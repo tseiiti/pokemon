@@ -1,8 +1,10 @@
+// querySelectorAll
 function qsa(arg) {
   return document.querySelectorAll(arg);
 }
 
-function loadComponents() {
+// Load Component
+function loacom() {
   qsa(".component").forEach(function(e) {
     let xhr = new XMLHttpRequest();
     xhr.onload = function() {
@@ -14,4 +16,5 @@ function loadComponents() {
     xhr.send();
   });
 }
-console.log(1)
+
+export { qsa, loacom }

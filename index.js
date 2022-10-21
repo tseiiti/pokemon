@@ -1,8 +1,8 @@
+import { loacom } from "./exports.js";
 
-console.log(2)
-loadComponents();
+loacom();
 
-var path = window.location.pathname;
-var page = path.split("/").pop();
+let path = window.location.pathname;
+let page = path.split("/").pop();
 console.log( page );
 console.log( page.split(".").pop() );
