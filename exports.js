@@ -14,3 +14,4 @@ function loadComponents() {
     xhr.send();
   });
 }
+console.log(1)

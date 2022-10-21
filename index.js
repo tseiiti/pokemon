@@ -1,3 +1,5 @@
+
+console.log(2)
 loadComponents();
 
 var path = window.location.pathname;
