@@ -2,10 +2,10 @@ import { querySelectorAll, loadComponent, random, randomBetween, setCookie, getC
 
 loadComponent();
 
-let path = window.location.pathname;
-let page = path.split("/").pop();
-console.log( page );
-console.log( page.split(".").pop() );
+// let path = window.location.pathname;
+// let page = path.split("/").pop();
+// console.log( page );
+// console.log( page.split(".").pop() );
 
 function getRootUrl(pok_name) {
   if (pokes.includes(pok_name)) {
