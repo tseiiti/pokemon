@@ -1,16 +1,20 @@
+function querySelector(arg) {
+  return document.querySelector(arg);
+}
+
 function querySelectorAll(arg) {
   return document.querySelectorAll(arg);
 }
 
 function loadComponent() {
-  querySelectorAll(".component").forEach(function(e) {
+  querySelectorAll('.component').forEach(function(e) {
     let xhr = new XMLHttpRequest();
     xhr.onload = function() {
       if (this.status == 200) {
         e.parentElement.innerHTML = xhr.responseText;
       }
     }
-    xhr.open("GET", e.getAttribute("data-component"), true);
+    xhr.open('GET', e.getAttribute('data-component'), true);
     xhr.send();
   });
 }
@@ -46,4 +50,4 @@ function getCookie(cname) {
   return '';
 }
 
-export { querySelectorAll, loadComponent, random, randomBetween, setCookie, getCookie }
+export { querySelector, querySelectorAll, loadComponent, random, randomBetween, setCookie, getCookie }
