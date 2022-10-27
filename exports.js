@@ -13,19 +13,19 @@ function loadComponent(arg, url) {
       querySelector(arg).innerHTML = xhr.responseText;
     }
   }
-  xhr.open('GET', url, true);
+  xhr.open("GET", url, true);
   xhr.send();
 }
 
 function loadComponentAll() {
-  querySelectorAll('.component').forEach(function(e) {
+  querySelectorAll(".component").forEach(function(e) {
     let xhr = new XMLHttpRequest();
     xhr.onload = function() {
       if (this.status === 200) {
         e.innerHTML = xhr.responseText;
       }
     }
-    xhr.open('GET', e.getAttribute('data-component'), true);
+    xhr.open("GET", e.getAttribute("data-component"), true);
     xhr.send();
   });
 }
@@ -41,22 +41,22 @@ function randomBetween(min, max) {
 function setCookie(cname, cvalue, exdays) {
   const d = new Date();
   d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-  let expires = 'expires=' + d.toUTCString();
-  document.cookie = cname + '=' + cvalue + ';' + expires + ';path=/';
+  let expires = "expires=" + d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
 function getCookie(cname) {
-  let name = cname + '=';
+  let name = cname + "=";
   let dcookie = decodeURIComponent(document.cookie);
-  let ca = dcookie.split(';');
+  let ca = dcookie.split(";");
   for (let i = 0; i < ca.length; i++) {
     let c = ca[i];
-    while (c.charAt(0) === ' ') {
+    while (c.charAt(0) === " ") {
       c = c.substring(1);
     }
     if (c.indexOf(name) === 0) {
       return c.substring(name.length, c.length);
     }
   }
-  return '';
+  return "";
 }

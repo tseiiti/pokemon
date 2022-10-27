@@ -1,16 +1,13 @@
 <div class="row align-items-center mx-3">
   <div class="col-md-6 text-center">
-    <img id="poke_image" src="gray.png" class="img-thumbnail" onload="pokeImageLoad();" />
+    <img class="rounded-4 img-thumbnail" id="poke_image" src="gray.png" onload="pokeImageLoad();" />
   </div>
   <div class="col-md-6 text-center my-3">
-    <div class="row">
-      <h1 class="">Nível Difícil</h1>
-    </div>
-    <div class="row">
-      <p class="">Escreva o nome do pokemon</p>
-    </div>
-    <div class="row">
-      <input class="form-control" type="text" placeholder="Nome do pokemon" />
+    <h1 class="">Nível Difícil</h1>
+    <p class="fw-lighter">Escreva o nome do personagem</p>
+    <div class="input-group">
+      <input class="form-control" id="text_validate_name" type="text" placeholder="Nome do personagem" aria-label="Nome do personagem" aria-describedby="button_validate-name">
+      <button class="btn btn-secondary" id="button_validate_name" type="button" onclick="buttonValidateName();">Validar</button>
     </div>
   </div>
 </div>
