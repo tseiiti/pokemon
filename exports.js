@@ -18,7 +18,7 @@ function loadComponent(arg, url) {
 }
 
 function loadComponentAll() {
-  querySelectorAll(".component").forEach(function(e) {
+  querySelectorAll("[data-component]").forEach(function(e) {
     let xhr = new XMLHttpRequest();
     xhr.onload = function() {
       if (this.status === 200) {
