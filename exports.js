@@ -6,11 +6,18 @@ function querySelectorAll(arg) {
   return document.querySelectorAll(arg);
 }
 
+const event = new Event("onLoadComponent");
+var compLen = 0;
 function loadComponent(elm, url) {
   let xhr = new XMLHttpRequest();
   xhr.onload = function() {
     if (this.status === 200) {
       elm.innerHTML = xhr.responseText;
+      compLen++;
+      if (compLen === querySelectorAll("[data-component]").length) {
+        compLen = 0;
+        document.body.dispatchEvent(event);
+      }
     }
   }
   xhr.open("GET", url, true);
@@ -20,14 +27,6 @@ function loadComponent(elm, url) {
 function loadComponentAll() {
   querySelectorAll("[data-component]").forEach(function(e) {
     loadComponent(e, e.getAttribute("data-component"));
-    // let xhr = new XMLHttpRequest();
-    // xhr.onload = function() {
-    //   if (this.status === 200) {
-    //     e.innerHTML = xhr.responseText;
-    //   }
-    // }
-    // xhr.open("GET", e.getAttribute("data-component"), true);
-    // xhr.send();
   });
 }
 
@@ -36,7 +35,7 @@ function random(vlr) {
 }
 
 function randomBetween(min, max) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
+  return random(max - min) + min;
 }
 
 function setCookie(cname, cvalue, exdays) {
