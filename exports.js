@@ -6,11 +6,11 @@ function querySelectorAll(arg) {
   return document.querySelectorAll(arg);
 }
 
-function loadComponent(arg, url) {
+function loadComponent(elm, url) {
   let xhr = new XMLHttpRequest();
   xhr.onload = function() {
     if (this.status === 200) {
-      querySelector(arg).innerHTML = xhr.responseText;
+      elm.innerHTML = xhr.responseText;
     }
   }
   xhr.open("GET", url, true);
@@ -19,14 +19,15 @@ function loadComponent(arg, url) {
 
 function loadComponentAll() {
   querySelectorAll("[data-component]").forEach(function(e) {
-    let xhr = new XMLHttpRequest();
-    xhr.onload = function() {
-      if (this.status === 200) {
-        e.innerHTML = xhr.responseText;
-      }
-    }
-    xhr.open("GET", e.getAttribute("data-component"), true);
-    xhr.send();
+    loadComponent(e, e.getAttribute("data-component"));
+    // let xhr = new XMLHttpRequest();
+    // xhr.onload = function() {
+    //   if (this.status === 200) {
+    //     e.innerHTML = xhr.responseText;
+    //   }
+    // }
+    // xhr.open("GET", e.getAttribute("data-component"), true);
+    // xhr.send();
   });
 }
 
