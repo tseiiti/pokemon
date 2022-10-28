@@ -1,7 +1,3 @@
-function buttonModalLoad() {
-  querySelector("button[data-bs-target='#modal_static']").click();
-}
-
 function buttonLoginEnter() {
   let e = querySelector("#modal_static button");
   e.setAttribute("data-bs-dismiss", "modal");
@@ -10,14 +6,6 @@ function buttonLoginEnter() {
 
 function getImageUrlByName(pok_id) {
   return `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${ pok_id.toString().padStart(3, "0") }.png`;
-}
-
-function pokeImageLoad() {
-  let img = querySelector("#poke_image");
-  if (img.alt) return false;
-  
-  img.src = getImageUrlByName(pok_id);
-  img.alt = "Imagem selecionada";
 }
 
 function buttonValidateName() {
@@ -35,7 +23,11 @@ const pokes = ["*", "bulbasaur", "ivysaur", "venusaur", "charmander", "charmeleo
 var pok_id = randomBetween(1, 905);
 
 document.body.addEventListener("onLoadComponent", (e) => {
-  console.log("I'm listening on a custom event");
+  querySelector("button[data-bs-target='#modal_static']").click();
+
+  let img = querySelector("#poke_image");
+  img.src = getImageUrlByName(pok_id);
+  img.alt = "Imagem selecionada";
 });
 
 loadComponentAll();
