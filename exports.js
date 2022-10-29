@@ -1,8 +1,8 @@
-function querySelector(arg) {
+function qs(arg) {
   return document.querySelector(arg);
 }
 
-function querySelectorAll(arg) {
+function qsa(arg) {
   return document.querySelectorAll(arg);
 }
 
@@ -14,7 +14,7 @@ function loadComponent(elm, url) {
     if (this.status === 200) {
       elm.innerHTML = xhr.responseText;
       compLen++;
-      if (compLen === querySelectorAll("[data-component]").length) {
+      if (compLen === qsa("[data-component]").length) {
         compLen = 0;
         document.body.dispatchEvent(event);
       }
@@ -25,20 +25,20 @@ function loadComponent(elm, url) {
 }
 
 function loadComponentAll() {
-  querySelectorAll("[data-component]").forEach(function(e) {
+  qsa("[data-component]").forEach(function(e) {
     loadComponent(e, e.getAttribute("data-component"));
   });
 }
 
-function setCookie(cname, cvalue) {
+function setCookie(key, val) {
   const d = new Date();
   d.setTime(d.getTime() + 365 * 24 * 60 * 60 * 1000);
   let expires = "expires=" + d.toUTCString();
-  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  document.cookie = key + "=" + val + ";" + expires + ";path=/";
 }
 
-function getCookie(cname) {
-  let name = cname + "=";
+function getCookie(key) {
+  let name = key + "=";
   let ca = decodeURIComponent(document.cookie).split(";");
   for (let i = 0; i < ca.length; i++) {
     let c = ca[i];
@@ -50,6 +50,14 @@ function getCookie(cname) {
     }
   }
   return "";
+}
+
+function setSession(key, val) {
+  sessionStorage.setItem(key, val);
+}
+
+function getSession(key) {
+  return sessionStorage.getItem(key);
 }
 
 function encode(object) {
@@ -155,7 +163,5 @@ const pokes = ["*", "bulbasaur", "ivysaur", "venusaur", "charmander", "charmeleo
 // // expected output: 5
 
 
-// sessionStorage.setItem("key", "value");
-// c(sessionStorage.getItem("key"));
 // sessionStorage.removeItem("key");
 // sessionStorage.clear();

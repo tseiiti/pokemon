@@ -1,4 +1,7 @@
-// import { querySelector, loadComponentAll, setCookie, getCookie, encode, decode, bsAlert, randomBetween } from "./exports.js";
+// import { qs, loadComponentAll, setCookie, getCookie, encode, decode, bsAlert, randomBetween } from "./exports.js";
+
+let user = sessionStorage.getItem("user");
+if (!user) window.location.replace("login.html");
 
 class Game {
   constructor(level, pok_id, answer, score) {
@@ -43,7 +46,7 @@ function getImageUrlByName(pok_id) {
 }
 
 function buttonValidateName() {
-  let txt = querySelector("#text_validate_name").value;
+  let txt = qs("#text_validate_name").value;
   if (!txt) {
     bsAlert("Mas nem preencheu o nome???", "warning");
   } else if (txt === pokes[pok_id]) {
@@ -57,25 +60,22 @@ var pok_id = randomBetween(1, 905);
 
 document.body.addEventListener("onLoadComponent", function(event) {
   
-  let user = sessionStorage.getItem("user");
-  if (!user) window.location.replace("login.html");
-  
   // (new bootstrap.Modal('#modal_static')).show();
   
   // let users = getCookie("users");
   // if (users == "") {
   //   window.location.replace("http://www.w3schools.com");
   //   setCookie("users", "[]");
-  //   querySelector("#modal_body").innerHTML = '<input class="form-control" id="usr_name" type="text" placeholder="Escreva seu nome">';
+  //   qs("#modal_body").innerHTML = '<input class="form-control" id="usr_name" type="text" placeholder="Escreva seu nome">';
   // } else {
   //   users = decode(users, User);
-  //   querySelector("#modal_body select").innerHTML += '<option value="4">Four</option>';
+  //   qs("#modal_body select").innerHTML += '<option value="4">Four</option>';
   // }
-  // querySelector("#button_modal_enter").addEventListener("click", buttonLoginEnter);
+  // qs("#button_modal_enter").addEventListener("click", buttonLoginEnter);
   
   
   
-  let img = querySelector("#poke_image");
+  let img = qs("#poke_image");
   img.src = getImageUrlByName(pok_id);
   img.alt = "Imagem selecionada";
 });
