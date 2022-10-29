@@ -12,7 +12,21 @@
     <header class="bg-secondary bg-gradient shadow-lg mb-5" data-component="header.html"></header>
 
     <div class="container-lg">
-      <main data-component="main.html"></main>
+      <main>
+        <div class="row align-items-center mx-3">
+          <div class="col-md-6 text-center">
+            <img class="rounded-4 img-thumbnail" id="poke_image" src="gray.png" />
+          </div>
+          <div class="col-md-6 text-center my-3">
+            <h1 class="">Nível Difícil</h1>
+            <p class="fw-lighter">Escreva o nome do personagem</p>
+            <div class="input-group">
+              <input class="form-control" id="text_validate_name" type="text" placeholder="Nome do personagem">
+              <button class="btn btn-secondary" id="button_validate_name" type="button" onclick="buttonValidateName();">Validar</button>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
 
     <footer class="bd-footer bg-light mt-5 p-3" data-component="footer.html"></footer>
@@ -22,7 +36,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
     
     <script src="exports.js"></script>
-    <script src="index.js"></script>
-    <!-- <script type="module" src="index.js"></script> -->
+    <script src="login.js"></script>
   </body>
 </html>
