@@ -71,11 +71,37 @@ function decode(string, T) {
 }
 
 function bsAlert(message, type, ele) {
+  qsa("div.alert").forEach(function(e) { e.remove(); });
   let html = `<div class="alert alert-${ type } alert-dismissible" role="alert"><div>${ message }</div><button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>`;
   let div = document.createElement("div");
   div.innerHTML = html;
   ele.before(div);
   setTimeout(function() { div.remove(); }, 5000);
+}
+
+function getTime(ms, format = "short") {
+  let f = undefined;
+  let d = new Date(ms);
+  if (format == "short") {
+    f = `${ d.getDate() }/${ (d.getMonth() + 1).toString().padStart(2, "0") } ${ d.getHours().toString().padStart(2, "0") }:${ d.getMinutes().toString().padStart(2, "0") }`;
+  } else if (format == "long") {
+    f = `${ d.getDate() }/${ (d.getMonth() + 1).toString().padStart(2, "0") }/${ d.getFullYear() } ${ d.getHours().toString().padStart(2, "0") }:${ d.getMinutes().toString().padStart(2, "0") }:${ d.getSeconds() }`;
+  } else if (format == "full") {
+    f = `${ d.getDate() }/${ (d.getMonth() + 1).toString().padStart(2, "0") }/${ d.getFullYear() } ${ d.getHours().toString().padStart(2, "0") }:${ d.getMinutes().toString().padStart(2, "0") }:${ d.getSeconds() }:${ d.getMilliseconds() }`;
+  }
+
+  return f;
+}
+
+function enterPress(button) {
+  let btn = qs(button);
+  let inp = qs("#" + btn.getAttribute("aria-describedby"));
+  inp.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      btn.click();
+    }
+  });
 }
 
 function random(vlr) {
@@ -165,3 +191,5 @@ const pokes = ["*", "bulbasaur", "ivysaur", "venusaur", "charmander", "charmeleo
 
 // sessionStorage.removeItem("key");
 // sessionStorage.clear();
+
+// (new bootstrap.Modal('#modal_static')).show();
