@@ -19,6 +19,18 @@ function buttonValidateName() {
   updateUser(user.addGame(4, pok_id, txt.value, score));
 }
 
+function userCard() {
+  qs("h4.card-header").innerText = user.name;
+  qs("h5.card-title").innerText = "Total de " + user.score + " pontos";
+  qs("h6.card-subtitle.mb-2.text-muted").innerText = "último acesso: " + getTime(user.update_at, "long");
+  let html = "";
+  let games = user.games.sort((a, b) => b.create_at - a.create_at).slice(0, 3);
+  games.forEach(function(g) {
+    html += "level: difícil; resposta: \"" + g.answer + "\"; horário: " + getTime(g.create_at) + "<br />";
+  });
+  qs("p.card-text").innerHTML = html;
+}
+
 var user = getSession("user");
 if (!user) {
   history.pushState(null, document.title, location.href);
@@ -29,15 +41,7 @@ user = decodeUser(user);
 var pok_id = randomBetween(1, 905);
 
 document.body.addEventListener("onLoadComponent", function(event) {
-  qs("h4.card-header").innerText = user.name;
-  qs("h5.card-title").innerText = "Total de " + user.score + " pontos";
-  qs("h6.card-subtitle.mb-2.text-muted").innerText = "último acesso: " + getTime(user.update_at, "long");
-  let html = "";
-  let games = user.games.sort((a, b) => b.create_at - a.create_at).slice(0, 3);
-  games.forEach(function(g) {
-    html += "level: difícil; resposta: \"" + g.answer + "\"; horário: " + getTime(g.create_at) + "<br />";
-  });
-  qs("p.card-text").innerHTML = html;
+  userCard();
 
   let img = qs("#poke_image");
   img.src = getImageUrlByName(pok_id);
