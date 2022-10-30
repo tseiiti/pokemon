@@ -20,7 +20,10 @@ function buttonValidateName() {
 }
 
 var user = getSession("user");
-if (!user) window.location.replace("login.html");
+if (!user) {
+  history.pushState(null, document.title, location.href);
+  location.replace("login.html");
+}
 user = decodeUser(user);
 
 var pok_id = randomBetween(1, 905);
