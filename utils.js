@@ -98,14 +98,15 @@ function getTime(ms, format = "short") {
   return f;
 }
 
-function enterPress(button) {
-  let btn = qs(button);
-  let inp = qs("#" + btn.getAttribute("aria-describedby"));
-  inp.addEventListener("keypress", function(event) {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      btn.click();
-    }
+function enterPress() {
+  qsa('button[aria-describedby]').forEach(function(e) {
+    let inp = qs("#" + e.getAttribute("aria-describedby"));
+    inp.addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        e.click();
+      }
+    });
   });
 }
 

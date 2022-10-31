@@ -50,7 +50,6 @@ document.body.addEventListener("onLoadComponent", function(event) {
   img.alt = "Imagem selecionada";
 
   qs("#button_validate_name").addEventListener("click", buttonValidateName);
-  enterPress("#button_validate_name");
 
   qs("a.nav-link.link-teste").addEventListener("click", function() {
     setCookie("users", "");
@@ -63,6 +62,7 @@ document.body.addEventListener("onLoadComponent", function(event) {
     location.replace("login.html");
   });
 
+  enterPress();
 });
 
 loadComponentAll();
