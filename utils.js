@@ -98,7 +98,7 @@ function getTime(ms, format = "short") {
   return f;
 }
 
-function enterPress(button) {c(1)
+function enterPress(button) {
   let btn = qs(button);
   let inp = qs("#" + btn.getAttribute("aria-describedby"));
   inp.addEventListener("keypress", function(event) {

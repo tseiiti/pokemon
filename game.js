@@ -53,7 +53,7 @@ function setUser(name) {
   let users = getUserArray();
 
   clearSession();
-  users.every(function(e) {
+  users.forEach(function(e) {
     let user = decodeUser(e);
     if (user.name == name) {
       setSession("user", e);

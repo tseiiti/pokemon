@@ -5,7 +5,7 @@ function buttonSetUser() {
   let name = qs("#usr_name");
   if (name.value) {
     setUser(name.value);
-    // window.location.replace("index.html");
+    location.replace("index.html");
   } else {
     bsAlert("Acho que faltou alguma coisa... seu nome, hahaha", "danger", name);
   }
