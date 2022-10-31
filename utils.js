@@ -60,6 +60,11 @@ function getSession(key) {
   return sessionStorage.getItem(key);
 }
 
+function clearSession() {
+  sessionStorage.clear();
+}
+
+
 function encode(object) {
   return JSON.stringify(Object.entries(object));
 }
@@ -93,7 +98,7 @@ function getTime(ms, format = "short") {
   return f;
 }
 
-function enterPress(button) {
+function enterPress(button) {c(1)
   let btn = qs(button);
   let inp = qs("#" + btn.getAttribute("aria-describedby"));
   inp.addEventListener("keypress", function(event) {
@@ -120,28 +125,29 @@ const pokes = ["*", "bulbasaur", "ivysaur", "venusaur", "charmander", "charmeleo
 
 
 
-export { 
-  qs, 
-  qsa, 
-  loadComponent, 
-  loadComponentAll, 
-  setCookie, 
-  getCookie, 
-  setSession, 
-  getSession, 
-  encode, 
-  decode, 
-  bsAlert, 
-  getTime, 
-  enterPress, 
-  random, 
-  randomBetween, 
-  c
-};
+// export { 
+//   qs, 
+//   qsa, 
+//   loadComponent, 
+//   loadComponentAll, 
+//   setCookie, 
+//   getCookie, 
+//   setSession, 
+//   getSession, 
+//   clearSession, 
+//   encode, 
+//   decode, 
+//   bsAlert, 
+//   getTime, 
+//   enterPress, 
+//   random, 
+//   randomBetween, 
+//   c
+// };
 
 
 
 // sessionStorage.removeItem("key");
-// sessionStorage.clear();
+// 
 
 // (new bootstrap.Modal('#modal_static')).show();

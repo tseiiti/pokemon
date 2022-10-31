@@ -1,24 +1,21 @@
-import { qs, loadComponentAll, getCookie, decode, getTime } from "./utils.js";
-import { setUser, decodeUser } from "./game.js";
+// import { qs, loadComponentAll, getCookie, decode, getTime } from "./utils.js";
+// import { setUser, decodeUser } from "./game.js";
 
 function buttonSetUser() {
   let name = qs("#usr_name");
   if (name.value) {
     setUser(name.value);
-    window.location.replace("index.html");
+    // window.location.replace("index.html");
   } else {
     bsAlert("Acho que faltou alguma coisa... seu nome, hahaha", "danger", name);
   }
 }
 
 document.body.addEventListener("onLoadComponent", function(event) {
-  let users = getCookie("users");
-  if (!users) users = "[]";
-  users = decode(users, Array);
+  let users = getUsers();
 
   let html = "";
-  users.forEach(function(e) {
-    let user = decodeUser(e);
+  users.map(user => {
     html += `<option value="${ user.name }">${ user.name } (${ getTime(user.update_at) })</option>`;
   });
   qs("#usr_name_list").innerHTML += html;

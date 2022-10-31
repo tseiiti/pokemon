@@ -1,4 +1,4 @@
-import { getCookie, setCookie, getSession, setSession, encode, decode } from "./utils.js";
+// import { getCookie, setCookie, getSession, setSession, clearSession, encode, decode } from "./utils.js";
 
 class Game {
   constructor(level, pok_id, answer, score) {
@@ -29,7 +29,7 @@ class User {
 
 function decodeUser(encoded) {
   let user = decode(encoded, User);
-  user.games = user.games.map((game) => decode(encode(game), Game));
+  user.games = user.games.map(game => decode(encode(game), Game));
 
   // for (let i = 0; i < user.games.length; i++) {
   //   user.games[i] = decode(encode(user.games[i]), Game);
@@ -37,26 +37,39 @@ function decodeUser(encoded) {
   return user;
 }
 
-function setUser(name) {
+function getUserArray() {
   let users = getCookie("users");
   if (!users) users = "[]";
-  users = decode(users, Array);
+  return decode(users, Array);
+}
 
-  users.forEach(function(e) {
+function getUsers() {
+  let users = getUserArray()
+  users = users.map(user => decodeUser(user));
+  return users.sort((a, b) => b.update_at - a.update_at);
+}
+
+function setUser(name) {
+  let users = getUserArray();
+
+  clearSession();
+  users.every(function(e) {
     let user = decodeUser(e);
     if (user.name == name) {
       setSession("user", e);
-      return user;
+      return;
     }
   });
   
-  setSession("user", encode(new User(name)));
-  users.push(getSession("user"));
-  setCookie("users", encode(users));
+  if (!getSession("user")) {
+    setSession("user", encode(new User(name)));
+    users.push(getSession("user"));
+    setCookie("users", encode(users));
+  }
 }
 
 function updateUser(user) {
-  let users = decode(getCookie("users"), Array);
+  let users = getUserArray();
 
   for (let i = 0; i < users.length; i++) {
     if (decodeUser(users[i]).name == user.name) {
@@ -72,10 +85,10 @@ function updateUser(user) {
 
 
 
-export {
-  Game, 
-  User, 
-  decodeUser, 
-  setUser, 
-  updateUser
-}
+// export {
+//   Game, 
+//   User, 
+//   decodeUser, 
+//   setUser, 
+//   updateUser
+// }

@@ -1,5 +1,5 @@
-import { qs, loadComponentAll, setCookie, getCookie, getSession, encode, decode, bsAlert, getTime, enterPress, randomBetween } from "./utils.js";
-import { decodeUser, updateUser } from "./game.js";
+// import { qs, loadComponentAll, setCookie, getSession, clearSession, bsAlert, getTime, enterPress, randomBetween } from "./utils.js";
+// import { decodeUser, updateUser } from "./game.js";
 
 function getImageUrlByName(pok_id) {
   return `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${ pok_id.toString().padStart(3, "0") }.png`;
@@ -34,14 +34,13 @@ function userCard() {
 
 
 
+var pok_id = randomBetween(1, 905);
 var user = getSession("user");
 if (!user) {
   history.pushState(null, document.title, location.href);
   location.replace("login.html");
 }
 user = decodeUser(user);
-
-var pok_id = randomBetween(1, 905);
 
 document.body.addEventListener("onLoadComponent", function(event) {
   userCard();
@@ -52,6 +51,18 @@ document.body.addEventListener("onLoadComponent", function(event) {
 
   qs("#button_validate_name").addEventListener("click", buttonValidateName);
   enterPress("#button_validate_name");
+
+  qs("a.nav-link.link-teste").addEventListener("click", function() {
+    setCookie("users", "");
+    clearSession();
+    location.replace("login.html");
+  });
+
+  qs("a.nav-link.link-sair").addEventListener("click", function() {
+    clearSession();
+    location.replace("login.html");
+  });
+
 });
 
 loadComponentAll();
