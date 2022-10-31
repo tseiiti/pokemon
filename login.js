@@ -11,7 +11,7 @@ function buttonSetUser() {
   }
 }
 
-document.body.addEventListener("onLoadComponent", function(event) {
+afterLoad(function() {
   let users = getUsers();
 
   let html = "";
@@ -21,8 +21,4 @@ document.body.addEventListener("onLoadComponent", function(event) {
   qs("#usr_name_list").innerHTML += html;
 
   qs("#button_set_usr").addEventListener("click", buttonSetUser);
-
-  enterPress();
 });
-
-loadComponentAll();

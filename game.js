@@ -7,6 +7,7 @@ class Game {
     this.answer = answer;
     this.score = score;
     this.create_at = (new Date()).getTime();
+    this.update_at = (new Date()).getTime();
   }
 }
 
