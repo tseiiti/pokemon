@@ -1,3 +1,5 @@
+import { getCookie, setCookie, getSession, setSession, encode, decode } from "./utils.js";
+
 class Game {
   constructor(level, pok_id, answer, score) {
     this.level = level;
@@ -44,7 +46,7 @@ function setUser(name) {
     let user = decodeUser(e);
     if (user.name == name) {
       setSession("user", e);
-      return;
+      return user;
     }
   });
   
@@ -66,4 +68,14 @@ function updateUser(user) {
   }
   
   setCookie("users", encode(users));
+}
+
+
+
+export {
+  Game, 
+  User, 
+  decodeUser, 
+  setUser, 
+  updateUser
 }

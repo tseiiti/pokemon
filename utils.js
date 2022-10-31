@@ -120,73 +120,25 @@ const pokes = ["*", "bulbasaur", "ivysaur", "venusaur", "charmander", "charmeleo
 
 
 
-// export { 
-//   querySelector, 
-//   querySelectorAll, 
-//   loadComponent, 
-//   loadComponentAll, 
-//   setCookie, 
-//   getCookie, 
-//   encode, 
-//   decode, 
-//   bsAlert, 
-//   random, 
-//   randomBetween
-// };
+export { 
+  qs, 
+  qsa, 
+  loadComponent, 
+  loadComponentAll, 
+  setCookie, 
+  getCookie, 
+  setSession, 
+  getSession, 
+  encode, 
+  decode, 
+  bsAlert, 
+  getTime, 
+  enterPress, 
+  random, 
+  randomBetween, 
+  c
+};
 
-
-
-// user = new User("teste")
-// user.addGame(1, 1, "teste", 0)
-// user.addGame(1, 1, "teste1", 1)
-// // e = encode(user)
-// // // '[["name","teste"],["games",[{"level":1,"pok_id":1,"answer":"teste","score":0},{"level":1,"pok_id":1,"answer":"teste1","score":1}]]]'
-// // d = decode(e, User)
-// // d.games[1]
-// // user.games[1]
-
-// ser = new Serializer([User])
-// e = ser.serialize(user)
-// d = ser.deserialize(e)
-
-
-// var active = element.querySelector('.active');
-// var prev = active.previousElementSibling;
-// var next = active.nextElementSibling;
-
-
-
-
-// const exampleModal = document.getElementById('exampleModal')
-// exampleModal.addEventListener('show.bs.modal', event => {
-//   // Button that triggered the modal
-//   const button = event.relatedTarget
-//   // Extract info from data-bs-* attributes
-//   const recipient = button.getAttribute('data-bs-whatever')
-//   // If necessary, you could initiate an AJAX request here
-//   // and then do the updating in a callback.
-//   //
-//   // Update the modal's content.
-//   const modalTitle = exampleModal.querySelector('.modal-title')
-//   const modalBodyInput = exampleModal.querySelector('.modal-body input')
-
-//   modalTitle.textContent = `New message to ${recipient}`
-//   modalBodyInput.value = recipient
-// })
-
-
-
-
-
-// function multiply(a, b = 1) {
-//   return a * b;
-// }
-
-// console.log(multiply(5, 2));
-// // expected output: 10
-
-// console.log(multiply(5));
-// // expected output: 5
 
 
 // sessionStorage.removeItem("key");

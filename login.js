@@ -1,4 +1,6 @@
-// import { qs, loadComponentAll, setCookie, getCookie, encode, decode, bsAlert, randomBetween } from "./utils.js";
+import { qs, loadComponentAll, getCookie, decode, getTime } from "./utils.js";
+import { setUser, decodeUser } from "./game.js";
+
 function buttonSetUser() {
   let name = qs("#usr_name");
   if (name.value) {

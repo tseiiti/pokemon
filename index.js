@@ -1,4 +1,5 @@
-// import { qs, loadComponentAll, setCookie, getCookie, encode, decode, bsAlert, randomBetween } from "./utils.js";
+import { qs, loadComponentAll, setCookie, getCookie, getSession, encode, decode, bsAlert, getTime, enterPress, randomBetween } from "./utils.js";
+import { decodeUser, updateUser } from "./game.js";
 
 function getImageUrlByName(pok_id) {
   return `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${ pok_id.toString().padStart(3, "0") }.png`;
@@ -24,12 +25,14 @@ function userCard() {
   qs("h5.card-title").innerText = "Total de " + user.score + " pontos";
   qs("h6.card-subtitle.mb-2.text-muted").innerText = "último acesso: " + getTime(user.update_at, "long");
   let html = "";
-  let games = user.games.sort((a, b) => b.create_at - a.create_at).slice(0, 3);
+  let games = user.games.sort((a, b) => b.create_at - a.create_at).slice(0, 9);
   games.forEach(function(g) {
     html += "level: difícil; resposta: \"" + g.answer + "\"; horário: " + getTime(g.create_at) + "<br />";
   });
   qs("p.card-text").innerHTML = html;
 }
+
+
 
 var user = getSession("user");
 if (!user) {
