@@ -31,10 +31,6 @@ class User {
 function decodeUser(encoded) {
   let user = decode(encoded, User);
   user.games = user.games.map(game => decode(encode(game), Game));
-
-  // for (let i = 0; i < user.games.length; i++) {
-  //   user.games[i] = decode(encode(user.games[i]), Game);
-  // }
   return user;
 }
 

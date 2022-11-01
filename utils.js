@@ -119,7 +119,7 @@ function bsAlert(message, type, ele) {
 }
 
 function getTime(ms, format = "short") {
-  let f = undefined;
+  let f = "";
   let d = new Date(ms);
   if (format == "short") {
     f = `${d.getDate()}/${(d.getMonth() + 1).toString().padStart(2, "0")} ${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}`;

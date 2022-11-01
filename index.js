@@ -1,23 +1,25 @@
-// import {qs, loadComponentAll, setCookieY, getSession, bsAlert, getTime, enterPress, randomBetween} from "./utils.js";
+// import {qs, afterLoad, getSession, bsAlert, getTime, randomBetween} from "./utils.js";
 // import {decodeUser, updateUser} from "./game.js";
 
-var pok_id = null;
 var user = null;
+var pok_id = null;
 
-function userCard() {
+function userSession() {
   user = getSession("user");
   if (!user) {
     history.pushState(null, document.title, location.href);
     location.replace("login.html");
   }
   user = decodeUser(user);
+}
 
+function userCard() {
   qs("h4.card-header").innerText = user.name;
   qs("h5.card-title").innerText = "Total de " + user.score + " pontos";
   qs("h6.card-subtitle.mb-2.text-muted").innerText = "último acesso: " + getTime(user.update_at, "long");
   let games = user.games.sort((a, b) => b.create_at - a.create_at).slice(0, 30);
   let html = "";
-  
+
   games.forEach(function(g) {
     html += '<tr>'
     html += `<td>${getTime(g.update_at)}</td>`
@@ -37,6 +39,7 @@ function getPoke() {
 }
 
 function buttonValidateName() {
+  userSession();
   let txt = qs("#text_validate_name");
   let score = 0;
   if (!txt.value) {
@@ -60,6 +63,7 @@ function buttonValidateName() {
 
 
 afterLoad(function() {
+  userSession();
   userCard();
   getPoke();
 
