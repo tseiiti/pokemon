@@ -35,41 +35,67 @@ function afterLoad(f) {
   document.body.addEventListener("onLoadComponent", function() {
     f();
     enterPress();
+
+
+
+    qs("a.nav-link.link-teste").addEventListener("click", function() {
+      clearCookies();
+      location.replace("login.html");
+    });
+
+    qs("a.nav-link.link-sair").addEventListener("click", function() {
+      delSession("user");
+      location.replace("login.html");
+    });
   });
 }
 
-function setCookie(key, val) {
+function setCookie(key, val, min) {
   const d = new Date();
-  d.setTime(d.getTime() + 365 * 24 * 60 * 60 * 1000);
-  let expires = "expires=" + d.toUTCString();
-  document.cookie = key + "=" + val + ";" + expires + ";path=/";
+  d.setTime(d.getTime() + min * 60 * 1000);
+  document.cookie = `${key}=${val};expires=${d.toUTCString()};path=/`;
+}
+
+function setCookieY(key, val) {
+  setCookie(key, val, 365 * 24 * 60);
 }
 
 function getCookie(key) {
-  let name = key + "=";
-  let ca = decodeURIComponent(document.cookie).split(";");
-  for (let i = 0; i < ca.length; i++) {
-    let c = ca[i];
-    while (c.charAt(0) === " ") {
-      c = c.substring(1);
+  key = key + "=";
+  let val = "";
+  document.cookie.split("; ").forEach(function(e) {
+    if (e.indexOf(key) === 0) {
+      val = e.substring(key.length, e.length);
+      return;
     }
-    if (c.indexOf(name) === 0) {
-      return c.substring(name.length, c.length);
-    }
-  }
-  return "";
+  });
+  return val;
+}
+
+function clearCookies() {
+  document.cookie.split(";").forEach(function(e) {
+    delCookie(e.split("=")[0].trim());
+  });
+}
+
+function delCookie(key) {
+  setCookie(key, "", -1);
 }
 
 function setSession(key, val) {
-  sessionStorage.setItem(key, val);
+  // sessionStorage.setItem(key, val);
+  setCookie("session_" + key, val, 5);
 }
 
 function getSession(key) {
-  return sessionStorage.getItem(key);
+  // return sessionStorage.getItem(key);
+  return getCookie("session_" + key);
 }
 
-function clearSession() {
-  sessionStorage.clear();
+function delSession(key) {
+  // sessionStorage.removeItem("key");
+  // sessionStorage.clear();
+  delCookie("session_" + key);
 }
 
 
@@ -84,23 +110,23 @@ function decode(string, T) {
 }
 
 function bsAlert(message, type, ele) {
-  qsa("div.alert").forEach(function(e) { e.remove(); });
-  let html = `<div class="alert alert-${ type } alert-dismissible" role="alert"><div>${ message }</div><button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>`;
+  qsa("div.alert").forEach(function(e) {e.remove();});
+  let html = `<div class="alert alert-${type} alert-dismissible" role="alert"><div>${message}</div><button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>`;
   let div = document.createElement("div");
   div.innerHTML = html;
   ele.before(div);
-  setTimeout(function() { div.remove(); }, 5000);
+  setTimeout(function() {div.remove();}, 5000);
 }
 
 function getTime(ms, format = "short") {
   let f = undefined;
   let d = new Date(ms);
   if (format == "short") {
-    f = `${ d.getDate() }/${ (d.getMonth() + 1).toString().padStart(2, "0") } ${ d.getHours().toString().padStart(2, "0") }:${ d.getMinutes().toString().padStart(2, "0") }`;
+    f = `${d.getDate()}/${(d.getMonth() + 1).toString().padStart(2, "0")} ${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}`;
   } else if (format == "long") {
-    f = `${ d.getDate() }/${ (d.getMonth() + 1).toString().padStart(2, "0") }/${ d.getFullYear() } ${ d.getHours().toString().padStart(2, "0") }:${ d.getMinutes().toString().padStart(2, "0") }:${ d.getSeconds() }`;
+    f = `${d.getDate()}/${(d.getMonth() + 1).toString().padStart(2, "0")}/${d.getFullYear()} ${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}:${d.getSeconds()}`;
   } else if (format == "full") {
-    f = `${ d.getDate() }/${ (d.getMonth() + 1).toString().padStart(2, "0") }/${ d.getFullYear() } ${ d.getHours().toString().padStart(2, "0") }:${ d.getMinutes().toString().padStart(2, "0") }:${ d.getSeconds() }:${ d.getMilliseconds() }`;
+    f = `${d.getDate()}/${(d.getMonth() + 1).toString().padStart(2, "0")}/${d.getFullYear()} ${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}:${d.getSeconds()}:${d.getMilliseconds()}`;
   }
 
   return f;
@@ -135,17 +161,17 @@ const pokes = ["*", "bulbasaur", "ivysaur", "venusaur", "charmander", "charmeleo
 
 
 
-// export { 
+// export {
 //   qs, 
 //   qsa, 
 //   loadComponent, 
 //   loadComponentAll, 
 //   afterLoad
 //   setCookie, 
+//   setCookieY, 
 //   getCookie, 
 //   setSession, 
 //   getSession, 
-//   clearSession, 
 //   encode, 
 //   decode, 
 //   bsAlert, 
@@ -158,7 +184,6 @@ const pokes = ["*", "bulbasaur", "ivysaur", "venusaur", "charmander", "charmeleo
 
 
 
-// sessionStorage.removeItem("key");
 // 
 
 // (new bootstrap.Modal('#modal_static')).show();

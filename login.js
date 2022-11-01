@@ -1,5 +1,5 @@
-// import { qs, loadComponentAll, getCookie, decode, getTime } from "./utils.js";
-// import { setUser, decodeUser } from "./game.js";
+// import {qs, loadComponentAll, getCookie, decode, getTime} from "./utils.js";
+// import {setUser, decodeUser} from "./game.js";
 
 function buttonSetUser() {
   let name = qs("#usr_name");
@@ -16,15 +16,9 @@ afterLoad(function() {
 
   let html = "";
   users.map(user => {
-    html += `<option value="${ user.name }">${ user.name } (${ getTime(user.update_at) })</option>`;
+    html += `<option value="${user.name}">${user.name} (${getTime(user.update_at)})</option>`;
   });
   qs("#usr_name_list").innerHTML += html;
 
   qs("#button_set_usr").addEventListener("click", buttonSetUser);
-  
-  qs("a.nav-link.link-teste").addEventListener("click", function() {
-    setCookie("users", "");
-    clearSession();
-    location.replace("login.html");
-  });
 });

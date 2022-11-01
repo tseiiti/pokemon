@@ -1,4 +1,4 @@
-// import { getCookie, setCookie, getSession, setSession, clearSession, encode, decode } from "./utils.js";
+// import { getCookie, setCookieY, getSession, setSession, encode, decode } from "./utils.js";
 
 class Game {
   constructor(level, pok_id, answer, score) {
@@ -53,7 +53,7 @@ function getUsers() {
 function setUser(name) {
   let users = getUserArray();
 
-  clearSession();
+  delSession("user");
   users.forEach(function(e) {
     let user = decodeUser(e);
     if (user.name == name) {
@@ -65,7 +65,7 @@ function setUser(name) {
   if (!getSession("user")) {
     setSession("user", encode(new User(name)));
     users.push(getSession("user"));
-    setCookie("users", encode(users));
+    setCookieY("users", encode(users));
   }
 }
 
@@ -81,7 +81,7 @@ function updateUser(user) {
     }
   }
   
-  setCookie("users", encode(users));
+  setCookieY("users", encode(users));
 }
 
 
