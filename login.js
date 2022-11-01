@@ -21,4 +21,10 @@ afterLoad(function() {
   qs("#usr_name_list").innerHTML += html;
 
   qs("#button_set_usr").addEventListener("click", buttonSetUser);
+  
+  qs("a.nav-link.link-teste").addEventListener("click", function() {
+    setCookie("users", "");
+    clearSession();
+    location.replace("login.html");
+  });
 });

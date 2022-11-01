@@ -58,7 +58,7 @@ function setUser(name) {
     let user = decodeUser(e);
     if (user.name == name) {
       setSession("user", e);
-      return;
+      return false;
     }
   });
   
