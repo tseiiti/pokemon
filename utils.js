@@ -37,12 +37,6 @@ function afterLoad(f) {
     enterPress();
 
 
-
-    qs("a.nav-link.link-teste").addEventListener("click", function() {
-      clearCookies();
-      location.replace("login.html");
-    });
-
     qs("a.nav-link.link-sair").addEventListener("click", function() {
       delSession("user");
       location.replace("login.html");
@@ -84,7 +78,7 @@ function delCookie(key) {
 
 function setSession(key, val) {
   // sessionStorage.setItem(key, val);
-  setCookie("session_" + key, val, 5);
+  setCookie("session_" + key, val, 30);
 }
 
 function getSession(key) {
@@ -97,7 +91,6 @@ function delSession(key) {
   // sessionStorage.clear();
   delCookie("session_" + key);
 }
-
 
 function encode(object) {
   return JSON.stringify(Object.entries(object));

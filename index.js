@@ -3,6 +3,7 @@
 
 var user = null;
 var pok_id = null;
+userSession();
 
 function userSession() {
   user = getSession("user");
@@ -24,7 +25,7 @@ function userCard() {
     html += '<tr>'
     html += `<td>${getTime(g.update_at)}</td>`
     html += `<td>${g.level == 4 ? 'difícil' : ''}</td>`
-    html += `<td>${g.answer.substring(0, 12)}${g.answer.length > 12 ? "..." : ""}</td>`
+    html += `<td>${g.answer.substring(0, 10)}${g.answer.length > 10 ? "..." : ""}</td>`
     html += `<td>${g.score == 0 ? "errou" : g.score}</td>`
     html += '</tr>'
   });
@@ -39,12 +40,12 @@ function getPoke() {
   img.alt = "créditos da imagem a pokemon.com";
 }
 
-function buttonValidateName() {
+function validateName(e) {
   userSession();
   let txt = qs("#text_validate_name");
   let score = 0;
   if (!txt.value) {
-    bsAlert("Mas ainda nem preencheu o nome?", "warning", txt.parentElement);
+    bsAlert("Mas nem respondeu o nome ainda?", "warning", txt.parentElement);
   } else if (txt.value == pokes[pok_id]) {
     bsAlert("Você acertou, parabéns!", "success", txt.parentElement);
     score = 5;
@@ -61,6 +62,16 @@ function buttonValidateName() {
   }
 }
 
+function buttonValidateName() {
+  validateName(qs('input:checked'));
+}
+
+
+// 1 muito fácil 5 opções
+// 2 fácil com inicio e fim
+// 3 médio forca
+// 4 difícil digitar
+// 5 muito difícil imagem cortada
 
 
 afterLoad(function() {
@@ -68,5 +79,32 @@ afterLoad(function() {
   userCard();
   getPoke();
 
+  if (user.level == 1) {
+    loadComponent(qs("div.component"), "very_easy.html");
+    let ids = [];
+    while(ids.length < 4) {
+      let id = randomBetween(1, 905);
+      if (id == pok_id || ids.includes(id)) continue;
+      ids.push(id);
+    }
+    ids.splice(random(4), 0, pok_id);
+    let html = "";
+    ids.forEach(function(id) {
+      html += '<div class="form-check">';
+      html += `<input class="form-check-input" id="radio-${id}" type="radio" value="${pokes[id]}">`;
+      html += `<label class="form-check-label" for="radio-${id}">${pokes[id]}</label>`;
+      html += '</div>';
+    });
+
+    qs("div.div_validate_name").innerHTML = html;
+  } else if (user.level == 4) {
+    loadComponent(qs("div.component"), "hard.html");
+  }
+
   qs("#button_validate_name").addEventListener("click", buttonValidateName);
+  qsa("button.btn.btn-outline-primary").forEach(function(e) {
+    e.addEventListener("click", function() {
+      alert(e.value);
+    });
+  });
 });
