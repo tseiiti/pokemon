@@ -42,28 +42,31 @@ function getPoke() {
 
 function validateName(e) {
   userSession();
-  let txt = qs("#text_validate_name");
   let score = 0;
-  if (!txt.value) {
-    bsAlert("Mas nem respondeu o nome ainda?", "warning", txt.parentElement);
-  } else if (txt.value == pokes[pok_id]) {
-    bsAlert("Você acertou, parabéns!", "success", txt.parentElement);
+  if (!e.value) {
+    bsAlert("Mas nem respondeu o nome ainda?", "warning", e.parentElement);
+  } else if (e.value == pokes[pok_id]) {
+    bsAlert("Você acertou, parabéns!", "success", e.parentElement);
     score = 5;
   } else {
-    bsAlert("Acho que você errrrooooooooooooou!!!", "danger", txt.parentElement);
+    bsAlert("Acho que você errrrooooooooooooou!!!", "danger", e.parentElement);
   }
   
-  updateUser(user.addGame(4, pok_id, txt.value, score));
+  updateUser(user.addGame(4, pok_id, e.value, score));
   
-  if (txt.value) {
-    userCard();
+  if (e.value) {
     getPoke();
-    txt.value = "";
   }
+  userCard();
+  e.value = "";
 }
 
 function buttonValidateName() {
-  validateName(qs('input:checked'));
+  if (user.level == 1) {
+    validateName(qs('input:checked'));
+  } else if (user.level == 4) {
+    validateName(qs("#text_validate_name"));
+  }
 }
 
 
@@ -73,6 +76,11 @@ function buttonValidateName() {
 // 4 difícil digitar
 // 5 muito difícil imagem cortada
 
+if (user.level == 1) {
+  loadComponent(qs("div.component"), "very_easy.html");
+} else if (user.level == 4) {
+  loadComponent(qs("div.level"), "hard.html");
+}
 
 afterLoad(function() {
   userSession();
@@ -80,7 +88,7 @@ afterLoad(function() {
   getPoke();
 
   if (user.level == 1) {
-    loadComponent(qs("div.component"), "very_easy.html");
+    // loadComponent(qs("div.component"), "very_easy.html");
     let ids = [];
     while(ids.length < 4) {
       let id = randomBetween(1, 905);
@@ -98,7 +106,7 @@ afterLoad(function() {
 
     qs("div.div_validate_name").innerHTML = html;
   } else if (user.level == 4) {
-    loadComponent(qs("div.component"), "hard.html");
+    // loadComponent(qs("div.component"), "hard.html");
   }
 
   qs("#button_validate_name").addEventListener("click", buttonValidateName);

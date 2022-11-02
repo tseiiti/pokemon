@@ -26,7 +26,9 @@ function loadComponent(elm, url) {
 
 function loadComponentAll() {
   qsa("[data-component]").forEach(function(e) {
-    loadComponent(e, e.getAttribute("data-component"));
+    if (e.getAttribute("data-component")) {
+      loadComponent(e, e.getAttribute("data-component"));
+    }
   });
 }
 

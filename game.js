@@ -16,7 +16,7 @@ class User {
     this.name = name;
     this.games = [];
     this.score = 0;
-    this.leve = 4;
+    this.level = 4;
     this.create_at = (new Date()).getTime();
     this.update_at = (new Date()).getTime();
   }
