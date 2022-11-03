@@ -1,5 +1,5 @@
-// import {qs, afterLoad, getSession, bsAlert, getTime, randomBetween} from "./utils.js";
-// import {decodeUser, updateUser} from "./game.js";
+// import {qs, afterLoad, getSession, bsAlert, getTime, randomBetween} from "/js/utils.js";
+// import {decodeUser, updateUser} from "/js/game.js";
 
 var user, pok_id, elm_fnd;
 userSession();
@@ -8,14 +8,14 @@ function userSession() {
   user = getSession("user");
   if (!user) {
     history.pushState(null, document.title, location.href);
-    location.replace("login.html");
+    location.replace("/login.html");
   }
   user = decodeUser(user);
   
   if (user.level == 1) {
-    elm_fnd = ["very_easy.html", "#div_val_nam", ".form-check-input:checked"];
+    elm_fnd = ["/comp/very_easy.html", "#div_val_nam", ".form-check-input:checked"];
   } else if (user.level == 4) {
-    elm_fnd = ["hard.html", "#div_val_nam", "#txt_val_nam"];
+    elm_fnd = ["/comp/hard.html", "#div_val_nam", "#txt_val_nam"];
   }
 }
 
@@ -41,7 +41,7 @@ function getPoke() {
   pok_id = randomBetween(1, 905);
   let img = qs("#poke_image");
   // img.src = `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${pok_id.toString().padStart(3, "0")}.png`;
-  img.src = `/img/${pok_id.toString().padStart(3, "0")}.png`;
+  img.src = `/img/pokes/${pok_id.toString().padStart(3, "0")}.png`;
   img.alt = "créditos da imagem a pokemon.com";
 }
 

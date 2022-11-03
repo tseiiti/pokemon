@@ -4,79 +4,31 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Jogo Pokes do Yuyu</title>
-    <link rel="icon" type="image/x-icon" href="icon.ico">
-    <link href="bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/img/icon.ico">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
   </head>
   <body>
-    <header class="bg-secondary bg-gradient shadow-lg mb-5" data-component="nav.html"></header>
+    <header class="bg-secondary bg-gradient shadow-lg mb-5" data-component="/comp/nav.html"></header>
 
     <div class="container-lg">
       <main class="text-center mx-3">
+        <div class="row" data-component="/comp/btn_level.html"></div>
+        <div class="row" data-component="/comp/user_card.html"></div>
         <div class="row">
-          <div class="btn-group col-md-12" role="group">
-            <button type="button" class="btn btn-outline-primary" value="1">Muito Fácil</button>
-            <button type="button" class="btn btn-outline-primary" value="2">Fácil</button>
-            <button type="button" class="btn btn-outline-primary" value="3">Médio</button>
-            <button type="button" class="btn btn-outline-primary" value="4">Difícil</button>
-            <button type="button" class="btn btn-outline-primary" value="5">Muito Difícil</button>
+          <div class="col-md-6 mb-4">
+            <img class="img-thumbnail" id="poke_image" src="/img/gray.png" />
           </div>
-        </div>
-
-        <div class="row">
-          <div class="col-md-6">
-            <div class="card my-4" style="height: 177px;">
-              <h4 class="card-header"></h4>
-              <div class="card-body">
-                <h5 class="card-title"></h5>
-                <h6 class="card-subtitle mb-2 text-muted"></h6>
-                <a href="login.html" class="card-link">Trocar de usuário</a>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="card my-4">
-              <div class="card-body overflow-auto">
-                <h6 class="card-subtitle mb-2">Últimos jogos</h6>
-                <div class="table-wrapper-scroll-y">
-                  <table class="table table-sm">
-                    <thead>
-                      <tr>
-                        <th scope="col">Horário</th>
-                        <th scope="col">Nível</th>
-                        <th scope="col">Resposta</th>
-                        <th scope="col">Pontos</th>
-                      </tr>
-                    </thead>
-                    <tbody id="history_tbody"></tbody>
-                  </table>
-                </div>
-                <style>
-                  .table-wrapper-scroll-y {
-                    position: relative;
-                    height: 120px;
-                    overflow: auto;
-                    display: block;
-                    font-size: small;
-                  }
-                </style>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6">
-            <img class="img-thumbnail" id="poke_image" src="gray.png" />
-          </div>
-          <div class="col-md-6 my-5" id="level_inputs" data-component=""></div>
+          <div class="col-md-6 mb-4" id="level_inputs" data-component=""></div>
         </div>
       </main>
     </div>
 
-    <footer class="bd-footer bg-light mt-5 p-3" data-component="footer.html"></footer>
-    <script src="bootstrap.bundle.min.js"></script>
-    <script src="utils.js"></script>
-    <script src="game.js"></script>
-    <script src="index.js"></script>
+    <footer class="bd-footer bg-light mt-5 p-3" data-component="/comp/footer.html"></footer>
+    <!-- <div data-component="/comp/modal.html"></div> -->
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/utils.js"></script>
+    <script src="/js/game.js"></script>
+    <script src="/js/index.js"></script>
     <!-- <script type="module" src="index.js"></script> -->
   </body>
 </html>

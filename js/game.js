@@ -1,4 +1,4 @@
-// import { getCookie, setCookieY, getSession, setSession, encode, decode } from "./utils.js";
+// import { getCookie, setCookieY, getSession, setSession, encode, decode } from "/js/utils.js";
 
 class Game {
   constructor(level, pok_id, answer, score) {

@@ -178,7 +178,4 @@ const pokes = ["*", "bulbasaur", "ivysaur", "venusaur", "charmander", "charmeleo
 // };
 
 
-
-// 
-
 // (new bootstrap.Modal('#modal_static')).show();
