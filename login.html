@@ -4,16 +4,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Jogo Pokes do Yuyu</title>
-    <link rel="icon" type="image/x-icon" href="icon.ico">
-    <link href="bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/img/icon.ico">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
   </head>
   <body>
-    <header class="bg-secondary bg-gradient shadow-lg mb-5" data-component="nav.html"></header>
+    <header class="bg-secondary bg-gradient shadow-lg mb-5" data-component="/comp/nav.html"></header>
 
     <div class="container-lg">
       <main>
         <div class="row justify-content-center">
-          <form class="form-group col-sm-6 col-sm-offset-3">
+          <form class="form-group col-10 col-md-6">
             <div class="text-center mb-3">
               <h1 class="">Fazer login</h1>
               <p class="fw-lighter">Não esqueça o seu nome, se não perderá todos os seus pontos, heheheh!</p>
@@ -25,17 +25,19 @@
               <datalist id="usr_name_list"></datalist>
             </div>
 
-            <button class="btn btn-primary" id="button_set_usr" type="button" aria-describedby="usr_name">Avançar</button>
+            <div style="text-align: right;">
+              <button class="btn btn-primary" id="button_set_usr" type="button" aria-describedby="usr_name">Avançar</button>
+            </div>
           </form>
         </div>
       </main>
     </div>
 
-    <footer class="bd-footer bg-light mt-5 p-3" data-component="footer.html"></footer>
-    <script src="bootstrap.bundle.min.js"></script>
-    <script src="utils.js"></script>
-    <script src="game.js"></script>
-    <script src="login.js"></script>
+    <footer class="bd-footer bg-light mt-5" data-component="/comp/footer.html"></footer>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/utils.js"></script>
+    <script src="/js/game.js"></script>
+    <script src="/js/login.js"></script>
     <!-- <script type="module" src="login.js"></script> -->
   </body>
 </html>

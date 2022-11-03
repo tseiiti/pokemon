@@ -1,0 +1,39 @@
+<div class="col-md-6">
+  <div class="card mb-4" style="height: 177px;">
+    <h4 class="card-header"></h4>
+    <div class="card-body">
+      <h5 class="card-title"></h5>
+      <h6 class="card-subtitle mb-2 text-muted"></h6>
+      <a href="login.html" class="card-link">Trocar de usuário</a>
+    </div>
+  </div>
+</div>
+<div class="col-md-6">
+  <div class="card mb-4">
+    <div class="card-body overflow-auto">
+      <h6 class="card-subtitle mb-2">Últimos jogos</h6>
+      <div class="table-wrapper-scroll-y">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th scope="col">Horário</th>
+              <th scope="col">Nível</th>
+              <th scope="col">Resposta</th>
+              <th scope="col">Pontos</th>
+            </tr>
+          </thead>
+          <tbody id="history_tbody"></tbody>
+        </table>
+      </div>
+      <style>
+        .table-wrapper-scroll-y {
+          position: relative;
+          height: 120px;
+          overflow: auto;
+          display: block;
+          font-size: small;
+        }
+      </style>
+    </div>
+  </div>
+</div>
