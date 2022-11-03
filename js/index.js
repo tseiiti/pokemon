@@ -1,7 +1,7 @@
 // import {qs, afterLoad, getSession, bsAlert, getTime, randomBetween} from "/js/utils.js";
 // import {decodeUser, updateUser} from "/js/game.js";
 
-var user, pok_id, elm_fnd;
+var user, pok_id, elm_fnd, levels = [""];
 userSession();
 
 function userSession() {
@@ -29,8 +29,8 @@ function userCard() {
   games.forEach(function(g) {
     html += '<tr>'
     html += `<td>${getTime(g.update_at)}</td>`
-    html += `<td>${g.level == 4 ? 'difícil' : ''}</td>`
-    html += `<td>${g.answer.substring(0, 10)}${g.answer.length > 10 ? "..." : ""}</td>`
+    html += `<td>${levels[g.level].toLowerCase()}</td>`
+    html += `<td${g.answer.length > 10 ? ' title="' + g.answer + '"' : ""}>${g.answer.substring(0, 10)}${g.answer.length > 10 ? "..." : ""}</td>`
     html += `<td>${g.score == 0 ? "errou" : g.score}</td>`
     html += '</tr>'
   });
@@ -105,16 +105,18 @@ function valName() {
 loadComponent(qs("#level_inputs"), elm_fnd[0]);
 
 afterLoad(function() {
-  userCard();
-  getPoke();
-  levelGen();
-
   qs("#btn_val_nam").addEventListener("click", valName);
-  qsa("button.btn.btn-outline-primary").forEach(function(e) {
+  qsa("button.btn-outline-primary").forEach(function(e) {
     e.addEventListener("click", function() {
       user.level = e.value;
       updateUser(user);
       location.reload();
     });
+    if (e.value == user.level) e.className = "btn btn-primary";
+    levels.push(e.innerText);
   });
+
+  userCard();
+  getPoke();
+  levelGen();
 });
