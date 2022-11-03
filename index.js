@@ -1,8 +1,7 @@
 // import {qs, afterLoad, getSession, bsAlert, getTime, randomBetween} from "./utils.js";
 // import {decodeUser, updateUser} from "./game.js";
 
-var user = null;
-var pok_id = null;
+var user, pok_id, elm_fnd;
 userSession();
 
 function userSession() {
@@ -12,6 +11,12 @@ function userSession() {
     location.replace("login.html");
   }
   user = decodeUser(user);
+  
+  if (user.level == 1) {
+    elm_fnd = ["very_easy.html", "#div_val_nam", ".form-check-input:checked"];
+  } else if (user.level == 4) {
+    elm_fnd = ["hard.html", "#div_val_nam", "#txt_val_nam"];
+  }
 }
 
 function userCard() {
@@ -29,7 +34,7 @@ function userCard() {
     html += `<td>${g.score == 0 ? "errou" : g.score}</td>`
     html += '</tr>'
   });
-  qs("div.card-body table tbody").innerHTML = html;
+  qs("#history_tbody").innerHTML = html;
 }
 
 function getPoke() {
@@ -40,55 +45,8 @@ function getPoke() {
   img.alt = "créditos da imagem a pokemon.com";
 }
 
-function validateName(e) {
-  userSession();
-  let score = 0;
-  if (!e.value) {
-    bsAlert("Mas nem respondeu o nome ainda?", "warning", e.parentElement);
-  } else if (e.value == pokes[pok_id]) {
-    bsAlert("Você acertou, parabéns!", "success", e.parentElement);
-    score = 5;
-  } else {
-    bsAlert("Acho que você errrrooooooooooooou!!!", "danger", e.parentElement);
-  }
-  
-  updateUser(user.addGame(4, pok_id, e.value, score));
-  
-  if (e.value) {
-    getPoke();
-  }
-  userCard();
-  e.value = "";
-}
-
-function buttonValidateName() {
+function levelGen() {
   if (user.level == 1) {
-    validateName(qs('input:checked'));
-  } else if (user.level == 4) {
-    validateName(qs("#text_validate_name"));
-  }
-}
-
-
-// 1 muito fácil 5 opções
-// 2 fácil com inicio e fim
-// 3 médio forca
-// 4 difícil digitar
-// 5 muito difícil imagem cortada
-
-if (user.level == 1) {
-  loadComponent(qs("div.component"), "very_easy.html");
-} else if (user.level == 4) {
-  loadComponent(qs("div.level"), "hard.html");
-}
-
-afterLoad(function() {
-  userSession();
-  userCard();
-  getPoke();
-
-  if (user.level == 1) {
-    // loadComponent(qs("div.component"), "very_easy.html");
     let ids = [];
     while(ids.length < 4) {
       let id = randomBetween(1, 905);
@@ -98,21 +56,64 @@ afterLoad(function() {
     ids.splice(random(4), 0, pok_id);
     let html = "";
     ids.forEach(function(id) {
+      let val = pokes[id][0].toUpperCase() + pokes[id].substring(1);
       html += '<div class="form-check">';
-      html += `<input class="form-check-input" id="radio-${id}" type="radio" value="${pokes[id]}">`;
-      html += `<label class="form-check-label" for="radio-${id}">${pokes[id]}</label>`;
+      html += `<input class="form-check-input" id="radio-${id}" type="radio" name="rad_val_nam" value="${val}">`;
+      html += `<label class="form-check-label" for="radio-${id}">${val}</label>`;
       html += '</div>';
     });
 
-    qs("div.div_validate_name").innerHTML = html;
+    qs(elm_fnd[1]).innerHTML = html;
   } else if (user.level == 4) {
-    // loadComponent(qs("div.component"), "hard.html");
+    //
   }
+}
 
-  qs("#button_validate_name").addEventListener("click", buttonValidateName);
+function valName() {
+  let ale_elm = qs(elm_fnd[1]);
+  let ans_elm = qs(elm_fnd[2]);
+  
+  userSession();
+  let score = 0;
+  if (!ans_elm.value) {
+    bsAlert("Mas nem respondeu o nome ainda?", "warning", ale_elm);
+  } else if (ans_elm.value.trim().toLowerCase() == pokes[pok_id]) {
+    bsAlert("Você acertou, parabéns!", "success", ale_elm);
+    score = 5;
+  } else {
+    bsAlert("Acho que você errrrooooooooooooou!!!", "danger", ale_elm);
+  }
+  
+  updateUser(user.addGame(user.level, pok_id, ans_elm.value, score));
+  
+  userCard();
+  if (ans_elm.value) {
+    getPoke();
+    ans_elm.value = "";
+  }
+  levelGen();
+}
+
+
+// 1 muito fácil 5 opções
+// 2 fácil com inicio e fim
+// 3 médio forca
+// 4 difícil digitar
+// 5 muito difícil imagem cortada
+
+loadComponent(qs("#level_inputs"), elm_fnd[0]);
+
+afterLoad(function() {
+  userCard();
+  getPoke();
+  levelGen();
+
+  qs("#btn_val_nam").addEventListener("click", valName);
   qsa("button.btn.btn-outline-primary").forEach(function(e) {
     e.addEventListener("click", function() {
-      alert(e.value);
+      user.level = e.value;
+      updateUser(user);
+      location.reload();
     });
   });
 });
