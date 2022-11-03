@@ -104,13 +104,13 @@ function decode(string, T) {
   return object;
 }
 
-function bsAlert(message, type, ele) {
+function bsAlert(message, type, ele, time = 5000) {
   qsa("div.alert").forEach(function(e) {e.remove();});
   let html = `<div class="alert alert-${type} alert-dismissible" role="alert"><div>${message}</div><button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>`;
   let div = document.createElement("div");
   div.innerHTML = html;
   ele.before(div);
-  setTimeout(function() {div.remove();}, 5000);
+  setTimeout(function() {div.remove();}, time);
 }
 
 function getTime(ms, format = "short") {

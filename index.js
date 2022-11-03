@@ -81,19 +81,20 @@ function valName() {
     bsAlert("Você acertou, parabéns!", "success", ale_elm);
     score = 5;
   } else {
-    bsAlert("Acho que você errrrooooooooooooou!!!", "danger", ale_elm);
+    bsAlert("Acho que você errrrooooooooooooou!!! O nome do personagem era \"" + pokes[pok_id][0].toUpperCase() + pokes[pok_id].substring(1) + "\"", "danger", ale_elm);
   }
   
   updateUser(user.addGame(user.level, pok_id, ans_elm.value, score));
   
-  userCard();
-  if (ans_elm.value) {
-    getPoke();
-    ans_elm.value = "";
-  }
-  levelGen();
+  setTimeout(function() {
+    userCard();
+    if (ans_elm.value) {
+      getPoke();
+      ans_elm.value = "";
+    }
+    levelGen();
+  }, 3000);
 }
-
 
 // 1 muito fácil 5 opções
 // 2 fácil com inicio e fim
