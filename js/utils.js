@@ -6,8 +6,12 @@ function qsa(arg) {
   return document.querySelectorAll(arg);
 }
 
+// necessário (acho) para controlar disparo do 
+// evento ao carregar todos os arquivos externos
 const event = new Event("onLoadComponent");
 var compLen = 0;
+
+// carrega html de arquivos externos
 function loadComponent(elm, url) {
   let xhr = new XMLHttpRequest();
   xhr.onload = function() {
@@ -24,6 +28,7 @@ function loadComponent(elm, url) {
   xhr.send();
 }
 
+// carrega todos
 function loadComponentAll() {
   qsa("[data-component]").forEach(function(e) {
     if (e.getAttribute("data-component")) {
@@ -32,6 +37,7 @@ function loadComponentAll() {
   });
 }
 
+// auxiliar para executar funções após carregar arquivos externos
 function afterLoad(f) {
   loadComponentAll();
   document.body.addEventListener("onLoadComponent", function() {
@@ -94,16 +100,19 @@ function delSession(key) {
   delCookie("session_" + key);
 }
 
+// converte objetos em json
 function encode(object) {
   return JSON.stringify(Object.entries(object));
 }
 
+// converte json em objeto de uma determinada classe
 function decode(string, T) {
   const object = new T();
   JSON.parse(string).map(([key, value]) => (object[key] = value));
   return object;
 }
 
+// cria div de mensagem acima de um elemento
 function bsAlert(message, type, ele, time = 5000) {
   qsa("div.alert").forEach(function(e) {e.remove();});
   let html = `<div class="alert alert-${type} alert-dismissible" role="alert"><div>${message}</div><button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>`;
@@ -113,20 +122,25 @@ function bsAlert(message, type, ele, time = 5000) {
   setTimeout(function() {div.remove();}, time);
 }
 
+// converte milissegundo em data hora
+// sort: 23/10 15:32
+// long: 23/10/2022 15:32:34
+// full: 23/10/2022 15:32:34:234
 function getTime(ms, format = "short") {
   let f = "";
   let d = new Date(ms);
   if (format == "short") {
-    f = `${d.getDate()}/${(d.getMonth() + 1).toString().padStart(2, "0")} ${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}`;
+    f = `${d.getDate().toString().padStart(2, "0")}/${(d.getMonth() + 1).toString().padStart(2, "0")} ${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}`;
   } else if (format == "long") {
-    f = `${d.getDate()}/${(d.getMonth() + 1).toString().padStart(2, "0")}/${d.getFullYear()} ${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}:${d.getSeconds()}`;
+    f = `${d.getDate()}/${(d.getMonth() + 1).toString().padStart(2, "0")}/${d.getFullYear()} ${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0").toString().padStart(2, "0")}:${d.getSeconds().toString().padStart(2, "0")}`;
   } else if (format == "full") {
-    f = `${d.getDate()}/${(d.getMonth() + 1).toString().padStart(2, "0")}/${d.getFullYear()} ${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}:${d.getSeconds()}:${d.getMilliseconds()}`;
+    f = `${d.getDate().toString().padStart(2, "0")}/${(d.getMonth() + 1).toString().padStart(2, "0")}/${d.getFullYear()} ${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}:${d.getSeconds().toString().padStart(2, "0")}:${d.getMilliseconds().toString().padStart(3, "0")}`;
   }
 
   return f;
 }
 
+// associa botão ao evento Enter do texto do atributo aria-describedby
 function enterPress() {
   qsa('button[aria-describedby]').forEach(function(e) {
     let inp = qs("#" + e.getAttribute("aria-describedby"));

@@ -1,4 +1,4 @@
-// import { getCookie, setCookieY, getSession, setSession, encode, decode } from "/js/utils.js";
+// import {*} as u from "/js/utils.js";
 
 class Game {
   constructor(level, pok_id, answer, score) {
@@ -29,24 +29,28 @@ class User {
   }
 }
 
+// texto em User
 function decodeUser(encoded) {
   let user = decode(encoded, User);
   user.games = user.games.map(game => decode(encode(game), Game));
   return user;
 }
 
+// array de textos de usuários
 function getUserArray() {
   let users = getCookie("users");
   if (!users) users = "[]";
   return decode(users, Array);
 }
 
+// usuários do cookie
 function getUsers() {
   let users = getUserArray()
   users = users.map(user => decodeUser(user));
   return users.sort((a, b) => b.update_at - a.update_at);
 }
 
+// cria ou procura usuário no cookie
 function setUser(name) {
   let users = getUserArray();
 
@@ -66,6 +70,13 @@ function setUser(name) {
   }
 }
 
+// usuário da sessão
+function getUser() {
+  let user = getSession("user");
+  if (user) return decodeUser(user);
+}
+
+// atualiza usuário no cookie
 function updateUser(user) {
   let users = getUserArray();
 

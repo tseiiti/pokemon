@@ -1,21 +1,20 @@
-// import {qs, afterLoad, getSession, bsAlert, getTime, randomBetween} from "/js/utils.js";
-// import {decodeUser, updateUser} from "/js/game.js";
+// import {*} as u from "/js/utils.js";
+// import {*} as g from "/js/game.js";
 
 var user, pok_id, elm_fnd, levels = [""];
 userSession();
 
 function userSession() {
-  user = getSession("user");
+  user = getUser();
   if (!user) {
     history.pushState(null, document.title, location.href);
     location.replace("/login.html");
   }
-  user = decodeUser(user);
   
   if (user.level == 1) {
-    elm_fnd = ["/comp/very_easy.html", "#div_val_nam", ".form-check-input:checked"];
+    elm_fnd = ["/comp/game_very_easy.html", "#div_val_nam", ".form-check-input:checked"];
   } else if (user.level == 4) {
-    elm_fnd = ["/comp/hard.html", "#div_val_nam", "#txt_val_nam"];
+    elm_fnd = ["/comp/game_hard.html", "#div_val_nam", "#txt_val_nam"];
   }
 }
 
@@ -117,6 +116,6 @@ afterLoad(function() {
   });
 
   userCard();
-  getPoke();
-  levelGen();
+  // getPoke();
+  // levelGen();
 });
