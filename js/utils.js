@@ -6,22 +6,13 @@ function qsa(arg) {
   return document.querySelectorAll(arg);
 }
 
-// necessário (acho) para controlar disparo do 
-// evento ao carregar todos os arquivos externos
-const event = new Event("onLoadComponent");
-var compLen = 0;
-
 // carrega html de arquivos externos
-function loadComponent(elm, url) {
+function render(elm, url, fun) {
   let xhr = new XMLHttpRequest();
   xhr.onload = function() {
     if (this.status === 200) {
       elm.innerHTML = xhr.responseText;
-      compLen++;
-      if (compLen === qsa("[data-component]").length) {
-        compLen = 0;
-        document.body.dispatchEvent(event);
-      }
+      if (fun) fun();
     }
   }
   xhr.open("GET", url, true);
@@ -29,21 +20,49 @@ function loadComponent(elm, url) {
 }
 
 // carrega todos
-function loadComponentAll() {
+function renderAll(fun) {
   qsa("[data-component]").forEach(function(e) {
     if (e.getAttribute("data-component")) {
-      loadComponent(e, e.getAttribute("data-component"));
+      render(e, e.getAttribute("data-component"), fun);
     }
   });
 }
 
-// auxiliar para executar funções após carregar arquivos externos
-function afterLoad(f) {
-  loadComponentAll();
-  document.body.addEventListener("onLoadComponent", function() {
-    f();
-    enterPress();
+// necessário (acho) para controlar disparo do 
+// evento ao carregar todos os arquivos externos
+const event = new Event("onRender");
+var compLen = 0;
 
+function afterLoad(fun) {
+  renderAll(function() {
+    compLen++;
+    if (compLen === qsa("[data-component]").length) fun();
+  });
+}
+
+// auxiliar para executar funções após carregar arquivos externos
+function afterLoadx(fun) {
+  qsa("[data-component]").forEach(function(e) {
+    if (e.getAttribute("data-component")) {
+      let xhr = new XMLHttpRequest();
+      xhr.onload = function() {
+        if (this.status === 200) {
+          e.innerHTML = xhr.responseText;
+          compLen++;
+          if (compLen === qsa("[data-component]").length) {
+            compLen = 0;
+            document.body.dispatchEvent(event);
+          }
+        }
+      }
+      xhr.open("GET", e.getAttribute("data-component"), true);
+      xhr.send();
+    }
+  });
+  
+  document.body.addEventListener("onRender", function() {
+    fun();
+    enterPress();
 
     qs("a.nav-link.link-sair").addEventListener("click", function() {
       delSession("user");
@@ -173,8 +192,8 @@ const pokes = ["*", "bulbasaur", "ivysaur", "venusaur", "charmander", "charmeleo
 // export {
 //   qs, 
 //   qsa, 
-//   loadComponent, 
-//   loadComponentAll, 
+//   render, 
+//   renderAll, 
 //   afterLoad
 //   setCookie, 
 //   setCookieY, 

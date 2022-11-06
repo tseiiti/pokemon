@@ -10,9 +10,7 @@ userSession();
 // 4 difícil digitar
 // 5 muito difícil imagem cortada
 
-elm_fnd[1] = [
-  "Muito Fácil", 
-  "/comp/game_very_easy.html", "#div_val_nam", ".form-check-input:checked", 1];
+elm_fnd[1] = ["Muito Fácil", "/comp/game_very_easy.html", "#div_val_nam", ".form-check-input:checked", 1];
 elm_fnd[2] = ["Fácil", "/comp/game_easy.html", "#div_val_nam", ".form-check-input:checked", 2];
 elm_fnd[3] = ["Médio", "/comp/game_medium.html", "#div_val_nam", ".form-check-input:checked", 3];
 elm_fnd[4] = ["Difícil", "/comp/game_hard.html", "#div_val_nam", "#txt_val_nam", 5];
@@ -59,7 +57,7 @@ function getPoke() {
 function levelChange() {
   user.level = this.value;
   updateUser(user);
-  loadComponent(qs("#level_inputs"), elm_fnd[user.level][1]);
+  render(qs("#level_inputs"), elm_fnd[user.level][1]);
   qs("#button_levels button.btn-primary").className = "btn btn-outline-primary";
   this.className = "btn btn-primary";
 }
@@ -92,6 +90,8 @@ function levelGen() {
   } else if (user.level == 5) {
     //
   }
+  
+  qs("#btn_val_nam").addEventListener("click", valName);
 }
 
 function valName() {
@@ -123,8 +123,12 @@ function valName() {
   }, 3000);
 }
 
+function teste() {
+  render(qs("#level_inputs"), "/comp/game_hard.html", function() { alert(9); });
+}
+
 afterLoad(function() {
-  qs("#btn_val_nam").addEventListener("click", valName);
+  qs("#btn_val_nam").addEventListener("click", teste);
 
   qsa("#button_levels button").forEach(function(e) {
     e.addEventListener("click", levelChange);
