@@ -96,6 +96,50 @@ function updateGame(user, game) {
   user.games.findLast() = game;
 }
 
+// 1 muito fácil 5 opções
+// 2 fácil com inicio e fim
+// 3 médio forca
+// 4 difícil digitar
+// 5 muito difícil imagem cortada
+
+const levels = [
+  {
+    id: 1, 
+    dsc: "Muito Fácil", 
+    url: "/comp/game_very_easy.html", 
+    sco: 1, 
+    elm: ["#div_val_nam", ".form-check-input:checked", ]
+  }, {
+    id: 2, 
+    dsc: "Fácil", 
+    url: "/comp/game_easy.html", 
+    sco: 2, 
+    elm: ["#div_val_nam", ".form-check-input:checked", ]
+  }, {
+    id: 3, 
+    dsc: "Médio", 
+    url: "/comp/game_medium.html", 
+    sco: 3, 
+    elm: ["#div_val_nam", ".form-check-input:checked", ]
+  }, {
+    id: 4, 
+    dsc: "Difícil", 
+    url: "/comp/game_hard.html", 
+    sco: 5, 
+    elm: ["#div_val_nam", "#txt_val_nam", ]
+  }, {
+    id: 5, 
+    dsc: "Muito Difícil", 
+    url: "/comp/game_very_hard.html", 
+    sco: 8, 
+    elm: ["#div_val_nam", ".form-check-input:checked", ]
+  }, 
+];
+
+function getLevel(id) {
+  return levels.find(function(e) {return e.id == id});
+}
+
 // export {
 //   Game, 
 //   User, 
