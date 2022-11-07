@@ -46,23 +46,25 @@ function userCard() {
   qs("#history_tbody").innerHTML = html;
 }
 
+function levelChange() {
+  user.level = this.value;
+  updateUser(user);
+  render(qs("#level_inputs"), "game_ready.html");
+  qs("#button_levels button.btn-primary").className = "btn btn-outline-primary";
+  this.className = "btn btn-primary";
+}
+
 function getPoke() {
   pok_id = randomBetween(1, 905);
   let img = qs("#poke_image");
   // img.src = `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${pok_id.toString().padStart(3, "0")}.png`;
   img.src = `/img/pokes/${pok_id.toString().padStart(3, "0")}.png`;
   img.alt = "créditos da imagem a pokemon.com";
-}
-
-function levelChange() {
-  user.level = this.value;
-  updateUser(user);
-  render(qs("#level_inputs"), elm_fnd[user.level][1]);
-  qs("#button_levels button.btn-primary").className = "btn btn-outline-primary";
-  this.className = "btn btn-primary";
+  updateUser(user.addGame(user.level, pok_id, "", 0));
 }
 
 function levelGen() {
+  getPoke();
   if (user.level == 1) {
     let ids = [];
     while(ids.length < 4) {
@@ -86,7 +88,7 @@ function levelGen() {
   } else if (user.level == 3) {
     //
   } else if (user.level == 4) {
-    //
+    qs(elm_fnd[user.level][3]).value = "";
   } else if (user.level == 5) {
     //
   }
@@ -95,8 +97,18 @@ function levelGen() {
 }
 
 function valName() {
-  let ale_elm = qs(elm_fnd[user.level][1]);
-  let ans_elm = qs(elm_fnd[user.level][2]);
+  let ale_elm = qs(elm_fnd[user.level][2]);
+  let ans_elm = qs(elm_fnd[user.level][3]);
+  
+  let i = user.games.length - 1;
+  let g = user.games[i];
+  
+  if ((new Date()).getTime() - g.create_at < 30000) {
+    g.answer = ans_elm.value;
+    g.score = score;
+    user.games[i] = g;
+    updateUser(user);
+  }
   
   userSession();
   let score = 0;
@@ -111,24 +123,18 @@ function valName() {
     bsAlert(msg, "danger", ale_elm);
   }
   
-  updateUser(user.addGame(user.level, pok_id, ans_elm.value, score));
-  
+  userCard();
   setTimeout(function() {
-    userCard();
-    if (ans_elm.value) {
-      getPoke();
-      ans_elm.value = "";
-    }
     levelGen();
   }, 3000);
 }
 
-function teste() {
-  render(qs("#level_inputs"), "/comp/game_hard.html", function() { alert(9); });
+function startGame() {
+  render(qs("#level_inputs"), elm_fnd[user.level][1], levelGen);
 }
 
 afterLoad(function() {
-  qs("#btn_val_nam").addEventListener("click", teste);
+  qs("#btn_val_nam").addEventListener("click", startGame);
 
   qsa("#button_levels button").forEach(function(e) {
     e.addEventListener("click", levelChange);

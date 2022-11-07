@@ -28,46 +28,23 @@ function renderAll(fun) {
   });
 }
 
-// necessário (acho) para controlar disparo do 
+// necessário para controlar disparo do 
 // evento ao carregar todos os arquivos externos
-const event = new Event("onRender");
 var compLen = 0;
 
 function afterLoad(fun) {
   renderAll(function() {
     compLen++;
-    if (compLen === qsa("[data-component]").length) fun();
-  });
-}
+    if (compLen === qsa("[data-component]").length) {
+      compLen = 0;
+      fun();
+      enterPress();
 
-// auxiliar para executar funções após carregar arquivos externos
-function afterLoadx(fun) {
-  qsa("[data-component]").forEach(function(e) {
-    if (e.getAttribute("data-component")) {
-      let xhr = new XMLHttpRequest();
-      xhr.onload = function() {
-        if (this.status === 200) {
-          e.innerHTML = xhr.responseText;
-          compLen++;
-          if (compLen === qsa("[data-component]").length) {
-            compLen = 0;
-            document.body.dispatchEvent(event);
-          }
-        }
-      }
-      xhr.open("GET", e.getAttribute("data-component"), true);
-      xhr.send();
+      qs("a.nav-link.link-sair").addEventListener("click", function() {
+        delSession("user");
+        location.replace("login.html");
+      });
     }
-  });
-  
-  document.body.addEventListener("onRender", function() {
-    fun();
-    enterPress();
-
-    qs("a.nav-link.link-sair").addEventListener("click", function() {
-      delSession("user");
-      location.replace("login.html");
-    });
   });
 }
 

@@ -92,7 +92,9 @@ function updateUser(user) {
   setCookieY("users", encode(users));
 }
 
-
+function updateGame(user, game) {
+  user.games.findLast() = game;
+}
 
 // export {
 //   Game, 
