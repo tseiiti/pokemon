@@ -45,6 +45,7 @@ function getPoke() {
   user.games.push(last_game);
   userCheck(user);
   
+  clearInterval(timer);
   let exp = last_game.create_at + level.tim * 1000;
   timer = setInterval(function() {
     let ms = exp - (new Date()).getTime();
@@ -53,7 +54,7 @@ function getPoke() {
       clearInterval(timer);
     }
     qs("#time_left").innerText = getTime(ms, "min");
-  }, 123);
+  }, 1000);
 }
 
 function levelGen() {

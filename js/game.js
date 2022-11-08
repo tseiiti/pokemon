@@ -126,14 +126,14 @@ const levels = [
     url: "/comp/game_easy.html", 
     sco: 2, 
     tim: 40, 
-    elm: ["#div_val_nam", ".form-check-input:checked"]
+    elm: ["#div_val_nam", ""]
   }, {
     id: 3, 
     dsc: "Médio", 
     url: "/comp/game_medium.html", 
     sco: 3, 
     tim: 20, 
-    elm: ["#div_val_nam", ".form-check-input:checked"]
+    elm: ["#div_val_nam", ""]
   }, {
     id: 4, 
     dsc: "Difícil", 
@@ -147,7 +147,7 @@ const levels = [
     url: "/comp/game_very_hard.html", 
     sco: 8, 
     tim: 10, 
-    elm: ["#div_val_nam", ".form-check-input:checked"]
+    elm: ["#div_val_nam", ""]
   }
 ];
 
