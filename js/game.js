@@ -92,6 +92,16 @@ function updateUser(user) {
   setCookieY("users", encode(users));
 }
 
+function userCheck(user) {
+  if (!user) {
+    if (pok_id) alert("Quem é você? Demorou tanto que o sistema te esqueceu...");
+    history.pushState(null, document.title, location.href);
+    location.replace("/login.html");
+  }
+  level = getLevel(user.level);
+  updateUser(user);
+}
+
 function updateGame(user, game) {
   user.games.findLast() = game;
 }
@@ -108,32 +118,37 @@ const levels = [
     dsc: "Muito Fácil", 
     url: "/comp/game_very_easy.html", 
     sco: 1, 
-    elm: ["#div_val_nam", ".form-check-input:checked", ]
+    tim: 60, 
+    elm: ["#div_val_nam", ".form-check-input:checked"]
   }, {
     id: 2, 
     dsc: "Fácil", 
     url: "/comp/game_easy.html", 
     sco: 2, 
-    elm: ["#div_val_nam", ".form-check-input:checked", ]
+    tim: 40, 
+    elm: ["#div_val_nam", ".form-check-input:checked"]
   }, {
     id: 3, 
     dsc: "Médio", 
     url: "/comp/game_medium.html", 
     sco: 3, 
-    elm: ["#div_val_nam", ".form-check-input:checked", ]
+    tim: 20, 
+    elm: ["#div_val_nam", ".form-check-input:checked"]
   }, {
     id: 4, 
     dsc: "Difícil", 
     url: "/comp/game_hard.html", 
     sco: 5, 
-    elm: ["#div_val_nam", "#txt_val_nam", ]
+    tim: 15, 
+    elm: ["#div_val_nam", "#txt_val_nam"]
   }, {
     id: 5, 
     dsc: "Muito Difícil", 
     url: "/comp/game_very_hard.html", 
     sco: 8, 
-    elm: ["#div_val_nam", ".form-check-input:checked", ]
-  }, 
+    tim: 10, 
+    elm: ["#div_val_nam", ".form-check-input:checked"]
+  }
 ];
 
 function getLevel(id) {

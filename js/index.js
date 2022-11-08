@@ -1,18 +1,8 @@
 // import {*} as u from "/js/utils.js";
 // import {*} as g from "/js/game.js";
 
-var user = getUser(), pok_id, level;
-userSession();
-
-function userSession() {
-  if (!user) {
-    if (pok_id) alert("Quem é você? Demorou tanto que o sistema te esqueceu...");
-    history.pushState(null, document.title, location.href);
-    location.replace("/login.html");
-  }
-  level = getLevel(user.level);
-  updateUser(user);
-}
+var user = getUser(), pok_id, level, last_game, timer;
+userCheck(user);
 
 function userCard() {
   qs("h4.card-header").innerText = user.name;
@@ -37,7 +27,7 @@ function userCard() {
 
 function levelChange() {
   user.level = this.value;
-  userSession();
+  userCheck(user);
   render(qs("#level_inputs"), "/comp/game_ready.html", function() {qs("#btn_val_nam").addEventListener("click", startGame);});
   qs("#button_levels button.btn-primary").className = "btn btn-outline-primary";
   this.className = "btn btn-primary";
@@ -51,8 +41,19 @@ function getPoke() {
   img.src = `/img/pokes/${pok_id.toString().padStart(3, "0")}.png`;
   img.alt = "créditos da imagem a pokemon.com";
   
-  user.addGame(user.level, pok_id, "", 0);
-  userSession();
+  last_game = new Game(user.level, pok_id, "", 0);
+  user.games.push(last_game);
+  userCheck(user);
+  
+  let exp = last_game.create_at + level.tim * 1000;
+  timer = setInterval(function() {
+    let ms = exp - (new Date()).getTime();
+    if (ms <= 0) {
+      qs("#time_left").innerText = getTime(0, "min");
+      clearInterval(timer);
+    }
+    qs("#time_left").innerText = getTime(ms, "min");
+  }, 123);
 }
 
 function levelGen() {
@@ -89,20 +90,15 @@ function levelGen() {
 }
 
 function valName() {
+  clearInterval(timer);
+  
   let ale_elm = qs(level.elm[0]);
   let ans_elm = qs(level.elm[1]);
+  let score = 0;
   
   let i = user.games.length - 1;
   let g = user.games[i];
   
-  if ((new Date()).getTime() - g.create_at < 30000) {
-    g.answer = ans_elm.value;
-    g.score = score;
-    user.games[i] = g;
-    userSession();
-  }
-  
-  let score = 0;
   if (!ans_elm.value) {
     bsAlert("Mas nem respondeu o nome ainda?", "warning", ale_elm);
   } else if (ans_elm.value.trim().toLowerCase() == pokes[pok_id]) {
@@ -112,6 +108,13 @@ function valName() {
     let msg = "Acho que você errrrooooooooooooou!!! O nome do personagem era \""
     msg += pokes[pok_id][0].toUpperCase() + pokes[pok_id].substring(1) + "\"";
     bsAlert(msg, "danger", ale_elm);
+  }
+  
+  if ((new Date()).getTime() - g.create_at < level.tim * 1000) {
+    g.answer = ans_elm.value;
+    g.score = score;
+    user.games[i] = g;
+    userCheck(user);
   }
   
   userCard();
