@@ -1,12 +1,23 @@
 // import {*} as u from "/js/utils.js";
 // import {*} as g from "/js/game.js";
 
-var user = getUser(), pok_id, level, last_game, timer;
-userCheck(user);
+var user, pok_id, last_game, timer;
+userCheck();
+
+function userCheck() {
+  user = getSession("user");
+  if (!user) {
+    if (pok_id) alert("Quem é você? Demorou tanto que o sistema te esqueceu...");
+    history.pushState(null, document.title, location.href);
+    location.replace("/login.html");
+  } else {
+    user = decodeUser(user);
+  }
+}
 
 function userCard() {
   qs("h4.card-header").innerText = user.name;
-  qs("h5.card-title").innerText = "Total de " + user.score + " pontos";
+  qs("h5.card-title").innerText = "Total de " + user.score() + " pontos";
   qs("h6.card-subtitle.mb-2.text-muted").innerText = "último acesso: " + getTime(user.update_at, "long");
   let games = user.games.sort((a, b) => b.create_at - a.create_at).slice(0, 30);
   let html = "";
@@ -26,9 +37,14 @@ function userCard() {
 }
 
 function levelChange() {
+  clearInterval(timer);
   user.level = this.value;
-  userCheck(user);
-  render(qs("#level_inputs"), "/comp/game_ready.html", function() {qs("#btn_val_nam").addEventListener("click", startGame);});
+  updateUser(user);
+
+  render(qs("#level_inputs"), "/comp/game_ready.html", function() {
+    qs("#btn_val_nam").addEventListener("click", startGame);
+  });
+
   qs("#button_levels button.btn-primary").className = "btn btn-outline-primary";
   this.className = "btn btn-primary";
   userCard();
@@ -43,22 +59,23 @@ function getPoke() {
   
   last_game = new Game(user.level, pok_id, "", 0);
   user.games.push(last_game);
-  userCheck(user);
+  updateUser(user);
   
+  let exp = last_game.create_at + getLevel().tim * 1000;
   clearInterval(timer);
-  let exp = last_game.create_at + level.tim * 1000;
   timer = setInterval(function() {
     let ms = exp - (new Date()).getTime();
     if (ms <= 0) {
-      qs("#time_left").innerText = getTime(0, "min");
       clearInterval(timer);
+      ms = 0;
     }
-    qs("#time_left").innerText = getTime(ms, "min");
+    if (qs("#time_left")) qs("#time_left").innerText = getTime(ms, "min");
   }, 1000);
 }
 
 function levelGen() {
   getPoke();
+
   if (user.level == 1) {
     let ids = [];
     while(ids.length < 4) {
@@ -82,7 +99,7 @@ function levelGen() {
   } else if (user.level == 3) {
     //
   } else if (user.level == 4) {
-    qs(level.elm[1]).value = "";
+    qs(getLevel().elm[1]).value = "";
   } else if (user.level == 5) {
     //
   }
@@ -93,8 +110,8 @@ function levelGen() {
 function valName() {
   clearInterval(timer);
   
-  let ale_elm = qs(level.elm[0]);
-  let ans_elm = qs(level.elm[1]);
+  let ale_elm = qs(getLevel().elm[0]);
+  let ans_elm = qs(getLevel().elm[1]);
   let score = 0;
   
   let i = user.games.length - 1;
@@ -104,28 +121,28 @@ function valName() {
     bsAlert("Mas nem respondeu o nome ainda?", "warning", ale_elm);
   } else if (ans_elm.value.trim().toLowerCase() == pokes[pok_id]) {
     bsAlert("Você acertou, parabéns!", "success", ale_elm);
-    score = level.sco;
+    score = getLevel().sco;
   } else {
     let msg = "Acho que você errrrooooooooooooou!!! O nome do personagem era \""
     msg += pokes[pok_id][0].toUpperCase() + pokes[pok_id].substring(1) + "\"";
     bsAlert(msg, "danger", ale_elm);
   }
   
-  if ((new Date()).getTime() - g.create_at < level.tim * 1000) {
+  if ((new Date()).getTime() - g.create_at < getLevel().tim * 1000) {
     g.answer = ans_elm.value;
     g.score = score;
     user.games[i] = g;
-    userCheck(user);
+    updateUser(user);
   }
-  
   userCard();
+  
   setTimeout(function() {
     levelGen();
   }, 3000);
 }
 
 function startGame() {
-  render(qs("#level_inputs"), level.url, levelGen);
+  render(qs("#level_inputs"), getLevel().url, levelGen);
 }
 
 afterLoad(function() {

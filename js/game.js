@@ -15,7 +15,6 @@ class User {
   constructor(name) {
     this.name = name;
     this.games = [];
-    this.score = 0;
     this.level = 4;
     this.create_at = (new Date()).getTime();
     this.update_at = (new Date()).getTime();
@@ -23,9 +22,14 @@ class User {
 
   addGame(level, pok_id, answer, score) {
     this.games.push(new Game(level, pok_id, answer, score));
-    this.score += score;
     this.update_at = (new Date()).getTime();
     return this;
+  }
+
+  score() {
+    let s = 0;
+    s = this.games.reduce((a, b) => {return a + b.score}, s);
+    return s;
   }
 }
 
@@ -82,6 +86,7 @@ function updateUser(user) {
 
   for (let i = 0; i < users.length; i++) {
     if (decodeUser(users[i]).name == user.name) {
+      user.update_at = (new Date()).getTime();
       let encoded = encode(user);
       setSession("user", encoded);
       users[i] = encoded;
@@ -92,25 +97,13 @@ function updateUser(user) {
   setCookieY("users", encode(users));
 }
 
-function userCheck(user) {
-  if (!user) {
-    if (pok_id) alert("Quem é você? Demorou tanto que o sistema te esqueceu...");
-    history.pushState(null, document.title, location.href);
-    location.replace("/login.html");
-  }
-  level = getLevel(user.level);
-  updateUser(user);
-}
+// function updateGame(user, game) {
+//   user.games.findLast() = game;
+// }
 
-function updateGame(user, game) {
-  user.games.findLast() = game;
+function getLevel(id = user.level) {
+  return levels.find(function(e) {return e.id == id});
 }
-
-// 1 muito fácil 5 opções
-// 2 fácil com inicio e fim
-// 3 médio forca
-// 4 difícil digitar
-// 5 muito difícil imagem cortada
 
 const levels = [
   {
@@ -151,9 +144,11 @@ const levels = [
   }
 ];
 
-function getLevel(id) {
-  return levels.find(function(e) {return e.id == id});
-}
+// 1 muito fácil 5 opções
+// 2 fácil com inicio e fim
+// 3 médio forca
+// 4 difícil digitar
+// 5 muito difícil imagem cortada
 
 // export {
 //   Game, 
