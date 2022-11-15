@@ -117,7 +117,7 @@ function valName() {
   let i = user.games.length - 1;
   let g = user.games[i];
   
-  if (!ans_elm.value) {
+  if (!ans_elm || !ans_elm.value) {
     bsAlert("Mas nem respondeu o nome ainda?", "warning", ale_elm);
   } else if (ans_elm.value.trim().toLowerCase() == pokes[pok_id]) {
     bsAlert("Você acertou, parabéns!", "success", ale_elm);
@@ -129,7 +129,7 @@ function valName() {
   }
   
   if ((new Date()).getTime() - g.create_at < getLevel().tim * 1000) {
-    g.answer = ans_elm.value;
+    g.answer = !ans_elm ? "" : ans_elm.value;
     g.score = score;
     user.games[i] = g;
     updateUser(user);

@@ -74,11 +74,11 @@ function setUser(name) {
   }
 }
 
-// usuário da sessão
-function getUser() {
-  let user = getSession("user");
-  if (user) return decodeUser(user);
-}
+// // usuário da sessão
+// function getUser() {
+//   let user = getSession("user");
+//   if (user) return decodeUser(user);
+// }
 
 // atualiza usuário no cookie
 function updateUser(user) {
