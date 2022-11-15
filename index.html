@@ -5,30 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Jogo Pokes do Yuyu</title>
     <link rel="icon" type="image/x-icon" href="/img/icon.ico">
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
   </head>
   <body>
-    <header class="bg-secondary bg-gradient shadow-lg mb-5" data-component="/comp/nav.html"></header>
+    <header class="bg-secondary bg-gradient shadow-lg mb-5" data-component="/comp/header.html"></header>
 
     <div class="container-lg">
       <main class="text-center mx-3">
-        <div class="row" data-component="/comp/btn_level.html"></div>
+        <div class="row" data-component="/comp/button_levels.html"></div>
         <div class="row" data-component="/comp/user_card.html"></div>
-        <div class="row">
-          <div class="col-md-6 mb-4">
-            <img class="img-thumbnail" width="700" height="700" id="poke_image" src="/img/gray.png" />
-          </div>
-          <div class="col-md-6 mb-4" id="level_inputs"data-component=""></div>
-        </div>
+        <div class="row" data-component="/comp/game_ready.html" id="level_inputs"></div>
       </main>
     </div>
 
     <footer class="bd-footer bg-light mt-5" data-component="/comp/footer.html"></footer>
     <!-- <div data-component="/comp/modal.html"></div> -->
-    <script src="/js/bootstrap.bundle.min.js"></script>
-    <script src="/js/utils.js"></script>
-    <script src="/js/game.js"></script>
-    <script src="/js/index.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="/js/utils.js"></script>
+    <script type="text/javascript" src="/js/game.js"></script>
+    <script type="text/javascript" src="/js/index.js"></script>
     <!-- <script type="module" src="index.js"></script> -->
   </body>
 </html>

@@ -1,5 +1,5 @@
-// import {qs, afterLoad, bsAlert, getTime} from "/js/utils.js";
-// import {setUser, getUsers, decodeUser} from "/js/game.js";
+// import {*} as u from "/js/utils.js";
+// import {*} as g from "/js/game.js";
 
 function buttonSetUser() {
   let name = qs("#usr_name");
