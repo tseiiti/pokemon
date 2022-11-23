@@ -39,11 +39,6 @@ function afterLoad(fun) {
       compLen = 0;
       fun();
       enterPress();
-
-      qs("a.nav-link.link-sair").addEventListener("click", function() {
-        delSession("user");
-        location.replace("login.html");
-      });
     }
   });
 }
@@ -119,7 +114,8 @@ function bsAlert(message, type, ele, time = 5000) {
 }
 
 // converte milissegundo em data hora
-// sort: 23/10 15:32
+// min: 32:34
+// short: 23/10 15:32
 // long: 23/10/2022 15:32:34
 // full: 23/10/2022 15:32:34:234
 function getTime(ms, format = "short") {
