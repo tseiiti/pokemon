@@ -19,9 +19,10 @@ function userCard() {
   qs("h4.card-header").innerText = user.name;
   qs("h5.card-title").innerText = "Total de " + user.score() + " pontos";
   qs("h6.card-subtitle.mb-2.text-muted").innerText = "último acesso: " + getTime(user.update_at, "long");
+  
+  // log games
   let games = user.games.sort((a, b) => b.create_at - a.create_at).slice(0, 30);
   let html = "";
-
   games.forEach(function(g) {
     html += `
       <tr>
@@ -38,15 +39,19 @@ function userCard() {
 
 function levelChange() {
   clearInterval(timer);
-  user.level = this.value;
-  updateUser(user);
+  
+  if (this.value) {
+    user.level = this.value;
+    updateUser(user);
+  }
 
   render(qs("#level_inputs"), "/comp/game_ready.html", function() {
-    qs("#btn_val_nam").addEventListener("click", startGame);
+    qs("#btn_start_game").addEventListener("click", startGame);
   });
 
-  qs("#button_levels button.btn-primary").className = "btn btn-outline-primary";
-  this.className = "btn btn-primary";
+  qs("#button_levels button.btn-primary").className = "btn btn-outline-primary"
+  qs(`[name=button_level_${user.level}]`).className = "btn btn-primary";
+  
   userCard();
 }
 
@@ -148,8 +153,7 @@ function startGame() {
 }
 
 afterLoad(function() {
-  qs("#btn_val_nam").addEventListener("click", startGame);
-
+  // botoes level
   qsa("#button_levels button").forEach(function(e) {
     e.addEventListener("click", levelChange);
     e.innerText = getLevel(e.value).dsc;
@@ -158,8 +162,18 @@ afterLoad(function() {
 
   userCard();
 
+  qs("#btn_start_game").addEventListener("click", startGame);
+
+  // botoes de navegacao
   qs("a.nav-link.link-sair").addEventListener("click", function() {
     delSession("user");
     location.replace("login.html");
   });
 });
+
+// a cada fim de jogo mostrar tela read
+// reduzir getTime
+// trocar btn_val_nam
+// trocar button_set_usr
+// padronizar elemento id de componentes
+// trocar ids repetidos por name

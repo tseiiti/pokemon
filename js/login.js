@@ -12,8 +12,8 @@ function buttonSetUser() {
 }
 
 afterLoad(function() {
+  // lista de usuarios
   let users = getUsers();
-
   let html = "";
   users.map(user => {
     html += `<option value="${user.name}">${user.name} (${getTime(user.update_at)})</option>`;
@@ -22,6 +22,7 @@ afterLoad(function() {
 
   qs("#button_set_usr").addEventListener("click", buttonSetUser);
 
+  // botoes de navegacao
   qs("a.nav-link.link-sair").addEventListener("click", function() {
     clearCookies();
     location.reload();

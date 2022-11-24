@@ -15,7 +15,7 @@ class User {
   constructor(name) {
     this.name = name;
     this.games = [];
-    this.level = 4;
+    this.level = 1;
     this.create_at = (new Date()).getTime();
     this.update_at = (new Date()).getTime();
   }
