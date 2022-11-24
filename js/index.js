@@ -143,9 +143,13 @@ function valName() {
   }
   
   userCard();
-  setTimeout(function() {
-    levelGen();
-  }, 3000);
+  // setTimeout(function() {
+  //   levelGen();
+  // }, 3000);
+  
+  render(qs("#level_inputs"), "/comp/game_result.html", function() {
+    qs("#btn_start_game").addEventListener("click", startGame);
+  });
 }
 
 function startGame() {
@@ -177,3 +181,5 @@ afterLoad(function() {
 // trocar button_set_usr
 // padronizar elemento id de componentes
 // trocar ids repetidos por name
+// colocar level no game_ready
+// traduzir nomes https://vinizinho.net/projects/bolsodex/ ou https://bloguruk.wordpress.com/2017/02/16/como-seriam-os-nomes-dos-pokemon-traduzidos-para-o-portugues/
