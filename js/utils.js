@@ -119,18 +119,25 @@ function bsAlert(message, type, ele, time = 5000) {
 // long: 23/10/2022 15:32:34
 // full: 23/10/2022 15:32:34:234
 function getTime(ms, format = "short") {
-  let f = "";
   let d = new Date(ms);
+  let dd = d.getDate().toString().padStart(2, "0");
+  let mm = (d.getMonth() + 1).toString().padStart(2, "0");
+  let yy = d.getFullYear();
+  let h = d.getHours().toString().padStart(2, "0");
+  let m = d.getMinutes().toString().padStart(2, "0");
+  let s = d.getSeconds().toString().padStart(2, "0");
+  let l = d.getMilliseconds().toString().padStart(3, "0");
+  
+  let f = "";
   if (format == "min") {
-    f = `${d.getMinutes().toString().padStart(2, "0")}:${d.getSeconds().toString().padStart(2, "0")}`;
+    f = `${m}:${s}`;
   } else if (format == "short") {
-    f = `${d.getDate().toString().padStart(2, "0")}/${(d.getMonth() + 1).toString().padStart(2, "0")} ${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}`;
+    f = `${dd}/${mm} ${h}:${m}`;
   } else if (format == "long") {
-    f = `${d.getDate()}/${(d.getMonth() + 1).toString().padStart(2, "0")}/${d.getFullYear()} ${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0").toString().padStart(2, "0")}:${d.getSeconds().toString().padStart(2, "0")}`;
+    f = `${dd}/${mm}/${yy} ${h}:${m}:${s}`;
   } else if (format == "full") {
-    f = `${d.getDate().toString().padStart(2, "0")}/${(d.getMonth() + 1).toString().padStart(2, "0")}/${d.getFullYear()} ${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}:${d.getSeconds().toString().padStart(2, "0")}:${d.getMilliseconds().toString().padStart(3, "0")}`;
+    f = `${dd}/${mm}/${yy} ${h}:${m}:${s}:${l}`;
   }
-
   return f;
 }
 

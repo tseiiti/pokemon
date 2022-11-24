@@ -176,7 +176,6 @@ afterLoad(function() {
 });
 
 // a cada fim de jogo mostrar tela read
-// reduzir getTime
 // trocar btn_val_nam
 // trocar button_set_usr
 // padronizar elemento id de componentes
