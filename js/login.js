@@ -23,7 +23,7 @@ afterLoad(function() {
   qs("#button_set_usr").addEventListener("click", buttonSetUser);
 
   // botoes de navegacao
-  qs("a.nav-link.link-sair").addEventListener("click", function() {
+  qs("nav a.link-sair").addEventListener("click", function() {
     clearCookies();
     location.reload();
   });

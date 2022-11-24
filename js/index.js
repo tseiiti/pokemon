@@ -34,7 +34,7 @@ function userCard() {
         <td>${!g.answer ? "-" : g.score == 0 ? "errou" : g.score}</td>
       </tr>`
   });
-  qs("#history_tbody").innerHTML = html;
+  qs("#tbody_logs").innerHTML = html;
 }
 
 function levelChange() {
@@ -45,11 +45,11 @@ function levelChange() {
     updateUser(user);
   }
 
-  render(qs("#level_inputs"), "/comp/game_ready.html", function() {
+  render(qs("#div_comp_game"), "/comp/game_ready.html", function() {
     qs("#btn_start_game").addEventListener("click", startGame);
   });
 
-  qs("#button_levels button.btn-primary").className = "btn btn-outline-primary"
+  qs("#div_btn_level button.btn-primary").className = "btn btn-outline-primary"
   qs(`[name=button_level_${user.level}]`).className = "btn btn-primary";
   
   userCard();
@@ -147,18 +147,18 @@ function valName() {
   //   levelGen();
   // }, 3000);
   
-  render(qs("#level_inputs"), "/comp/game_result.html", function() {
+  render(qs("#div_comp_game"), "/comp/game_result.html", function() {
     qs("#btn_start_game").addEventListener("click", startGame);
   });
 }
 
 function startGame() {
-  render(qs("#level_inputs"), getLevel().url, levelGen);
+  render(qs("#div_comp_game"), getLevel().url, levelGen);
 }
 
 afterLoad(function() {
   // botoes level
-  qsa("#button_levels button").forEach(function(e) {
+  qsa("#div_btn_level button").forEach(function(e) {
     e.addEventListener("click", levelChange);
     e.innerText = getLevel(e.value).dsc;
   });
@@ -169,16 +169,8 @@ afterLoad(function() {
   qs("#btn_start_game").addEventListener("click", startGame);
 
   // botoes de navegacao
-  qs("a.nav-link.link-sair").addEventListener("click", function() {
+  qs("nav a.link-sair").addEventListener("click", function() {
     delSession("user");
     location.replace("login.html");
   });
 });
-
-// a cada fim de jogo mostrar tela read
-// trocar btn_val_nam
-// trocar button_set_usr
-// padronizar elemento id de componentes
-// trocar ids repetidos por name
-// colocar level no game_ready
-// traduzir nomes https://vinizinho.net/projects/bolsodex/ ou https://bloguruk.wordpress.com/2017/02/16/como-seriam-os-nomes-dos-pokemon-traduzidos-para-o-portugues/
