@@ -121,21 +121,29 @@ function valName() {
   let i = user.games.length - 1;
   let g = user.games[i];
   
+  let res; let msg; let tip;
   if ((new Date()).getTime() - g.create_at > getLevel().tim * 1000) {
-    bsAlert("Você foi mais rápido que uma lesma...", "danger", ale_elm);
+    res = "t";
+    msg = "Você foi mais rápido que uma lesma...";
+    tip = "danger";
   } else if (!ans_elm || !ans_elm.value) {
-    bsAlert("Mas nem respondeu o nome ainda?", "warning", ale_elm);
+    res = "b";
+    msg = "Mas nem respondeu o nome ainda?";
+    tip = "warning";
   } else if (ans_elm.value.trim().toLowerCase() == pokes[pok_id]) {
-    bsAlert("Você acertou, parabéns!", "success", ale_elm);
+    res = "c";
+    msg = "Você acertou, parabéns!";
+    tip = "success";
     
     g.answer = ans_elm.value;
     g.score = getLevel().sco;
     user.games[i] = g;
     updateUser(user);
   } else {
-    let msg = "Acho que você errrrooooooooooooou!!! O nome do personagem era \""
+    res = "e";
+    msg = "Acho que você errrrooooooooooooou!!! O nome do personagem era \"";
     msg += pokes[pok_id][0].toUpperCase() + pokes[pok_id].substring(1) + "\"";
-    bsAlert(msg, "danger", ale_elm);
+    tip = "danger";
     
     g.answer = ans_elm.value;
     user.games[i] = g;
@@ -148,6 +156,7 @@ function valName() {
   // }, 3000);
   
   render(qs("#div_comp_game"), "/comp/game_result.html", function() {
+    alert(tip);
     qs("#btn_start_game").addEventListener("click", startGame);
   });
 }
@@ -165,7 +174,6 @@ afterLoad(function() {
   qs(`[name=button_level_${user.level}]`).className = "btn btn-primary";
 
   userCard();
-
   qs("#btn_start_game").addEventListener("click", startGame);
 
   // botoes de navegacao
