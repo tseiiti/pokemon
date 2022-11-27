@@ -45,14 +45,11 @@ function levelChange() {
     updateUser(user);
   }
 
-  render(qs("#div_comp_game"), "/comp/game_ready.html", function() {
-    qs("#btn_start_game").addEventListener("click", startGame);
-  });
+  endGame();
+  userCard();
 
   qs("#div_btn_level button.btn-primary").className = "btn btn-outline-primary"
   qs(`[name=button_level_${user.level}]`).className = "btn btn-primary";
-  
-  userCard();
 }
 
 function getPoke() {
@@ -114,55 +111,49 @@ function levelGen() {
 
 function valName() {
   clearInterval(timer);
-  
-  let ale_elm = qs(getLevel().elm[0]);
   let ans_elm = qs(getLevel().elm[1]);
+  let g = user.games.pop();
+  let msg; let typ;
   
-  let i = user.games.length - 1;
-  let g = user.games[i];
-  
-  let res; let msg; let tip;
   if ((new Date()).getTime() - g.create_at > getLevel().tim * 1000) {
-    res = "t";
-    msg = "Você foi mais rápido que uma lesma...";
-    tip = "danger";
+    typ = "secondary";
+    msg = "Você foi mais rápido que uma lesma... Acho que não foi a tempo";
   } else if (!ans_elm || !ans_elm.value) {
-    res = "b";
     msg = "Mas nem respondeu o nome ainda?";
-    tip = "warning";
+    typ = "warning";
   } else if (ans_elm.value.trim().toLowerCase() == pokes[pok_id]) {
-    res = "c";
+    typ = "success";
     msg = "Você acertou, parabéns!";
-    tip = "success";
     
     g.answer = ans_elm.value;
     g.score = getLevel().sco;
-    user.games[i] = g;
-    updateUser(user);
   } else {
-    res = "e";
+    typ = "danger";
     msg = "Acho que você errrrooooooooooooou!!! O nome do personagem era \"";
     msg += pokes[pok_id][0].toUpperCase() + pokes[pok_id].substring(1) + "\"";
-    tip = "danger";
     
     g.answer = ans_elm.value;
-    user.games[i] = g;
-    updateUser(user);
   }
-  
+  updateUser(user.games.push(g));
   userCard();
-  // setTimeout(function() {
-  //   levelGen();
-  // }, 3000);
-  
+
   render(qs("#div_comp_game"), "/comp/game_result.html", function() {
-    alert(tip);
+    qs("#div_alert").className += ` alert-${typ}`;
+    qs("#div_alert").innerText = msg;
+    qs("#p_fw_lighter").innerText = "Vamos jogar novamente?";
+    qs("#btn_end_game").addEventListener("click", endGame);
     qs("#btn_start_game").addEventListener("click", startGame);
   });
 }
 
 function startGame() {
   render(qs("#div_comp_game"), getLevel().url, levelGen);
+}
+
+function endGame() {
+  render(qs("#div_comp_game"), "/comp/game_ready.html", function() {
+    qs("#btn_start_game").addEventListener("click", startGame);
+  });
 }
 
 afterLoad(function() {

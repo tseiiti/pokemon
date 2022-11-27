@@ -12,7 +12,7 @@ function render(elm, url, fun) {
   xhr.onload = function() {
     if (this.status === 200) {
       elm.innerHTML = xhr.responseText;
-      if (fun) fun();
+      if (fun) setTimeout(fun(), 10);
     }
   }
   xhr.open("GET", url, true);
@@ -120,13 +120,13 @@ function bsAlert(message, type, ele, time = 5000) {
 // full: 23/10/2022 15:32:34:234
 function getTime(ms, format = "short") {
   let d = new Date(ms);
-  let dd = d.getDate().toString().padStart(2, "0");
-  let mm = (d.getMonth() + 1).toString().padStart(2, "0");
+  let dd = pLeft(d.getDate());
+  let mm = pLeft(d.getMonth() + 1);
   let yy = d.getFullYear();
-  let h = d.getHours().toString().padStart(2, "0");
-  let m = d.getMinutes().toString().padStart(2, "0");
-  let s = d.getSeconds().toString().padStart(2, "0");
-  let l = d.getMilliseconds().toString().padStart(3, "0");
+  let h = pLeft(d.getHours());
+  let m = pLeft(d.getMinutes());
+  let s = pLeft(d.getSeconds());
+  let l = pLeft(d.getMilliseconds(), 3);
   
   let f = "";
   if (format == "min") {
@@ -139,6 +139,10 @@ function getTime(ms, format = "short") {
     f = `${dd}/${mm}/${yy} ${h}:${m}:${s}:${l}`;
   }
   return f;
+}
+
+function pLeft(n, len = 2) {
+  return n.toString().padStart(len, "0");
 }
 
 // associa botão ao evento Enter do texto do atributo aria-describedby
