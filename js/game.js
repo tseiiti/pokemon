@@ -15,7 +15,7 @@ class User {
   constructor(name) {
     this.name = name;
     this.games = [];
-    this.level = 4;
+    this.level = 1;
     this.create_at = (new Date()).getTime();
     this.update_at = (new Date()).getTime();
   }
@@ -74,11 +74,11 @@ function setUser(name) {
   }
 }
 
-// usuário da sessão
-function getUser() {
-  let user = getSession("user");
-  if (user) return decodeUser(user);
-}
+// // usuário da sessão
+// function getUser() {
+//   let user = getSession("user");
+//   if (user) return decodeUser(user);
+// }
 
 // atualiza usuário no cookie
 function updateUser(user) {

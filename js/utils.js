@@ -12,7 +12,7 @@ function render(elm, url, fun) {
   xhr.onload = function() {
     if (this.status === 200) {
       elm.innerHTML = xhr.responseText;
-      if (fun) fun();
+      if (fun) setTimeout(fun(), 10);
     }
   }
   xhr.open("GET", url, true);
@@ -39,11 +39,6 @@ function afterLoad(fun) {
       compLen = 0;
       fun();
       enterPress();
-
-      qs("a.nav-link.link-sair").addEventListener("click", function() {
-        delSession("user");
-        location.replace("login.html");
-      });
     }
   });
 }
@@ -119,23 +114,35 @@ function bsAlert(message, type, ele, time = 5000) {
 }
 
 // converte milissegundo em data hora
-// sort: 23/10 15:32
+// min: 32:34
+// short: 23/10 15:32
 // long: 23/10/2022 15:32:34
 // full: 23/10/2022 15:32:34:234
 function getTime(ms, format = "short") {
-  let f = "";
   let d = new Date(ms);
+  let dd = pLeft(d.getDate());
+  let mm = pLeft(d.getMonth() + 1);
+  let yy = d.getFullYear();
+  let h = pLeft(d.getHours());
+  let m = pLeft(d.getMinutes());
+  let s = pLeft(d.getSeconds());
+  let l = pLeft(d.getMilliseconds(), 3);
+  
+  let f = "";
   if (format == "min") {
-    f = `${d.getMinutes().toString().padStart(2, "0")}:${d.getSeconds().toString().padStart(2, "0")}`;
+    f = `${m}:${s}`;
   } else if (format == "short") {
-    f = `${d.getDate().toString().padStart(2, "0")}/${(d.getMonth() + 1).toString().padStart(2, "0")} ${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}`;
+    f = `${dd}/${mm} ${h}:${m}`;
   } else if (format == "long") {
-    f = `${d.getDate()}/${(d.getMonth() + 1).toString().padStart(2, "0")}/${d.getFullYear()} ${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0").toString().padStart(2, "0")}:${d.getSeconds().toString().padStart(2, "0")}`;
+    f = `${dd}/${mm}/${yy} ${h}:${m}:${s}`;
   } else if (format == "full") {
-    f = `${d.getDate().toString().padStart(2, "0")}/${(d.getMonth() + 1).toString().padStart(2, "0")}/${d.getFullYear()} ${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}:${d.getSeconds().toString().padStart(2, "0")}:${d.getMilliseconds().toString().padStart(3, "0")}`;
+    f = `${dd}/${mm}/${yy} ${h}:${m}:${s}:${l}`;
   }
-
   return f;
+}
+
+function pLeft(n, len = 2) {
+  return n.toString().padStart(len, "0");
 }
 
 // associa botão ao evento Enter do texto do atributo aria-describedby

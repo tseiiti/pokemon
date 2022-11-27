@@ -19,9 +19,10 @@ function userCard() {
   qs("h4.card-header").innerText = user.name;
   qs("h5.card-title").innerText = "Total de " + user.score() + " pontos";
   qs("h6.card-subtitle.mb-2.text-muted").innerText = "último acesso: " + getTime(user.update_at, "long");
+  
+  // log games
   let games = user.games.sort((a, b) => b.create_at - a.create_at).slice(0, 30);
   let html = "";
-
   games.forEach(function(g) {
     html += `
       <tr>
@@ -33,21 +34,22 @@ function userCard() {
         <td>${!g.answer ? "-" : g.score == 0 ? "errou" : g.score}</td>
       </tr>`
   });
-  qs("#history_tbody").innerHTML = html;
+  qs("#tbody_logs").innerHTML = html;
 }
 
 function levelChange() {
   clearInterval(timer);
-  user.level = this.value;
-  updateUser(user);
+  
+  if (this.value) {
+    user.level = this.value;
+    updateUser(user);
+  }
 
-  render(qs("#level_inputs"), "/comp/game_ready.html", function() {
-    qs("#btn_val_nam").addEventListener("click", startGame);
-  });
-
-  qs("#button_levels button.btn-primary").className = "btn btn-outline-primary";
-  this.className = "btn btn-primary";
+  endGame();
   userCard();
+
+  qs("#div_btn_level button.btn-primary").className = "btn btn-outline-primary"
+  qs(`[name=button_level_${user.level}]`).className = "btn btn-primary";
 }
 
 function getPoke() {
@@ -109,50 +111,65 @@ function levelGen() {
 
 function valName() {
   clearInterval(timer);
-  
-  let ale_elm = qs(getLevel().elm[0]);
   let ans_elm = qs(getLevel().elm[1]);
-  let score = 0;
+  let g = user.games.pop();
+  let msg; let typ;
   
-  let i = user.games.length - 1;
-  let g = user.games[i];
-  
-  if (!ans_elm.value) {
-    bsAlert("Mas nem respondeu o nome ainda?", "warning", ale_elm);
+  if ((new Date()).getTime() - g.create_at > getLevel().tim * 1000) {
+    typ = "secondary";
+    msg = "Você foi mais rápido que uma lesma... Acho que não foi a tempo";
+  } else if (!ans_elm || !ans_elm.value) {
+    msg = "Mas nem respondeu o nome ainda?";
+    typ = "warning";
   } else if (ans_elm.value.trim().toLowerCase() == pokes[pok_id]) {
-    bsAlert("Você acertou, parabéns!", "success", ale_elm);
-    score = getLevel().sco;
-  } else {
-    let msg = "Acho que você errrrooooooooooooou!!! O nome do personagem era \""
-    msg += pokes[pok_id][0].toUpperCase() + pokes[pok_id].substring(1) + "\"";
-    bsAlert(msg, "danger", ale_elm);
-  }
-  
-  if ((new Date()).getTime() - g.create_at < getLevel().tim * 1000) {
+    typ = "success";
+    msg = "Você acertou, parabéns!";
+    
     g.answer = ans_elm.value;
-    g.score = score;
-    user.games[i] = g;
-    updateUser(user);
+    g.score = getLevel().sco;
+  } else {
+    typ = "danger";
+    msg = "Acho que você errrrooooooooooooou!!! O nome do personagem era \"";
+    msg += pokes[pok_id][0].toUpperCase() + pokes[pok_id].substring(1) + "\"";
+    
+    g.answer = ans_elm.value;
   }
+  updateUser(user.games.push(g));
   userCard();
-  
-  setTimeout(function() {
-    levelGen();
-  }, 3000);
+
+  render(qs("#div_comp_game"), "/comp/game_result.html", function() {
+    qs("#div_alert").className += ` alert-${typ}`;
+    qs("#div_alert").innerText = msg;
+    qs("#p_fw_lighter").innerText = "Vamos jogar novamente?";
+    qs("#btn_end_game").addEventListener("click", endGame);
+    qs("#btn_start_game").addEventListener("click", startGame);
+  });
 }
 
 function startGame() {
-  render(qs("#level_inputs"), getLevel().url, levelGen);
+  render(qs("#div_comp_game"), getLevel().url, levelGen);
+}
+
+function endGame() {
+  render(qs("#div_comp_game"), "/comp/game_ready.html", function() {
+    qs("#btn_start_game").addEventListener("click", startGame);
+  });
 }
 
 afterLoad(function() {
-  qs("#btn_val_nam").addEventListener("click", startGame);
-
-  qsa("#button_levels button").forEach(function(e) {
+  // botoes level
+  qsa("#div_btn_level button").forEach(function(e) {
     e.addEventListener("click", levelChange);
     e.innerText = getLevel(e.value).dsc;
   });
   qs(`[name=button_level_${user.level}]`).className = "btn btn-primary";
 
   userCard();
+  qs("#btn_start_game").addEventListener("click", startGame);
+
+  // botoes de navegacao
+  qs("nav a.link-sair").addEventListener("click", function() {
+    delSession("user");
+    location.replace("login.html");
+  });
 });

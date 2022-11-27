@@ -12,8 +12,8 @@ function buttonSetUser() {
 }
 
 afterLoad(function() {
+  // lista de usuarios
   let users = getUsers();
-
   let html = "";
   users.map(user => {
     html += `<option value="${user.name}">${user.name} (${getTime(user.update_at)})</option>`;
@@ -21,4 +21,10 @@ afterLoad(function() {
   qs("#usr_name_list").innerHTML += html;
 
   qs("#button_set_usr").addEventListener("click", buttonSetUser);
+
+  // botoes de navegacao
+  qs("nav a.link-sair").addEventListener("click", function() {
+    clearCookies();
+    location.reload();
+  });
 });
