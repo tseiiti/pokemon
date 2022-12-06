@@ -1,6 +1,6 @@
 // import {*} as u from "/js/utils.js";
 // import {*} as g from "/js/game.js";
-
+// location.replace("/sudoku.html");
 var user, pok_id, last_game, timer;
 userCheck();
 
