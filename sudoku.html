@@ -6,24 +6,32 @@
     <title>Jogo Pokes do Yuyu</title>
     <link rel="icon" type="image/x-icon" href="/img/icon.ico">
     <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <style>
+      * {
+        margin: 0px;
+        padding: 0px;
+      }
+    </style>
   </head>
   <body>
     <header class="bg-secondary bg-gradient shadow-lg mb-5" data-component="/comp/header.html"></header>
 
     <div class="container-lg">
       <main class="text-center mx-3">
-        <div class="row" data-component="/comp/level_buttons.html"></div>
-        <div class="row" data-component="/comp/user_card.html"></div>
-        <div class="row" id="div_comp_game"></div>
+        <div class="m-0 p-0" id="div_teste"></div>
+
+        <button class="btn btn-primary" id="btn_teste_1" type="button">Teste 1</button>
+        <button class="btn btn-primary" id="btn_teste_2" type="button">Teste 2</button>
+        <button class="btn btn-primary" id="btn_teste_3" type="button">Teste 3</button>
+        <button class="btn btn-primary" id="btn_teste_4" type="button">Teste 4</button>
+        
+        <div id="div_console"></div>
+        
       </main>
     </div>
 
-    <footer class="bd-footer bg-light mt-5" data-component="/comp/footer.html"></footer>
-    <!-- <div data-component="/comp/modal.html"></div> -->
     <script type="text/javascript" src="/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="/js/utils.js"></script>
-    <script type="text/javascript" src="/js/game.js"></script>
-    <script type="text/javascript" src="/js/index.js"></script>
-    <!-- <script type="module" src="index.js"></script> -->
+    <script type="text/javascript" src="/js/sudoku.js"></script>
   </body>
 </html>

@@ -133,6 +133,8 @@ function getTime(ms, format = "short") {
     f = `${m}:${s}`;
   } else if (format == "short") {
     f = `${dd}/${mm} ${h}:${m}`;
+  } else if (format == "mill") {
+    f = `${h}:${m}:${s}:${l}`;
   } else if (format == "long") {
     f = `${dd}/${mm}/${yy} ${h}:${m}:${s}`;
   } else if (format == "full") {

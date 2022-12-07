@@ -1,6 +1,6 @@
 // import {*} as u from "/js/utils.js";
 // import {*} as g from "/js/game.js";
-
+// location.replace("/sudoku.html");
 var user, pok_id, last_game, timer;
 userCheck();
 
@@ -75,10 +75,7 @@ function getPoke() {
   }, 1000);
 }
 
-function levelGen() {
-  getPoke();
-
-  if (user.level == 1) {
+function gameVeryEasy() {
     let ids = [];
     while(ids.length < 4) {
       let id = randomBetween(1, 905);
@@ -96,8 +93,27 @@ function levelGen() {
     });
 
     qs("#div_val_nam").innerHTML = html;
+}
+
+function gameEasy() {
+    let str = pokes[pok_id];
+    let html = `<label name="txt_val_nam" for="txt_val_nam" value="${str[0]}">${str[0]}</label>`;
+    for (let i = 1; i < str.length - 1; i++) {
+      html += `<input name="txt_val_nam" type="text" minlength="1" maxlength="1" size="1" pattern="{1}" style="width: 20px; text-align:center;">`;
+    }
+    html += `<label name="txt_val_nam" for="txt_val_nam" value="${str.substr(-1)}">${str.substr(-1)}</label>`;
+    qs("#div_val_nam").innerHTML = html;
+    c(str)
+    //qsa("[name=txt_val_nam]").forEach(function(e) {c(e.value);});
+}
+
+function levelGen() {
+  getPoke();
+
+  if (user.level == 1) {
+    gameVeryEasy();
   } else if (user.level == 2) {
-    //
+    gameEasy();
   } else if (user.level == 3) {
     //
   } else if (user.level == 4) {
@@ -165,8 +181,8 @@ afterLoad(function() {
   qs(`[name=button_level_${user.level}]`).className = "btn btn-primary";
 
   userCard();
-  qs("#btn_start_game").addEventListener("click", startGame);
-
+  endGame();
+  
   // botoes de navegacao
   qs("nav a.link-sair").addEventListener("click", function() {
     delSession("user");
