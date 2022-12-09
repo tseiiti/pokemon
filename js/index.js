@@ -183,9 +183,5 @@ afterLoad(function() {
   userCard();
   endGame();
   
-  // botoes de navegacao
-  qs("nav a.link-sair").addEventListener("click", function() {
-    delSession("user");
-    location.replace("login.html");
-  });
+  qs("nav a.link-login").innerText = "Sair";
 });

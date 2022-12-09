@@ -1,12 +1,6 @@
 function celula(html, id_t, id_c, id_y, id_x) {
   html += `<div class="col-4 border p-0">`;
   
-  // html += `<div class="row m-0 p-0">`;
-  // html += `<label class="" style="width: 12px; line-height: 10px; font-size: 10px;">${id_t}</label>`;
-  // html += `<label class="" style="width: 12px; line-height: 10px; font-size: 10px;">${id_y}</label>`;
-  // html += `<label class="" style="width: 12px; line-height: 10px; font-size: 10px;">${id_x}</label>`;
-  // html += `</div>`;
-  
   // respostas
   html += `<div style="line-height: 10px; font-size: 9px;">`;
   for(let i = 0; i < 9; i++) {
@@ -177,19 +171,22 @@ function btnTeste4() {
   });
 }
 
-grid();
-oneNumber();
 
-qs("#btn_teste_1").addEventListener("click", btnTeste1);
-qs("#btn_teste_2").addEventListener("click", btnTeste2);
-qs("#btn_teste_3").addEventListener("click", btnTeste3);
-qs("#btn_teste_4").addEventListener("click", btnTeste4);
-
-
-// let x = [[1, 4, 3], [1, 6, 8], [1, 7, 5], [1, 8, 9], [3, 1, 5], [3, 4, 1], [3, 6, 7], [3, 7, 6], [3, 8, 8], [3, 9, 4], [4, 3, 1], [4, 4, 6], [4, 7, 4], [5, 1, 8], [5, 2, 4], [5, 6, 5], [5, 8, 3], [6, 3, 3], [6, 6, 8], [6, 8, 1], [7, 2, 4], [8, 7, 7], [8, 8, 2], [8, 9, 9], [9, 1, 7], [9, 3, 1], [9, 5, 6], [9, 6, 9], [9, 8, 4],];
-
-// x.forEach(function(a) {
-//   qs(`input.tabela_${a[0]}.celula_${a[1]}`).value = a[2];
-// });
-
-btnTeste2();
+afterLoad(function() {
+  grid();
+  oneNumber();
+  
+  qs("#btn_teste_1").addEventListener("click", btnTeste1);
+  qs("#btn_teste_2").addEventListener("click", btnTeste2);
+  qs("#btn_teste_3").addEventListener("click", btnTeste3);
+  qs("#btn_teste_4").addEventListener("click", btnTeste4);
+  
+  
+  // let x = [[1, 4, 3], [1, 6, 8], [1, 7, 5], [1, 8, 9], [3, 1, 5], [3, 4, 1], [3, 6, 7], [3, 7, 6], [3, 8, 8], [3, 9, 4], [4, 3, 1], [4, 4, 6], [4, 7, 4], [5, 1, 8], [5, 2, 4], [5, 6, 5], [5, 8, 3], [6, 3, 3], [6, 6, 8], [6, 8, 1], [7, 2, 4], [8, 7, 7], [8, 8, 2], [8, 9, 9], [9, 1, 7], [9, 3, 1], [9, 5, 6], [9, 6, 9], [9, 8, 4],];
+  
+  // x.forEach(function(a) {
+  //   qs(`input.tabela_${a[0]}.celula_${a[1]}`).value = a[2];
+  // });
+  
+  btnTeste2();
+});
