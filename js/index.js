@@ -1,7 +1,7 @@
 // import {*} as u from "/js/utils.js";
 // import {*} as g from "/js/game.js";
 
-ab("version: 1.9", "footer");
+ab("version: 0.1.4", "footer");
 
 var user, pok_id, last_game, timer;
 userCheck();
@@ -99,22 +99,36 @@ function gameVeryEasy() {
 
 function gameEasy() {
     let str = pokes[pok_id];
-    let html = `<label class="me-1" name="txt_val_nam" for="txt_val_nam">${str[0].toUpperCase()}</label>`;
-    for (let i = 1; i < str.length - 1; i++) {
-      html += `<input name="txt_val_nam" type="text" minlength="1" maxlength="1" size="1" pattern="{1}" style="width: 20px; text-align:center;">`;
+    let ids = [];
+    if (str.length < 3) {
+      ids = [0, 1];
+    } else {
+      while(ids.length < Math.floor(str.length / 2)) {
+        let i = randomBetween(0, str.length - 1);
+        if (!ids.includes(i)) ids.push(i);
+      }
     }
-    html += `<label class="ms-1" name="txt_val_nam" for="txt_val_nam">${str.substr(-1)}</label>`;
+    let html = "";
+    for (let i = 0; i < str.length; i++) {
+      let c = str[i];
+      if (i == 0) c = c.toUpperCase();
+      if (ids.includes(i))
+        html += `<input class="empty" name="txt_val_nam" type="text" style="width: 20px; text-align:center;">`;
+      else
+        html += `<label class="mx-1" name="txt_val_nam" for="txt_val_nam">${c}</label>`;
+    }
     qs("#div_val_nam").innerHTML = html;
     
-    qsa("input[name=txt_val_nam]").forEach(function(e) {
+    qsa("input.empty").forEach(function(e) {
       e.oninput = function() {
-        this.nextElementSibling.focus();
+        if (this.value) {
+          this.value = this.value.substr(-1);
+          this.className = "not_empty";
+          qs("input.empty").focus();
+        } else {
+          this.className = "empty";
+        }
       }
-      // e.onkeypress = function() {
-      //   alert(2)
-      //   if (!this.value)
-      //     this.previusElementSibling.focus();
-      // }
     });
 }
 
