@@ -1,7 +1,7 @@
 // import {*} as u from "/js/utils.js";
 // import {*} as g from "/js/game.js";
 
-ab("version: 1.3", "footer");
+ab("version: 1.9", "footer");
 
 var user, pok_id, last_game, timer;
 userCheck();
@@ -29,7 +29,7 @@ function userCard() {
     html += `
       <tr>
         <td>${getTime(g.update_at)}</td>
-        <td>${getLevel(g.level).dsc.toLowerCase()}</td>
+        <td>${getLevel(g.level).til.toLowerCase()}</td>
         <td${g.answer.length > 10 ? ' title="' + g.answer + '"' : ""}>
           ${g.answer.substring(0, 10)}${g.answer.length > 10 ? "..." : ""}
         </td>
@@ -110,6 +110,11 @@ function gameEasy() {
       e.oninput = function() {
         this.nextElementSibling.focus();
       }
+      // e.onkeypress = function() {
+      //   alert(2)
+      //   if (!this.value)
+      //     this.previusElementSibling.focus();
+      // }
     });
 }
 
@@ -196,15 +201,17 @@ function startGame() {
 
 function endGame() {
   render(qs("#div_comp_game"), "/comp/game_ready.html", function() {
+    qs("h5.text-muted").innerText = getLevel().til;
+    qs("p.fw-lighter").innerText = getLevel().dsc;
     qs("#btn_start_game").onclick = startGame;
   });
 }
 
 afterLoad(function() {
-  // botoes level
+  // botões level
   qsa("#div_btn_level button").forEach(function(e) {
     e.onclick = levelChange;
-    e.innerText = getLevel(e.value).dsc;
+    e.innerText = getLevel(e.value).til;
   });
   qs(`[name=button_level_${user.level}]`).className = "btn btn-primary";
 
