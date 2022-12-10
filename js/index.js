@@ -1,6 +1,8 @@
 // import {*} as u from "/js/utils.js";
 // import {*} as g from "/js/game.js";
 
+ab("version: 1.3", "footer");
+
 var user, pok_id, last_game, timer;
 userCheck();
 
@@ -64,15 +66,15 @@ function getPoke() {
   updateUser(user);
   
   let exp = last_game.create_at + getLevel().tim * 1000;
-  // clearInterval(timer);
-  // timer = setInterval(function() {
-  //   let ms = exp - (new Date()).getTime();
-  //   if (ms <= 0) {
-  //     clearInterval(timer);
-  //     ms = 0;
-  //   }
-  //   if (qs("#time_left")) qs("#time_left").innerText = getTime(ms, "min");
-  // }, 1000);
+  clearInterval(timer);
+  timer = setInterval(function() {
+    let ms = exp - (new Date()).getTime();
+    if (ms <= 0) {
+      clearInterval(timer);
+      ms = 0;
+    }
+    if (qs("#time_left")) qs("#time_left").innerText = getTime(ms, "min");
+  }, 1000);
 }
 
 function gameVeryEasy() {
@@ -103,6 +105,12 @@ function gameEasy() {
     }
     html += `<label class="ms-1" name="txt_val_nam" for="txt_val_nam">${str.substr(-1)}</label>`;
     qs("#div_val_nam").innerHTML = html;
+    
+    qsa("input[name=txt_val_nam]").forEach(function(e) {
+      e.oninput = function() {
+        this.nextElementSibling.focus();
+      }
+    });
 }
 
 function gameMedium() {alert(3)}
@@ -128,7 +136,7 @@ function levelGen() {
     gameVeryHard();
   }
   
-  qs("#btn_val_nam").addEventListener("click", valName);
+  qs("#btn_val_nam").onclick = valName;
 }
 
 function valName() {
@@ -177,8 +185,8 @@ function valName() {
     qs("#div_alert").className += ` alert-${typ}`;
     qs("#div_alert").innerText = msg;
     qs("#p_fw_lighter").innerText = "Vamos jogar novamente?";
-    qs("#btn_end_game").addEventListener("click", endGame);
-    qs("#btn_start_game").addEventListener("click", startGame);
+    qs("#btn_end_game").onclick = endGame;
+    qs("#btn_start_game").onclick = startGame;
   });
 }
 
@@ -188,14 +196,14 @@ function startGame() {
 
 function endGame() {
   render(qs("#div_comp_game"), "/comp/game_ready.html", function() {
-    qs("#btn_start_game").addEventListener("click", startGame);
+    qs("#btn_start_game").onclick = startGame;
   });
 }
 
 afterLoad(function() {
   // botoes level
   qsa("#div_btn_level button").forEach(function(e) {
-    e.addEventListener("click", levelChange);
+    e.onclick = levelChange;
     e.innerText = getLevel(e.value).dsc;
   });
   qs(`[name=button_level_${user.level}]`).className = "btn btn-primary";
