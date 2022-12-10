@@ -111,36 +111,31 @@ const levels = [
     dsc: "Muito Fácil", 
     url: "/comp/game_very_easy.html", 
     sco: 1, 
-    tim: 60, 
-    elm: ["#div_val_nam", ".form-check-input:checked"]
+    tim: 60
   }, {
     id: 2, 
     dsc: "Fácil", 
     url: "/comp/game_easy.html", 
     sco: 2, 
-    tim: 40, 
-    elm: ["#div_val_nam", ""]
+    tim: 40
   }, {
     id: 3, 
     dsc: "Médio", 
     url: "/comp/game_medium.html", 
     sco: 3, 
-    tim: 20, 
-    elm: ["#div_val_nam", ""]
+    tim: 20
   }, {
     id: 4, 
     dsc: "Difícil", 
     url: "/comp/game_hard.html", 
     sco: 5, 
-    tim: 15, 
-    elm: ["#div_val_nam", "#txt_val_nam"]
+    tim: 15
   }, {
     id: 5, 
     dsc: "Muito Difícil", 
     url: "/comp/game_very_hard.html", 
     sco: 8, 
-    tim: 10, 
-    elm: ["#div_val_nam", ""]
+    tim: 10
   }
 ];
 

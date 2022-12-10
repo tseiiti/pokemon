@@ -1,6 +1,6 @@
 // import {*} as u from "/js/utils.js";
 // import {*} as g from "/js/game.js";
-// location.replace("/sudoku.html");
+
 var user, pok_id, last_game, timer;
 userCheck();
 
@@ -64,15 +64,15 @@ function getPoke() {
   updateUser(user);
   
   let exp = last_game.create_at + getLevel().tim * 1000;
-  clearInterval(timer);
-  timer = setInterval(function() {
-    let ms = exp - (new Date()).getTime();
-    if (ms <= 0) {
-      clearInterval(timer);
-      ms = 0;
-    }
-    if (qs("#time_left")) qs("#time_left").innerText = getTime(ms, "min");
-  }, 1000);
+  // clearInterval(timer);
+  // timer = setInterval(function() {
+  //   let ms = exp - (new Date()).getTime();
+  //   if (ms <= 0) {
+  //     clearInterval(timer);
+  //     ms = 0;
+  //   }
+  //   if (qs("#time_left")) qs("#time_left").innerText = getTime(ms, "min");
+  // }, 1000);
 }
 
 function gameVeryEasy() {
@@ -97,15 +97,21 @@ function gameVeryEasy() {
 
 function gameEasy() {
     let str = pokes[pok_id];
-    let html = `<label name="txt_val_nam" for="txt_val_nam" value="${str[0]}">${str[0]}</label>`;
+    let html = `<label class="me-1" name="txt_val_nam" for="txt_val_nam">${str[0].toUpperCase()}</label>`;
     for (let i = 1; i < str.length - 1; i++) {
       html += `<input name="txt_val_nam" type="text" minlength="1" maxlength="1" size="1" pattern="{1}" style="width: 20px; text-align:center;">`;
     }
-    html += `<label name="txt_val_nam" for="txt_val_nam" value="${str.substr(-1)}">${str.substr(-1)}</label>`;
+    html += `<label class="ms-1" name="txt_val_nam" for="txt_val_nam">${str.substr(-1)}</label>`;
     qs("#div_val_nam").innerHTML = html;
-    c(str)
-    //qsa("[name=txt_val_nam]").forEach(function(e) {c(e.value);});
 }
+
+function gameMedium() {alert(3)}
+
+function gameHard() {
+  qs("#txt_val_nam").value = "";
+}
+
+function gameVeryHard() {alert(5)}
 
 function levelGen() {
   getPoke();
@@ -115,11 +121,11 @@ function levelGen() {
   } else if (user.level == 2) {
     gameEasy();
   } else if (user.level == 3) {
-    //
+    gameMedium();
   } else if (user.level == 4) {
-    qs(getLevel().elm[1]).value = "";
+    gameHard();
   } else if (user.level == 5) {
-    //
+    gameVeryHard();
   }
   
   qs("#btn_val_nam").addEventListener("click", valName);
@@ -127,28 +133,42 @@ function levelGen() {
 
 function valName() {
   clearInterval(timer);
-  let ans_elm = qs(getLevel().elm[1]);
   let g = user.games.pop();
   let msg; let typ;
   
+  if (user.level == 1) {
+    let e = qs(".form-check-input:checked");
+    if (e) g.answer = e.value;
+  } else if (user.level == 2) {
+    let v = "";
+    qsa("[name=txt_val_nam]").forEach(function(e) {
+      if (e.value) v += e.value;
+      if (e.innerText) v += e.innerText;
+    });
+    g.answer = v;
+  } else if (user.level == 3) {
+    //
+  } else if (user.level == 4) {
+    g.answer = qs("#txt_val_nam").value;
+  } else if (user.level == 5) {
+    //
+  }
+  
   if ((new Date()).getTime() - g.create_at > getLevel().tim * 1000) {
     typ = "secondary";
-    msg = "Você foi mais rápido que uma lesma... Acho que não foi a tempo";
-  } else if (!ans_elm || !ans_elm.value) {
+    msg = "Você foi mais rápido que uma lesma... Mas acho que não foi a tempo";
+    g.answer = "";
+  } else if (!g.answer) {
     msg = "Mas nem respondeu o nome ainda?";
     typ = "warning";
-  } else if (ans_elm.value.trim().toLowerCase() == pokes[pok_id]) {
+  } else if (g.answer.trim().toLowerCase() == pokes[pok_id]) {
     typ = "success";
     msg = "Você acertou, parabéns!";
-    
-    g.answer = ans_elm.value;
     g.score = getLevel().sco;
   } else {
     typ = "danger";
     msg = "Acho que você errrrooooooooooooou!!! O nome do personagem era \"";
     msg += pokes[pok_id][0].toUpperCase() + pokes[pok_id].substring(1) + "\"";
-    
-    g.answer = ans_elm.value;
   }
   updateUser(user.games.push(g));
   userCard();
