@@ -1,7 +1,7 @@
 // import {*} as u from "/js/utils.js";
 // import {*} as g from "/js/game.js";
 
-ab("version: 0.1.4", "footer");
+// ab("version: 0.1.5", "footer");
 
 var user, pok_id, last_game, timer;
 userCheck();
@@ -160,8 +160,8 @@ function levelGen() {
 
 function valName() {
   clearInterval(timer);
-  let g = user.games.pop();
   let msg; let typ;
+  let g = user.games.pop();
   
   if (user.level == 1) {
     let e = qs(".form-check-input:checked");
@@ -233,4 +233,5 @@ afterLoad(function() {
   endGame();
   
   qs("nav a.link-login").innerText = "Sair";
+  qs("span.version").innerText = "version: 0.2.2";
 });
