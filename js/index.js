@@ -1,6 +1,8 @@
 // import {*} as u from "/js/utils.js";
 // import {*} as g from "/js/game.js";
-// location.replace("/sudoku.html");
+
+// ab("version: 0.1.5", "footer");
+
 var user, pok_id, last_game, timer;
 userCheck();
 
@@ -27,7 +29,7 @@ function userCard() {
     html += `
       <tr>
         <td>${getTime(g.update_at)}</td>
-        <td>${getLevel(g.level).dsc.toLowerCase()}</td>
+        <td>${getLevel(g.level).til.toLowerCase()}</td>
         <td${g.answer.length > 10 ? ' title="' + g.answer + '"' : ""}>
           ${g.answer.substring(0, 10)}${g.answer.length > 10 ? "..." : ""}
         </td>
@@ -97,15 +99,46 @@ function gameVeryEasy() {
 
 function gameEasy() {
     let str = pokes[pok_id];
-    let html = `<label name="txt_val_nam" for="txt_val_nam" value="${str[0]}">${str[0]}</label>`;
-    for (let i = 1; i < str.length - 1; i++) {
-      html += `<input name="txt_val_nam" type="text" minlength="1" maxlength="1" size="1" pattern="{1}" style="width: 20px; text-align:center;">`;
+    let ids = [];
+    if (str.length < 3) {
+      ids = [0, 1];
+    } else {
+      while(ids.length < Math.floor(str.length / 2)) {
+        let i = randomBetween(0, str.length - 1);
+        if (!ids.includes(i)) ids.push(i);
+      }
     }
-    html += `<label name="txt_val_nam" for="txt_val_nam" value="${str.substr(-1)}">${str.substr(-1)}</label>`;
+    let html = "";
+    for (let i = 0; i < str.length; i++) {
+      let c = str[i];
+      if (i == 0) c = c.toUpperCase();
+      if (ids.includes(i))
+        html += `<input class="empty" name="txt_val_nam" type="text" style="width: 20px; text-align:center;">`;
+      else
+        html += `<label class="mx-1" name="txt_val_nam" for="txt_val_nam">${c}</label>`;
+    }
     qs("#div_val_nam").innerHTML = html;
-    c(str)
-    //qsa("[name=txt_val_nam]").forEach(function(e) {c(e.value);});
+    
+    qsa("input.empty").forEach(function(e) {
+      e.oninput = function() {
+        if (this.value) {
+          this.value = this.value.substr(-1);
+          this.className = "not_empty";
+          qs("input.empty").focus();
+        } else {
+          this.className = "empty";
+        }
+      }
+    });
 }
+
+function gameMedium() {alert(3)}
+
+function gameHard() {
+  qs("#txt_val_nam").value = "";
+}
+
+function gameVeryHard() {alert(5)}
 
 function levelGen() {
   getPoke();
@@ -115,40 +148,54 @@ function levelGen() {
   } else if (user.level == 2) {
     gameEasy();
   } else if (user.level == 3) {
-    //
+    gameMedium();
   } else if (user.level == 4) {
-    qs(getLevel().elm[1]).value = "";
+    gameHard();
   } else if (user.level == 5) {
-    //
+    gameVeryHard();
   }
   
-  qs("#btn_val_nam").addEventListener("click", valName);
+  qs("#btn_val_nam").onclick = valName;
 }
 
 function valName() {
   clearInterval(timer);
-  let ans_elm = qs(getLevel().elm[1]);
-  let g = user.games.pop();
   let msg; let typ;
+  let g = user.games.pop();
+  
+  if (user.level == 1) {
+    let e = qs(".form-check-input:checked");
+    if (e) g.answer = e.value;
+  } else if (user.level == 2) {
+    let v = "";
+    qsa("[name=txt_val_nam]").forEach(function(e) {
+      if (e.value) v += e.value;
+      if (e.innerText) v += e.innerText;
+    });
+    g.answer = v;
+  } else if (user.level == 3) {
+    //
+  } else if (user.level == 4) {
+    g.answer = qs("#txt_val_nam").value;
+  } else if (user.level == 5) {
+    //
+  }
   
   if ((new Date()).getTime() - g.create_at > getLevel().tim * 1000) {
     typ = "secondary";
-    msg = "Você foi mais rápido que uma lesma... Acho que não foi a tempo";
-  } else if (!ans_elm || !ans_elm.value) {
+    msg = "Você foi mais rápido que uma lesma... Mas acho que não foi a tempo";
+    g.answer = "";
+  } else if (!g.answer) {
     msg = "Mas nem respondeu o nome ainda?";
     typ = "warning";
-  } else if (ans_elm.value.trim().toLowerCase() == pokes[pok_id]) {
+  } else if (g.answer.trim().toLowerCase() == pokes[pok_id]) {
     typ = "success";
     msg = "Você acertou, parabéns!";
-    
-    g.answer = ans_elm.value;
     g.score = getLevel().sco;
   } else {
     typ = "danger";
     msg = "Acho que você errrrooooooooooooou!!! O nome do personagem era \"";
     msg += pokes[pok_id][0].toUpperCase() + pokes[pok_id].substring(1) + "\"";
-    
-    g.answer = ans_elm.value;
   }
   updateUser(user.games.push(g));
   userCard();
@@ -157,8 +204,8 @@ function valName() {
     qs("#div_alert").className += ` alert-${typ}`;
     qs("#div_alert").innerText = msg;
     qs("#p_fw_lighter").innerText = "Vamos jogar novamente?";
-    qs("#btn_end_game").addEventListener("click", endGame);
-    qs("#btn_start_game").addEventListener("click", startGame);
+    qs("#btn_end_game").onclick = endGame;
+    qs("#btn_start_game").onclick = startGame;
   });
 }
 
@@ -168,15 +215,17 @@ function startGame() {
 
 function endGame() {
   render(qs("#div_comp_game"), "/comp/game_ready.html", function() {
-    qs("#btn_start_game").addEventListener("click", startGame);
+    qs("h5.text-muted").innerText = getLevel().til;
+    qs("p.fw-lighter").innerText = getLevel().dsc;
+    qs("#btn_start_game").onclick = startGame;
   });
 }
 
 afterLoad(function() {
-  // botoes level
+  // botões level
   qsa("#div_btn_level button").forEach(function(e) {
-    e.addEventListener("click", levelChange);
-    e.innerText = getLevel(e.value).dsc;
+    e.onclick = levelChange;
+    e.innerText = getLevel(e.value).til;
   });
   qs(`[name=button_level_${user.level}]`).className = "btn btn-primary";
 
@@ -184,4 +233,5 @@ afterLoad(function() {
   endGame();
   
   qs("nav a.link-login").innerText = "Sair";
+  qs("span.version").innerText = "version: 0.2.2";
 });

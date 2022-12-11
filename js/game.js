@@ -108,39 +108,39 @@ function getLevel(id = user.level) {
 const levels = [
   {
     id: 1, 
-    dsc: "Muito Fácil", 
+    til: "Muito Fácil", 
+    dsc: "Um treinamento. É só escolher o nome entre as 5 opções.", 
     url: "/comp/game_very_easy.html", 
     sco: 1, 
-    tim: 60, 
-    elm: ["#div_val_nam", ".form-check-input:checked"]
+    tim: 60
   }, {
     id: 2, 
-    dsc: "Fácil", 
+    til: "Fácil", 
+    dsc: "Complete as letras faltantes para formar o nome.", 
     url: "/comp/game_easy.html", 
     sco: 2, 
-    tim: 40, 
-    elm: ["#div_val_nam", ""]
+    tim: 40
   }, {
     id: 3, 
-    dsc: "Médio", 
+    til: "Médio", 
+    dsc: "Forca", 
     url: "/comp/game_medium.html", 
     sco: 3, 
-    tim: 20, 
-    elm: ["#div_val_nam", ""]
+    tim: 20
   }, {
     id: 4, 
-    dsc: "Difícil", 
+    til: "Difícil", 
+    dsc: "Sem complicação, escreva o nome e pronto.", 
     url: "/comp/game_hard.html", 
     sco: 5, 
-    tim: 15, 
-    elm: ["#div_val_nam", "#txt_val_nam"]
+    tim: 15
   }, {
     id: 5, 
-    dsc: "Muito Difícil", 
+    til: "Muito Difícil", 
+    dsc: "Quase igual aos demais, escreva o nome... Se souber quem é.", 
     url: "/comp/game_very_hard.html", 
     sco: 8, 
-    tim: 10, 
-    elm: ["#div_val_nam", ""]
+    tim: 10
   }
 ];
 
