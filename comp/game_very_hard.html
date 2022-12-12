@@ -1,11 +1,13 @@
 
-<div class="col-md-6 mb-4">
-  <img class="img-thumbnail" width="700" height="700" id="poke_image" src="/img/gray.png" />
+<div class="col-md-6 mb-4" style="inline-block;">
+  <img class="img-thumbnail" width="700" height="700" id="poke_image" src="/img/gray.png" style="clip-path: circle(60px at 50% 50%);"/>
 </div>
 <div class="col-md-6 mb-4">
   <h1>Nível Muito Difícil</h1>
   <h2 id="time_left">00:00</h2>
-  <p class="fw-lighter">Selecione o nome correto do personagem</p>
-  <div id="div_val_nam" style="text-align: left;"></div>
-  <button class="btn btn-primary" id="btn_val_nam" type="button">Validar</button>
+  <p class="fw-lighter">Escreva o nome do personagem</p>
+  <div id="div_val_nam">
+    <input class="form-control" id="txt_val_nam" type="text" placeholder="Nome do personagem" autocomplete="off">
+  </div>
+  <button class="btn btn-primary mt-3" id="btn_val_nam" type="button">Validar</button>
 </div>

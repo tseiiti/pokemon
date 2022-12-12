@@ -1,7 +1,7 @@
 // import {*} as u from "/js/utils.js";
 // import {*} as g from "/js/game.js"
 
-delSession("user");
+// delSession("user");
 
 function buttonSetUser() {
   let name = qs("#usr_name");

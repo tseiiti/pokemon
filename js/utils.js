@@ -160,18 +160,26 @@ function enterPress() {
   });
 }
 
+// número aleatório entre 0 e vlr, vlr inclusive 
 function random(vlr) {
   return Math.floor(Math.random() * (vlr + 1));
 }
 
+// número aleatório entre min e max
 function randomBetween(min, max) {
   return random(max - min) + min;
 }
 
+// texto no console
 function c(msg) {
   console.log(msg);
 }
 
+function capF(text) {
+  return text[0].toUpperCase() + text.substring(1);
+}
+
+// adiciona texto div antes do elemento indicado
 function ab(text, str_elm) {
   const newDiv = document.createElement("div");
   const newContent = document.createTextNode(text);
