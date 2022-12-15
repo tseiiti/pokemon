@@ -1,7 +1,7 @@
 // import {*} as u from "/js/utils.js";
 // import {*} as g from "/js/game.js";
 
-var user, pok_id, last_game, timer;
+var user, pok_id, last_game, inter;
 userCheck();
 
 function userCheck() {
@@ -28,7 +28,7 @@ function userCard() {
       <tr>
         <td>${getTime(g.update_at)}</td>
         <td>${getLevel(g.level).til.toLowerCase()}</td>
-        <td class="text-truncate" style="max-width: 70px;">${capF(pokes[g.pok_id])}</td>
+        <td class="text-truncate" style="max-width: 60px;">${capF(pokes[g.pok_id])}</td>
         <td class="text-truncate" style="max-width: 60px;" title="${g.answer}">${g.answer}</td>
         <td>${!g.answer ? "-" : g.score == 0 ? "errou" : g.score}</td>
       </tr>`
@@ -37,7 +37,7 @@ function userCard() {
 }
 
 function levelChange() {
-  clearInterval(timer);
+  clearInterval(inter);
   
   if (this.value) {
     user.level = this.value;
@@ -63,11 +63,11 @@ function getPoke() {
   updateUser(user);
   
   let exp = last_game.create_at + getLevel().tim * 1000;
-  clearInterval(timer);
-  timer = setInterval(function() {
+  clearInterval(inter);
+  inter = setInterval(function() {
     let ms = exp - (new Date()).getTime();
     if (ms <= 0) {
-      clearInterval(timer);
+      clearInterval(inter);
       ms = 0;
     }
     if (qs("#time_left")) qs("#time_left").innerText = getTime(ms, "min");
@@ -100,7 +100,7 @@ function gameEasy() {
   if (str.length < 3) {
     ids = [0, 1];
   } else {
-    while(ids.length < Math.floor(str.length / 2)) {
+    while(ids.length < Math.floor(str.length / 3)) {
       let i = randomBetween(0, str.length - 1);
       if (!ids.includes(i)) ids.push(i);
     }
@@ -110,9 +110,9 @@ function gameEasy() {
     let c = str[i];
     if (i == 0) c = c.toUpperCase();
     if (ids.includes(i))
-      html += `<input class="empty" name="txt_val_nam" type="text" style="width: 20px; text-align:center;" autocomplete="off">`;
+      html += `<input class="empty" name="txt_val_nam" type="text" style="width: 18px; text-align:center;" autocomplete="off">`;
     else
-      html += `<label class="mx-1" name="txt_val_nam" for="txt_val_nam">${c}</label>`;
+      html += `<label class="mx-1" name="txt_val_nam">${c}</label>`;
   }
   qs("#div_val_nam").innerHTML = html;
   
@@ -129,7 +129,48 @@ function gameEasy() {
   });
 }
 
-function gameMedium() {alert(3)}
+function gameMediumAux() {
+  let str = pokes[pok_id];
+  let err = qs("#div_error");
+  let elm = qs("#txt_val_nam");
+  let chr = elm.value.substr(-1).toUpperCase();
+  let lim_err = Math.round(str.length / 2);
+  let vis = "visually-error";
+  if (lim_err < 3) lim_err = 3;
+  
+  if (err.textContent.search(chr) == -1) {
+    for (let i = 0; i < str.length; i++) {
+      if (str[i] == chr.toLowerCase()) {
+        qsa("label[name=txt_val_nam]")[i].innerText = chr;
+        vis = "visually-hidden";
+      }
+    }
+    err.innerHTML += `<label class="fs-5 text-danger ${vis}">${chr}</label>`;
+  } else {
+    bsAlert("Mas de novo! Essa letra já foi!", "danger", qs("#div_val_nam"));
+  }
+  setTimeout(function() {
+    elm.value = "";
+    elm.focus();
+  }, 300);
+  
+  
+  if (qsa("label.visually-error").length < lim_err) {
+    if (vis == "visually-error") bsAlert(`Cuidado, o limite de erros é ${lim_err} vezes.`, "warning", err, 3000, true);
+  } else {
+    valName();
+  }
+}
+
+function gameMedium() {
+  let str = pokes[pok_id];
+  let html = "";
+  for (let i = 0; i < str.length; i++) {
+    html += `<span class="border-bottom border-dark border-3 mx-1"><label name="txt_val_nam" style="width: 20px"></label></span>`;
+  }
+  qs("#div_val_nam").innerHTML = html;
+  qs("#txt_val_nam").oninput = gameMediumAux;
+}
 
 function gameHard() {
   qs("#txt_val_nam").value = "";
@@ -154,11 +195,12 @@ function levelGen() {
     gameVeryHard();
   }
   
-  qs("#btn_val_nam").onclick = valName;
+  let btn = qs("#btn_val_nam");
+  if (btn) btn.onclick = valName;
 }
 
 function valName() {
-  clearInterval(timer);
+  clearInterval(inter);
   let msg; let typ;
   let g = user.games.pop();
   
@@ -173,7 +215,7 @@ function valName() {
     });
     g.answer = v;
   } else if (user.level == 3) {
-    //
+    g.answer = qs("#div_val_nam").innerText;
   } else if (user.level == 4) {
     g.answer = qs("#txt_val_nam").value;
   } else if (user.level == 5) {
@@ -232,5 +274,5 @@ afterLoad(function() {
   endGame();
   
   qs("nav a.link-login").innerText = "Sair";
-  qs("span.version").innerText = "version: 0.2.7";
+  qs("span.version").innerText = "version: 1.1.20221215";
 });
