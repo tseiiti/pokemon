@@ -1,7 +1,23 @@
 
-<div class="col-md-6 mb-4" style="inline-block;">
-  <img class="img-thumbnail" width="700" height="700" id="poke_image" src="/img/gray.png" style="clip-path: circle(60px at 50% 50%);"/>
+<div class="col-md-6 mb-4">
+  <div class="img-wrapper" style="inline-block;">
+    <img class="img-thumbnail" id="poke_image" src="/img/gray.png" style="clip-path: circle(60px at 50% 50%);"/>
+  </div>
 </div>
+<style>
+  .img-wrapper{
+    position: relative;
+    overflow:hidden;
+    height:200px;
+  }
+  .img-wrapper img{
+    position: absolute;
+    top:-100%; left:0; right: 0; bottom:-100%;
+    margin: auto;
+    padding: 0;
+    border: 0;
+  }
+</style>
 <div class="col-md-6 mb-4">
   <h1>Nível Muito Difícil</h1>
   <h2 id="time_left">00:00</h2>

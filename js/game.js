@@ -109,7 +109,7 @@ const levels = [
   {
     id: 1, 
     til: "Muito Fácil", 
-    dsc: "Um treinamento. É só escolher o nome entre as 5 opções.", 
+    dsc: "É só um treino. Escolha o nome entre as 5 opções.", 
     url: "/comp/game_very_easy.html", 
     sco: 1, 
     tim: 60
@@ -123,10 +123,10 @@ const levels = [
   }, {
     id: 3, 
     til: "Médio", 
-    dsc: "Forca", 
+    dsc: "Já jogou forca?", 
     url: "/comp/game_medium.html", 
     sco: 3, 
-    tim: 20
+    tim: 30
   }, {
     id: 4, 
     til: "Difícil", 
