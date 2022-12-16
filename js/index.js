@@ -133,7 +133,8 @@ function gameEasy() {
       if (this.value) {
         this.value = this.value.substr(-1);
         this.className = "not_empty";
-        qs("input.empty").focus();
+        let f = qs("input.empty");
+        if (f) f.focus();
       } else {
         this.className = "empty";
       }
@@ -148,6 +149,16 @@ function gameEasy() {
     });
     valName(val);
   }
+}
+
+function gameMedium() {
+  let str = pokes[pok_id];
+  let html = "";
+  for (let i = 0; i < str.length; i++) {
+    html += `<span class="border-bottom border-dark border-3 mx-1"><label name="txt_val_nam" style="width: 20px"></label></span>`;
+  }
+  qs("#div_val_nam").innerHTML = html;
+  qs("#txt_val_nam").oninput = gameMediumAux;
 }
 
 function gameMediumAux() {
@@ -167,29 +178,20 @@ function gameMediumAux() {
       }
     }
     err.innerHTML += `<label class="fs-5 text-danger ${vis}">${chr}</label>`;
+  
+    if (qsa("label.visually-error").length < lim_err) {
+      if (vis == "visually-error") bsAlert(`Cuidado, o limite de erros é ${lim_err} vezes.`, "danger", err, 3000, true);
+    } else {
+      valName(qs("#div_val_nam").innerText);
+    }
   } else {
-    bsAlert("Mas de novo! Essa letra já foi!", "danger", qs("#div_val_nam"));
+    bsAlert("Mas de novo! Essa letra já foi!", "warning", err, 3000, true);
   }
+  
   setTimeout(function() {
     elm.value = "";
     elm.focus();
   }, 300);
-  
-  if (qsa("label.visually-error").length < lim_err) {
-    if (vis == "visually-error") bsAlert(`Cuidado, o limite de erros é ${lim_err} vezes.`, "warning", err, 3000, true);
-  } else {
-    valName(qs("#div_val_nam").innerText);
-  }
-}
-
-function gameMedium() {
-  let str = pokes[pok_id];
-  let html = "";
-  for (let i = 0; i < str.length; i++) {
-    html += `<span class="border-bottom border-dark border-3 mx-1"><label name="txt_val_nam" style="width: 20px"></label></span>`;
-  }
-  qs("#div_val_nam").innerHTML = html;
-  qs("#txt_val_nam").oninput = gameMediumAux;
 }
 
 function gameHard() {
