@@ -20,24 +20,23 @@ function render(elm, url, fun) {
 }
 
 // carrega todos
-function renderAll(fun) {
+function renderAll(func) {
   qsa("[data-component]").forEach(function(e) {
     if (e.getAttribute("data-component")) {
-      render(e, e.getAttribute("data-component"), fun);
+      render(e, e.getAttribute("data-component"), func);
     }
   });
 }
 
 // necessário para controlar disparo do 
 // evento ao carregar todos os arquivos externos
-var compLen = 0;
-
-function afterLoad(fun) {
+var clen = 0;
+function afterLoad(func) {
   renderAll(function() {
-    compLen++;
-    if (compLen === qsa("[data-component]").length) {
-      compLen = 0;
-      fun();
+    clen++;
+    if (clen === qsa("[data-component]").length) {
+      clen = 0;
+      func();
       enterPress();
     }
   });
@@ -104,12 +103,13 @@ function decode(string, T) {
 }
 
 // cria div de mensagem acima de um elemento
-function bsAlert(message, type, ele, time = 5000) {
+function bsAlert(message, type, ele, time = 5000, after = false) {
   qsa("div.alert").forEach(function(e) {e.remove();});
   let html = `<div class="alert alert-${type} alert-dismissible" role="alert"><div>${message}</div><button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>`;
   let div = document.createElement("div");
   div.innerHTML = html;
-  ele.before(div);
+  if (after) ele.after(div);
+  else ele.before(div);
   setTimeout(function() {div.remove();}, time);
 }
 
