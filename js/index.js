@@ -44,11 +44,16 @@ function levelChange() {
     updateUser(user);
   }
 
-  endGame();
+  gameReady();
   userCard();
 
   qs("#div_btn_level button.btn-primary").className = "btn btn-outline-primary"
   qs(`[name=button_level_${user.level}]`).className = "btn btn-primary";
+  
+  setTimeout(function() {
+    let t = qs("div.card").scrollHeight;
+    window.scrollTo({top: t, behavior: 'smooth'});
+  }, 100);
 }
 
 function getPoke() {
@@ -92,6 +97,13 @@ function gameVeryEasy() {
   });
 
   qs("#div_val_nam").innerHTML = html;
+  
+  qs("#btn_val_nam").onclick = function() {
+    let val = "";
+    let e = qs(".form-check-input:checked");
+    if (e) val = e.value;
+    valName(e.value);
+  }
 }
 
 function gameEasy() {
@@ -127,6 +139,15 @@ function gameEasy() {
       }
     }
   });
+  
+  qs("#btn_val_nam").onclick = function() {
+    let val = "";
+    qsa("[name=txt_val_nam]").forEach(function(e) {
+      if (e.value) val += e.value;
+      if (e.innerText) val += e.innerText;
+    });
+    valName(val);
+  }
 }
 
 function gameMediumAux() {
@@ -154,11 +175,10 @@ function gameMediumAux() {
     elm.focus();
   }, 300);
   
-  
   if (qsa("label.visually-error").length < lim_err) {
     if (vis == "visually-error") bsAlert(`Cuidado, o limite de erros é ${lim_err} vezes.`, "warning", err, 3000, true);
   } else {
-    valName();
+    valName(qs("#div_val_nam").innerText);
   }
 }
 
@@ -174,53 +194,25 @@ function gameMedium() {
 
 function gameHard() {
   qs("#txt_val_nam").value = "";
+  qs("#btn_val_nam").onclick = function() {
+    let val = "";
+    valName(qs("#txt_val_nam").value);
+  }
 }
 
 function gameVeryHard() {
   qs("#txt_val_nam").value = "";
-}
-
-function levelGen() {
-  getPoke();
-
-  if (user.level == 1) {
-    gameVeryEasy();
-  } else if (user.level == 2) {
-    gameEasy();
-  } else if (user.level == 3) {
-    gameMedium();
-  } else if (user.level == 4) {
-    gameHard();
-  } else if (user.level == 5) {
-    gameVeryHard();
+  qs("#btn_val_nam").onclick = function() {
+    let val = "";
+    valName(qs("#txt_val_nam").value);
   }
-  
-  let btn = qs("#btn_val_nam");
-  if (btn) btn.onclick = valName;
 }
 
-function valName() {
+function valName(val) {
   clearInterval(inter);
   let msg; let typ;
   let g = user.games.pop();
-  
-  if (user.level == 1) {
-    let e = qs(".form-check-input:checked");
-    if (e) g.answer = e.value;
-  } else if (user.level == 2) {
-    let v = "";
-    qsa("[name=txt_val_nam]").forEach(function(e) {
-      if (e.value) v += e.value;
-      if (e.innerText) v += e.innerText;
-    });
-    g.answer = v;
-  } else if (user.level == 3) {
-    g.answer = qs("#div_val_nam").innerText;
-  } else if (user.level == 4) {
-    g.answer = qs("#txt_val_nam").value;
-  } else if (user.level == 5) {
-    g.answer = qs("#txt_val_nam").value;
-  }
+  g.answer = val;
   
   if ((new Date()).getTime() - g.create_at > getLevel().tim * 1000) {
     typ = "secondary";
@@ -237,28 +229,51 @@ function valName() {
     typ = "danger";
     msg = `Acho que você errrrooooooooooooou!!! O nome do personagem era "${capF(pokes[pok_id])}"`;
   }
+  
   user.games.push(g);
   updateUser(user);
   userCard();
+  gameResult(typ, msg);
+}
 
+function gameResult(typ, msg) {
   render(qs("#div_comp_game"), "/comp/game_result.html", function() {
     qs("#div_alert").className += ` alert-${typ}`;
     qs("#div_alert").innerText = msg;
     qs("#p_fw_lighter").innerText = "Vamos jogar novamente?";
-    qs("#btn_end_game").onclick = endGame;
-    qs("#btn_start_game").onclick = startGame;
+    qs("#btn_end_game").onclick = gameReady;
+    qs("#btn_start_game").onclick = levelGen;
   });
 }
 
-function startGame() {
-  render(qs("#div_comp_game"), getLevel().url, levelGen);
+function levelGen() {
+  render(qs("#div_comp_game"), getLevel().url, function() {
+    getPoke();
+
+    if (user.level == 1) {
+      gameVeryEasy();
+    } else if (user.level == 2) {
+      gameEasy();
+    } else if (user.level == 3) {
+      gameMedium();
+    } else if (user.level == 4) {
+      gameHard();
+    } else if (user.level == 5) {
+      gameVeryHard();
+    }
+  });
+  
+  setTimeout(function() {
+    let t = qs("#div_comp_game").scrollHeight;
+    window.scrollTo({top: t, behavior: 'smooth'});
+  }, 50);
 }
 
-function endGame() {
+function gameReady() {
   render(qs("#div_comp_game"), "/comp/game_ready.html", function() {
     qs("h5.text-muted").innerText = getLevel().til;
     qs("p.fw-lighter").innerText = getLevel().dsc;
-    qs("#btn_start_game").onclick = startGame;
+    qs("#btn_start_game").onclick = levelGen;
   });
 }
 
@@ -271,8 +286,8 @@ afterLoad(function() {
   qs(`[name=button_level_${user.level}]`).className = "btn btn-primary";
 
   userCard();
-  endGame();
+  gameReady();
   
   qs("nav a.link-login").innerText = "Sair";
-  qs("span.version").innerText = "version: 1.1.20221215";
+  qs("span.version").innerText = "version: 1.0.20221219";
 });
