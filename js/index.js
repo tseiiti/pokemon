@@ -155,43 +155,53 @@ function gameMedium() {
   let str = pokes[pok_id];
   let html = "";
   for (let i = 0; i < str.length; i++) {
-    html += `<span class="border-bottom border-dark border-3 mx-1"><label name="txt_val_nam" style="width: 20px"></label></span>`;
+    html += `<span class="border-bottom border-dark border-3 mx-1"><label class="empty" name="txt_val_nam" style="width: 20px"></label></span>`;
   }
   qs("#div_val_nam").innerHTML = html;
-  qs("#txt_val_nam").oninput = gameMediumAux;
+  html = "";
+  let alf = ["qwertyuiop", "asdfghjkl", "zxcvbnm"];
+  for (let i = 0; i < 3; i++) {
+    let ks = alf[i];
+    html += `<div>`;
+    for (let j = 0; j < ks.length; j++) {
+      html += `<button class="btn btn-outline-secondary" style="width: 28px; margin: 2px; padding: 2px; padding-bottom: 1px;">${ks[j].toUpperCase()}</button>`;
+    }
+    html += `</div>`;
+  }
+  qs("#kb").innerHTML = html;
+  
+  qsa("#kb button.btn").forEach(function(e) {
+    e.onclick = gameMediumAux;
+  });
 }
 
 function gameMediumAux() {
+  let chr = this.innerText;
+  let cls = "btn-danger";
+  let kb = qs("#kb");
   let str = pokes[pok_id];
-  let err = qs("#div_error");
-  let elm = qs("#txt_val_nam");
-  let chr = elm.value.substr(-1).toUpperCase();
   let lim_err = Math.round(str.length / 2);
-  let vis = "visually-error";
   if (lim_err < 3) lim_err = 3;
   
-  if (err.textContent.search(chr) == -1) {
-    for (let i = 0; i < str.length; i++) {
-      if (str[i] == chr.toLowerCase()) {
-        qsa("label[name=txt_val_nam]")[i].innerText = chr;
-        vis = "visually-hidden";
-      }
+  for (let i = 0; i < str.length; i++) {
+    if (str[i] == chr.toLowerCase()) {
+      let e = qsa("label[name=txt_val_nam]")[i];
+      e.innerText = chr;
+      e.className = "not_empty";
+      cls = "btn-success";
     }
-    err.innerHTML += `<label class="fs-5 text-danger ${vis}">${chr}</label>`;
-  
-    if (qsa("label.visually-error").length < lim_err) {
-      if (vis == "visually-error") bsAlert(`Cuidado, o limite de erros é ${lim_err} vezes.`, "danger", err, 3000, true);
-    } else {
-      valName(qs("#div_val_nam").innerText);
-    }
-  } else {
-    bsAlert("Mas de novo! Essa letra já foi!", "warning", err, 3000, true);
   }
+  this.classList.replace("btn-outline-secondary", cls);
+  this.disabled = true;
   
-  setTimeout(function() {
-    elm.value = "";
-    elm.focus();
-  }, 300);
+  lim_err -= qsa("#kb .btn-danger").length;
+  if (lim_err == 0 || qsa("label.not_empty").length == str.length) {
+    valName(qs("#div_val_nam").innerText);
+  } else {
+    if (cls == "btn-danger") {
+      bsAlert(`Cuidado, você pode errar só mais ${lim_err > 1 ? lim_err + " vezes" : "1 vez"}.`, "danger", kb, 3000, true);
+    }
+  }
 }
 
 function gameHard() {
@@ -240,7 +250,8 @@ function valName(val) {
 
 function gameResult(typ, msg) {
   render(qs("#div_comp_game"), "/comp/game_result.html", function() {
-    qs("#div_alert").className += ` alert-${typ}`;
+    // qs("#div_alert").className += ` alert-${typ}`;
+    qs("#div_alert").classList.add(`alert-${typ}`);
     qs("#div_alert").innerText = msg;
     qs("#p_fw_lighter").innerText = "Vamos jogar novamente?";
     qs("#btn_end_game").onclick = gameReady;

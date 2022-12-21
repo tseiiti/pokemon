@@ -126,7 +126,7 @@ const levels = [
     dsc: "Já jogou forca?", 
     url: "/comp/game_medium.html", 
     sco: 3, 
-    tim: 30
+    tim: 35
   }, {
     id: 4, 
     til: "Difícil", 
