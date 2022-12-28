@@ -127,6 +127,7 @@ function togBtn() {
   }
   gam_arr[i][j] = dsg;
   setSession("gam_arr", encode(gam_arr));
+  totals();
 }
 
 function genBtn() {
@@ -134,7 +135,7 @@ function genBtn() {
   for (let i = 0; i < bts.length; i++) {
     for (let j = 0; j < bts[i].length; j++) {
       if (j == 0) {
-        html += `<h1>${bts[i][j].des}</h1><div class="row mx-3 mb-5">`;
+        html += `<h1 class="detetive">${bts[i][j].des}</h1><div class="row mx-3 mb-5">`;
       } else {
         let cls = "secondary";
         let red = ` readonly="readonly"`;
@@ -148,16 +149,27 @@ function genBtn() {
           red = "";
           bgc = bts[i][j].col;
         }
-        html += `<button class="btn btn-outline-${cls} my-1 col-12 col-md-4 detetive" data-mcolor="${bts[i][j].col}" data-mty="${i}" data-mid="${j - 1}"${red} style="background-color: ${bgc};">${bts[i][j].des}${dsc}</button>`;
+        html += `<button class="btn btn-outline-${cls} my-1 col-12 col-md-4 detetive det${i}" data-mcolor="${bts[i][j].col}" data-mty="${i}" data-mid="${j - 1}"${red} style="background-color: ${bgc};">${bts[i][j].des}${dsc}</button>`;
       }
     }
     html += `</div>`;
   }
   qs("#div_sus").innerHTML = html;
+  totals();
   
   qsa("button.detetive").forEach(function(e) {
     e.onclick = togBtn;
   });
+}
+
+function totals() {
+  let es = qsa("h1.detetive");
+  for (let i = 0; i < es.length; i++) {
+    let sl = gam_arr[i].filter(x => x != "").length;
+    let tl = bts[i].length;
+    let x = `${bts[i][0].des} ${sl}/${tl}`;
+    es[i].innerText = `${bts[i][0].des} ${sl}/${tl}`;
+  }
 }
 
 afterLoad(function() {
