@@ -19,16 +19,16 @@ afterLoad(function() {
     col: "#FEFCFF"
   }, {
     des: "Chefe de Cozinha - Tony Gourmet",
-    col: "#804A00"
+    col: "#B87333"
   }, {
     des: "Mordomo - James",
-    col: "#1589FF"
+    col: "#16E2F5"
   }, {
     des: "Médica - Dona Violeta",
     col: "#F535AA"
   }, {
     des: "Dançarina - Srta. Rosa",
-    col: "#FD1C03"
+    col: "#FF2400"
   }, {
     des: "Coveiro - Sérgio Soturno",
     col: "#52595D"
@@ -45,16 +45,16 @@ afterLoad(function() {
     col: "#FEFCFF"
   }, {
     des: "Pé de Cabra",
-    col: "#804A00"
+    col: "#B87333"
   }, {
     des: "Tesoura",
-    col: "#1589FF"
+    col: "#16E2F5"
   }, {
     des: "Arma Química",
     col: "#F535AA"
   }, {
     des: "Veneno",
-    col: "#FD1C03"
+    col: "#FF2400"
   }, {
     des: "Soco Inglês",
     col: "#52595D"
@@ -71,7 +71,7 @@ afterLoad(function() {
     col: "#FEFCFF"
   }, {
     des: "Floricultura",
-    col: "#804A00"
+    col: "#B87333"
   }, {
     des: "Boate",
     col: "#1589FF"
@@ -89,13 +89,13 @@ afterLoad(function() {
     col: "#16F529"
   }, {
     des: "Hotel",
-    col: "#FD1C03"
+    col: "#FFA500"
   }, {
     des: "Banco",
-    col: "#52595D"
+    col: "#FAAFBA"
   }, {
     des: "Estação de Trem",
-    col: "#16F529"
+    col: "#B041FF"
   }];
   
   let html = "";
