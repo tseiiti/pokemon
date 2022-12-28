@@ -94,26 +94,62 @@ const bts = [
     }
   ]
 ];
-  
+
+var gam_arr = [[], [], []];
+
 function togBtn() {
-  if (this.readOnly != true) {
+  let i = this.dataset.mty;
+  let j = this.dataset.mid;
+  let dsg = gam_arr[i][j];
+  
+  if (dsg == "2") {
+    let resp = confirm("Deseja desmarcar esse botão?");
+    if (resp) {
+      let str = this.innerText;
+      this.innerText = str.replace(" *", "");
+      this.style.backgroundColor = this.dataset.mcolor;
+      this.classList.replace("btn-outline-secondary", "btn-outline-dark");
+      this.readOnly = false;
+      dsg = "";
+    }
+  } else if (dsg == "1") {
+    let resp = confirm("Deseja marcar esse botão?");
+    if (resp) {
+      this.innerText += " *";
+      this.classList.replace("btn-outline-secondary", "btn-outline-dark");
+      dsg = "2";
+    }
+  } else {
     this.classList.replace("btn-outline-dark", "btn-outline-secondary");
     this.readOnly = true;
     this.style.backgroundColor = "#A9A9A9";
-  } else {
-    this.readOnly = false;
-    this.style.backgroundColor = this.dataset.mcolor;
+    dsg = "1";
   }
+  gam_arr[i][j] = dsg;
+  setSession("gam_arr", encode(gam_arr));
 }
 
 function genBtn() {
   let html = "";
   for (let i = 0; i < bts.length; i++) {
     for (let j = 0; j < bts[i].length; j++) {
-      if (j == 0)
-      html += `<h1>${bts[i][j].des}</h1><div class="row mx-3 mb-5">`;
-      else
-      html += `<button class="btn btn-outline-dark my-1 col-12 col-md-4 detetive" data-mcolor="${bts[i][j].col}" style="background-color: ${bts[i][j].col};">${bts[i][j].des}</button>`;
+      if (j == 0) {
+        html += `<h1>${bts[i][j].des}</h1><div class="row mx-3 mb-5">`;
+      } else {
+        let cls = "secondary";
+        let red = ` readonly="readonly"`;
+        let bgc = "#A9A9A9";
+        let dsc = "";
+        if (gam_arr[i][j - 1] == "2") {
+          cls = "dark";
+          dsc = " *";
+        } else if (gam_arr[i][j - 1] != "1") {
+          cls = "dark";
+          red = "";
+          bgc = bts[i][j].col;
+        }
+        html += `<button class="btn btn-outline-${cls} my-1 col-12 col-md-4 detetive" data-mcolor="${bts[i][j].col}" data-mty="${i}" data-mid="${j - 1}"${red} style="background-color: ${bgc};">${bts[i][j].des}${dsc}</button>`;
+      }
     }
     html += `</div>`;
   }
@@ -125,6 +161,16 @@ function genBtn() {
 }
 
 afterLoad(function() {
+  let s = getSession("gam_arr");
+  if (s) gam_arr = decode(s, Array);
   genBtn();
-  qs("#btn_redefinir").onclick = genBtn;
+  
+  qs("#btn_redefinir").onclick = function() {
+    let resp = confirm("Deseja redefinir o jogo?");
+    if (resp) {
+      delSession("gam_arr");
+      gam_arr = [[], [], []];
+      genBtn();
+    }
+  }
 });
