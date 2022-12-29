@@ -104,7 +104,7 @@ function togBtn() {
   let i = this.dataset.mty;
   let j = this.dataset.mid;
   let dsg = gam_arr[i][j];
-  // alert(dsg)
+  
   if (dsg == "1") {
     this.classList.replace("btn-outline-secondary", "btn-outline-dark");
     this.style.backgroundColor = this.dataset.mcolor;
@@ -130,13 +130,15 @@ function togMarca() {
   let j = e.dataset.mid;
   let dsg = gam_arr[i][j];
   if (e.classList.contains("fw-bold")) {
+    this.classList.replace("btn-secondary", "btn-outline-secondary");
     e.classList.remove("fw-bold");
     e.style.backgroundColor = "#C0C0C0";
     dsg = "1";
   } else {
+    this.classList.replace("btn-outline-secondary", "btn-secondary");
     e.classList.add("fw-bold");
     e.style.backgroundColor = "#A9A9A9";
-    dsg = "2"
+    dsg = "2";
   }
   gam_arr[i][j] = dsg;
   setSession("gam_arr", encode(gam_arr));
@@ -151,20 +153,21 @@ function genBtn() {
       } else {
         let cls = "secondary";
         let red = ` readonly="readonly"`;
-        let dis = "";
+        let dis = `class="btn btn-outline-secondary marca"`;
         let bgc = "#C0C0C0";
         if (gam_arr[i][j - 1] == "2") {
           cls = "secondary fw-bold";
+          dis = `class="btn btn-secondary marca"`;
           bgc = "#A9A9A9";
         } else if (gam_arr[i][j - 1] != "1") {
           cls = "dark";
+          dis = `class="btn btn-outline-secondary marca" disabled="disabled"`;
           red = "";
-          dis =  ` disabled="disabled"`;
           bgc = bts[i][j].col;
         }
         html += `<div class="btn-group my-1 col-12 col-md-4" role="group">`;
         html += `<button class="btn btn-outline-${cls} text-truncate detetive det${i}" data-mcolor="${bts[i][j].col}" data-mty="${i}" data-mid="${j - 1}"${red} style="background-color: ${bgc};">${bts[i][j].des}</button>`;
-        html += `<button type="button" class="btn btn-outline-secondary marca"${dis} width="40px" style="width: 40px; max-width: 40px;">*</button>`;
+        html += `<button type="button" ${dis} width="40px" style="width: 40px; max-width: 40px;">*</button>`;
         html += `</div>`;
       }
     }
