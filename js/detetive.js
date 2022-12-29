@@ -95,39 +95,53 @@ const bts = [
   ]
 ];
 
-var gam_arr = [[], [], []];
+var gam_arr = [
+  ["0", "0", "0", "0", "0", "0", "0", "0"], 
+  ["0", "0", "0", "0", "0", "0", "0", "0"], 
+  ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"]];
 
 function togBtn() {
   let i = this.dataset.mty;
   let j = this.dataset.mid;
   let dsg = gam_arr[i][j];
   
-  if (dsg == "2") {
-    let resp = confirm("Deseja desmarcar esse botão?");
-    if (resp) {
-      let str = this.innerText;
-      this.innerText = str.replace(" *", "");
-      this.style.backgroundColor = this.dataset.mcolor;
-      this.classList.replace("btn-outline-secondary", "btn-outline-dark");
-      this.readOnly = false;
-      dsg = "";
-    }
-  } else if (dsg == "1") {
-    let resp = confirm("Deseja marcar esse botão?");
-    if (resp) {
-      this.innerText += " *";
-      this.classList.replace("btn-outline-secondary", "btn-outline-dark");
-      dsg = "2";
-    }
-  } else {
+  if (dsg == "1") {
+    this.classList.replace("btn-outline-secondary", "btn-outline-dark");
+    this.style.backgroundColor = this.dataset.mcolor;
+    this.readOnly = false;
+    this.classList.remove("fw-bold");
+    this.nextElementSibling.disabled = true;
+    dsg = "0";
+  } else if (dsg == "0") {
     this.classList.replace("btn-outline-dark", "btn-outline-secondary");
+    this.style.backgroundColor = "#C0C0C0";
     this.readOnly = true;
-    this.style.backgroundColor = "#A9A9A9";
+    this.nextElementSibling.disabled = false;
     dsg = "1";
   }
   gam_arr[i][j] = dsg;
   setSession("gam_arr", encode(gam_arr));
-  totals();
+  totTit();
+}
+
+function togMarca() {
+  let e = this.previousElementSibling;
+  let i = e.dataset.mty;
+  let j = e.dataset.mid;
+  let dsg = gam_arr[i][j];
+  if (e.classList.contains("fw-bold")) {
+    this.classList.replace("btn-secondary", "btn-outline-secondary");
+    e.classList.remove("fw-bold");
+    e.style.backgroundColor = "#C0C0C0";
+    dsg = "1";
+  } else {
+    this.classList.replace("btn-outline-secondary", "btn-secondary");
+    e.classList.add("fw-bold");
+    e.style.backgroundColor = "#A9A9A9";
+    dsg = "2";
+  }
+  gam_arr[i][j] = dsg;
+  setSession("gam_arr", encode(gam_arr));
 }
 
 function genBtn() {
@@ -135,38 +149,47 @@ function genBtn() {
   for (let i = 0; i < bts.length; i++) {
     for (let j = 0; j < bts[i].length; j++) {
       if (j == 0) {
-        html += `<h1 class="detetive">${bts[i][j].des}</h1><div class="row mx-3 mb-5">`;
+        html += `<h1 class="det">${bts[i][j].des}</h1><div class="row mx-3 mb-5">`;
       } else {
         let cls = "secondary";
         let red = ` readonly="readonly"`;
-        let bgc = "#A9A9A9";
-        let dsc = "";
+        let dis = `class="btn btn-outline-secondary marca"`;
+        let bgc = "#C0C0C0";
         if (gam_arr[i][j - 1] == "2") {
-          cls = "dark";
-          dsc = " *";
+          cls = "secondary fw-bold";
+          dis = `class="btn btn-secondary marca"`;
+          bgc = "#A9A9A9";
         } else if (gam_arr[i][j - 1] != "1") {
           cls = "dark";
+          dis = `class="btn btn-outline-secondary marca" disabled="disabled"`;
           red = "";
           bgc = bts[i][j].col;
         }
-        html += `<button class="btn btn-outline-${cls} my-1 col-12 col-md-4 detetive det${i}" data-mcolor="${bts[i][j].col}" data-mty="${i}" data-mid="${j - 1}"${red} style="background-color: ${bgc};">${bts[i][j].des}${dsc}</button>`;
+        html += `<div class="btn-group my-1 col-12 col-md-4" role="group">`;
+        html += `<button class="btn btn-outline-${cls} text-truncate detetive det${i}" data-mcolor="${bts[i][j].col}" data-mty="${i}" data-mid="${j - 1}"${red} style="background-color: ${bgc};">${bts[i][j].des}</button>`;
+        html += `<button type="button" ${dis} width="40px" style="width: 40px; max-width: 40px;">*</button>`;
+        html += `</div>`;
       }
     }
     html += `</div>`;
   }
   qs("#div_sus").innerHTML = html;
-  totals();
+  totTit();
   
   qsa("button.detetive").forEach(function(e) {
     e.onclick = togBtn;
   });
+  
+  qsa("button.marca").forEach(function(e) {
+    e.onclick = togMarca;
+  });
 }
 
-function totals() {
-  let es = qsa("h1.detetive");
+function totTit() {
+  let es = qsa("h1.det");
   for (let i = 0; i < es.length; i++) {
-    let sl = gam_arr[i].filter(x => x != "").length;
-    let tl = bts[i].length;
+    let sl = gam_arr[i].filter(x => x != "0").length;
+    let tl = bts[i].length - 1;
     let x = `${bts[i][0].des} ${sl}/${tl}`;
     es[i].innerText = `${bts[i][0].des} ${sl}/${tl}`;
   }
@@ -181,7 +204,10 @@ afterLoad(function() {
     let resp = confirm("Deseja redefinir o jogo?");
     if (resp) {
       delSession("gam_arr");
-      gam_arr = [[], [], []];
+      gam_arr = [
+        ["0", "0", "0", "0", "0", "0", "0", "0"], 
+        ["0", "0", "0", "0", "0", "0", "0", "0"], 
+        ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"]];
       genBtn();
     }
   }
