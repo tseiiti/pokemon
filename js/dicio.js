@@ -35,7 +35,7 @@
 </soap:Envelope> */}
 
 
-
+{/*
 <verbetes total='9' prim='1' n='8'>
 	<base nome="dlpo" dll="LegixIsamLLDB" language="0"/>
 	<registo>
@@ -527,38 +527,99 @@
 <organismos></organismos>
 <textos></textos>
 </verbetes>
-
+*/}
 
 afterLoad(function() {
 	let sr = `
-<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:ser="http://services.priberam.pt/">
-	<soap:Header/>
-	<soap:Body>
-		 <ser:Pesquisa>
-				<!--Optional:-->
-				<ser:TextoAPesquisar>alvará</ser:TextoAPesquisar>
-				<ser:PrimeiraPosicao>1</ser:PrimeiraPosicao>
-				<ser:ResultadosPorPagina>20</ser:ResultadosPorPagina>
-				<ser:TotalResultados>50</ser:TotalResultados>
-				<ser:PaginaActual>1</ser:PaginaActual>
-				<ser:Modo>Android</ser:Modo>
-				<ser:acordo>true</ser:acordo>
-				<ser:lid>1046</ser:lid>
-		 </ser:Pesquisa>
-	</soap:Body>
-</soap:Envelope>`;
+    <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:ser="http://services.priberam.pt/">
+    	<soap:Header/>
+    	<soap:Body>
+  		  <ser:Pesquisa>
+  				<ser:TextoAPesquisar>alvará</ser:TextoAPesquisar>
+  				<ser:PrimeiraPosicao>1</ser:PrimeiraPosicao>
+  				<ser:ResultadosPorPagina>20</ser:ResultadosPorPagina>
+  				<ser:TotalResultados>50</ser:TotalResultados>
+  				<ser:PaginaActual>1</ser:PaginaActual>
+  				<ser:Modo>Android</ser:Modo>
+  				<ser:acordo>true</ser:acordo>
+  				<ser:lid>1046</ser:lid>
+  		  </ser:Pesquisa>
+    	</soap:Body>
+    </soap:Envelope>`;
 
 	var xmlhttp = new XMLHttpRequest();
-	xmlhttp.open('POST', 'http://services.flip.pt/dlpo2transformsac/dlpo_format.asmx', true);;
+	xmlhttp.open('POST', 'http://services.flip.pt/dlpo2transformsac/dlpo_format.asmx', true);
+// 	xmlhttp.open('POST', 'http://services.priberam.pt/Pesquisa', true);
 	xmlhttp.onreadystatechange = function () {
-			if (xmlhttp.readyState == 4) {
-					if (xmlhttp.status == 200) {
-							alert(xmlhttp.responseText);
-							// alert('done. use firebug/console to see network response');
-					}
-			}
+		alert(xmlhttp.status + " | " + xmlhttp.responseText + " | " + xmlhttp.responseXML);
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			alert(xmlhttp.responseText);
+		}
 	}
+	
 	// Send the POST request
-	xmlhttp.setRequestHeader('Content-Type', 'text/xml');
+// 	xmlhttp.setRequestHeader('Content-Type', 'text/xml');
+	xmlhttp.setRequestHeader('User-Agent', 'sampleTest');
+	xmlhttp.setRequestHeader('Content-Type', 'text/xml;charset=utf-8');
 	xmlhttp.send(sr);
+	
+	
+
+// // create web audio api context
+// var audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+
+// function playNote(frequency, duration) {
+//   // create Oscillator node
+//   var oscillator = audioCtx.createOscillator();
+
+//   oscillator.type = 'square';
+//   oscillator.frequency.value = frequency; // value in hertz
+//   oscillator.connect(audioCtx.destination);
+//   oscillator.start();
+
+//   setTimeout(
+//     function() {
+//       oscillator.stop();
+//       playMelody();
+//     }, duration);
+// }
+
+// function playMelody() {
+//   if (notes.length > 0) {
+//     note = notes.pop();
+//     playNote(note[0], 1000 * 256 / (note[1] * tempo));
+//   }
+// }
+
+// notes = [
+//   [659, 4],
+//   [659, 4],
+//   [659, 4],
+//   [523, 8],
+//   [0, 16],
+//   [783, 16],
+//   [659, 4],
+//   [523, 8],
+//   [0, 16],
+//   [783, 16],
+//   [659, 4],
+//   [0, 4],
+//   [987, 4],
+//   [987, 4],
+//   [987, 4],
+//   [1046, 8],
+//   [0, 16],
+//   [783, 16],
+//   [622, 4],
+//   [523, 8],
+//   [0, 16],
+//   [783, 16],
+//   [659, 4]
+// ];
+
+// notes.reverse();
+// tempo = 100;
+
+// playMelody();
+
 });
