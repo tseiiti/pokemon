@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Poke Yuyu - o Jogo</title>
+    <link rel="icon" type="image/x-icon" href="/img/icon.ico">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+  </head>
+  <body>
+    <header class="bg-secondary bg-gradient shadow-lg mb-5" data-component="/comp/header.html"></header>
+
+    <div class="container-lg">
+      <main class="text-center mx-3">
+        <label for="osc_type">type:</label>
+        <select id="osc_type">
+          <option value="sine">sine</option>
+          <option value="square" selected>square</option>
+          <option value="sawtooth">sawtooth</option>
+          <option value="triangle">triangle</option>
+        </select>
+        
+        <label for="frequency">frequency:</label>
+        <input id="frequency" type="number" value="440">
+        
+        <label for="duration">duration:</label>
+        <input id="duration" type="number" value="4">
+      </main>
+    </div>
+
+    <footer class="bd-footer bg-light mt-5" data-component="/comp/footer.html"></footer>
+
+		<script type="text/javascript" src="/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="/js/utils.js"></script>
+    <script type="text/javascript" src="/js/piano.js"></script>
+  </body>
+</html>
