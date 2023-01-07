@@ -2,6 +2,7 @@
 git clone git@github.com:tseiiti/pokemon.git
 git checkout test
 ruby -run -ehttpd . -p 8000
+http://localhost:8000/piano.html
 git add .; git commit -m "reduzi getTime"; git pull; git push; git status;
 
 pendencias:
