@@ -13,34 +13,46 @@
     <div class="container-lg">
       <main class="mx-3">
         <div class="row">
-          <label class="form-label" for="cIn">frequency:</label>
-          <span id="fOut"></span>
-          <input class="form-range" type="range" id="cIn" min="0" max="69" value="4" oninput="show();" />
-          <input class="form-range" type="range" id="fIn" min="0" max="99" value="40" oninput="show();" />
+          <span class="form-label" id="ff_out" for="fc_in">frequency:</span>
+          <input class="form-range" type="range" id="fc_in" min="0" max="69" value="4" oninput="ff_show();" />
+          <input class="form-range" type="range" id="ff_in" min="0" max="99" value="40" oninput="ff_show();" />
           
-          <label class="form-label" for="tIn">type:</label>
-          <span id="tOut"></span>
-          <input class="form-range" type="range" id="tIn" min="0" max="3" value="0" oninput="show();" />
+          <label class="form-label" id="tp_out" for="tp_in">type:</label>
+          <input class="form-range" type="range" id="tp_in" min="0" max="3" value="0" oninput="tp_show();" />
           
-          <label class="form-label" for="vIn">volume:</label>
-          <span id="vOut"></span>
-          <input class="form-range" type="range" id="vIn" min="0" max="100" value="80" oninput="show();" />
+          <label class="form-label" id="de_out" for="de_in">detune:</label>
+          <input class="form-range" type="range" id="de_in" min="0" max="100" value="0" oninput="de_show();" />
           
-          <label class="form-label" for="dIn">duration:</label>
-          <span id="dOut"></span>
-          <input class="form-range" type="range" id="dIn" min="1" max="5000" value="1000" oninput="show();" />
+          <label class="form-label" id="vl_out" for="vl_in">volume:</label>
+          <input class="form-range" type="range" id="vl_in" min="0" max="100" value="80" oninput="vl_show();" />
+          
+          <label class="form-label" id="du_out" for="du_in">duration:</label>
+          <input class="form-range" type="range" id="du_in" min="1" max="5000" value="1000" oninput="du_show();" />
         </div>
         
         <div class="row">
-          <div class="col-4">
-            <button class="btn btn-primary m-2 px-4" onclick='beep();'>Beep</button>
+          <div class="col-3">
+            <button class="btn btn-primary m-2 px-4" onclick="beep();">Beep</button>
           </div>
-          <div class="col-4">
-            <button class="btn btn-primary m-2 px-4" onclick='oStart();'>Start</button>
+          <div class="col-3">
+            <button class="btn btn-primary m-2 px-4" onclick="oStart();">Start</button>
           </div>
-          <div class="col-4">
-            <button class="btn btn-primary m-2 px-4" onclick='oStop();'>Stop</button>
+          <div class="col-3">
+            <button class="btn btn-primary m-2 px-4" onclick="oStop();">Stop</button>
           </div>
+          <div class="col-3">
+            <button class="btn btn-primary m-2 px-4" onclick="oPlay();">Play</button>
+          </div>
+        </div>
+        
+        <div class="row">
+          <button class="btn btn-primary m-1 px-1" onclick="note(261.625519);">dó</button>
+          <button class="btn btn-primary m-1 px-1" onclick="note(293.664734);">ré</button>
+          <button class="btn btn-primary m-1 px-1" onclick="note(329.627533);">mi</button>
+          <button class="btn btn-primary m-1 px-1" onclick="note(349.228241);">fá</button>
+          <button class="btn btn-primary m-1 px-1" onclick="note(391.995392);">sol</button>
+          <button class="btn btn-primary m-1 px-1" onclick="note(440);">lá</button>
+          <button class="btn btn-primary m-1 px-1" onclick="note(493.883301);">si</button>
         </div>
         
         <div id="div_console"></div>
