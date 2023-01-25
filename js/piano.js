@@ -34,48 +34,11 @@ function cc(text, replace = false, tlog = true) {
   }
 }
 
-// function sleep(ms) {
-//   return new Promise(resolve => setTimeout(resolve, ms));
-// }
-
-// async function play1() {
-//   const audioCtx = new(window.AudioContext || window.webkitAudioContext)();
-//   const oscillator = audioCtx.createOscillator();
-//   const gainNode = audioCtx.createGain();
-//   const tempo = 100;
-  
-//   oscillator.connect(gainNode);
-//   gainNode.connect(audioCtx.destination);
-  
-//   // oscillator.type = "square";
-//   oscillator.detune.value = 100;
-//   oscillator.start(0);
-  
-//   const initialVol = 0.1;
-//   gainNode.gain.value = initialVol;
-//   gainNode.gain.minValue = initialVol;
-//   gainNode.gain.maxValue = initialVol;
-
-//   for(let i = 0; i < notes.length; i++) {
-//     let frequency = notes[i][0];
-//     let duration = 1000 * 256 / (notes[i][1] * tempo);
-//     cc(frequency + " - " + duration);
-    
-//     oscillator.frequency.value = frequency;
-//     // gainNode.gain.value = 0.5;
-//     // gainNode.connect(audioCtx.destination);
-    
-//     await sleep(duration);
-//     // gainNode.disconnect(audioCtx.destination);
-//   }
-//   gainNode.disconnect(audioCtx.destination);
-// }
-
 var audioCtx = new(window.AudioContext || window.webkitAudioContext)();
 var gainNode = audioCtx.createGain();
 gainNode.connect(audioCtx.destination);
 
-var oscillator = audioCtx.createOscillator();
+var oscillator = null;
 var frequency = 0;
 var type = 0;
 var detune = 0;
@@ -87,7 +50,7 @@ function ff_show() {
   let f = qs("#ff_in").value;
   frequency = f * 1 + c * 100;
   qs("#ff_out").innerHTML = `frequency: ${frequency} hz`;
-  oscillator.frequency.value = frequency;
+  if (oscillator) oscillator.frequency.value = frequency;
 }
 
 function tp_show() {
@@ -98,32 +61,40 @@ function tp_show() {
     case 3: type = "triangle"; break;
   }
   qs("#tp_out").innerHTML = `type: ${type}`;
-  oscillator.type = type;
+  if (oscillator) oscillator.type = type;
 }
 
 function de_show() {
   detune = qs("#de_in").value;
   qs("#de_out").innerHTML = `detune: ${detune}`;
-  oscillator.detune.value = detune;
+  if (oscillator) oscillator.detune.value = detune;
 }
 
 function vl_show() {
   volume = qs("#vl_in").value / 100;
   qs("#vl_out").innerHTML = `volume: ${volume}`;
   gainNode.gain.value = volume;
+  // cc(volume)
 }
 
 function du_show() {
   duration = qs("#du_in").value;
   qs("#du_out").innerHTML = `duration: ${duration} ms`;
 }
-ff_show();
-tp_show();
-de_show();
-vl_show();
-du_show();
+
+function all_show() {
+  ff_show();
+  tp_show();
+  de_show();
+  vl_show();
+  du_show();
+}
 
 function createOsc() {
+  if (oscillator != null) {
+    oscillator.stop();
+  }
+  
   oscillator = audioCtx.createOscillator();
   oscillator.connect(gainNode);
   oscillator.detune.value = detune;
@@ -131,6 +102,8 @@ function createOsc() {
     oscillator.disconnect(gainNode);
     oscillator = null;
   }
+  
+  all_show();
   oscillator.frequency.value = frequency;
   oscillator.type = type;
   gainNode.gain.value = volume;
@@ -139,9 +112,29 @@ function createOsc() {
 function beep() {
   createOsc();
   
+  gainNode.gain.value = 0;
+  oscillator.start();
+  
   let ct = audioCtx.currentTime;
-  oscillator.start(ct);
-  oscillator.stop(ct + (duration / 1000));
+  let st = ct + duration / 1000;
+  let cl = 200;
+  // cc(`ct: ${ct}; stop: ${st};`, true, false);
+  
+  for(let i = 0; i <= cl; i++) {
+    let p = i / cl;
+    let c = p / 5;
+    let v = volume * p;
+    let t = ct + c;
+    let u = ct + duration / 1000 - c;
+    // cc(`i: ${i}; v: ${v.toString().substring(0, 6)}; t: ${t.toString().substring(0, 6)}; u: ${u.toString().substring(0, 6)};`, false, false)
+    gainNode.gain.setValueAtTime(v, t);
+    gainNode.gain.setValueAtTime(v, u);
+  }
+  
+  // cc(`ct: ${ct}; stop: ${st};`, false, false);
+  
+  // oscillator.start(ct);
+  oscillator.stop(st);
 };
 
 function oStart() {
@@ -155,27 +148,63 @@ function oStop() {
 
 function oPlay() {
   createOsc();
-  let accumulator = audioCtx.currentTime;
+  let acc = audioCtx.currentTime;
   for(let i = 0; i < notes.length; i++) {
     frequency = notes[i][0];
-    oscillator.frequency.setValueAtTime(frequency, accumulator);
+    oscillator.frequency.setValueAtTime(frequency, acc);
     duration = 256 / (notes[i][1] * 100); // tempo 100
-    accumulator += duration;
+    acc += duration;
   }
-  oscillator.frequency.setValueAtTime(0, accumulator);
+  oscillator.frequency.setValueAtTime(0, acc);
   oscillator.start();
-  oscillator.stop(accumulator + 0.1);
+  oscillator.stop(acc + 0.1);
 }
 
 function note(freq) {
   createOsc();
-  
   oscillator.frequency.value = freq;
-  
   oscillator.start();
   oscillator.stop(audioCtx.currentTime + (duration / 1000));
 };
 
+function draw() {
+  let html = `
+        <canvas id="canvas" width="150" height="150">teste</canvas>
+        <style>
+          canvas {
+            border: 1px solid black;
+          }
+        </style>`;
+  qs("#div_console").innerHTML = html;
+  
+  const canvas = qs("#canvas");
+  if (canvas.getContext) {
+    const ctx = canvas.getContext("2d");
+
+    // ctx.fillStyle = "rgb(200, 0, 0)";
+    // ctx.fillRect(10, 10, 50, 50);
+    // ctx.fillStyle = "rgba(0, 0, 200, 0.5)";
+    // ctx.fillRect(30, 30, 50, 50);
+    
+    // ctx.fillRect(25, 25, 100, 100);
+    // ctx.clearRect(45, 45, 60, 60);
+    // ctx.strokeRect(50, 50, 50, 50);
+    
+    ctx.beginPath();
+    ctx.moveTo(75, 41.4);
+    ctx.lineTo(100, 100);
+    ctx.lineTo(100, 50);
+    ctx.fill();
+    
+    // ctx.beginPath();
+    // ctx.moveTo(70, 50);
+    // ctx.lineTo(100, 75);
+    // ctx.lineTo(100, 25);
+    // ctx.fill();
+  }
+}
+      
 afterLoad(function() {
-  // play1();
+  all_show();
+  draw();
 });
