@@ -63,7 +63,6 @@ function gameHistory() {
   });
 }
 
-
 function gameAlert(typ, msg) {
   let html = `<div class="alert alert-dismissible alert-${typ} m-3" id="div_alert" role="alert">${msg}`;
   html += '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>';
@@ -79,7 +78,7 @@ function getNumbers() {
   
   n1 = randomBetween(2, 9);
   n2 = randomBetween(1, 10);
-  exp = (new Date()).getTime() + 31 * 1000;
+  exp = (new Date()).getTime() + 11 * 1000;
   point -= 1;
 
   setCookieY("point", point);
