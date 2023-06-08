@@ -78,7 +78,7 @@ function getNumbers() {
   
   n1 = randomBetween(2, 9);
   n2 = randomBetween(1, 10);
-  exp = (new Date()).getTime() + 11 * 1000;
+  exp = (new Date()).getTime() + 16 * 1000;
   point -= 1;
 
   setCookieY("point", point);
