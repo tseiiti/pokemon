@@ -1,5 +1,5 @@
 
-var point = 0, exp, n1, n2, inter;
+var point, exp, n1, n2, inter;
 
 function ntot(n) {
   if (n == 1) {
@@ -26,19 +26,20 @@ function ntot(n) {
 }
 
 function getNumbers() {
+  qs("#n1").value = "";
+  qs("#n2").value = "";
+  qs("#nr").value = "";
+  qs("#point").innerHTML = `Total de ${point} pontos`;
+  
   n1 = randomBetween(2, 9);
   n2 = randomBetween(1, 10);
-  exp = (new Date()).getTime() + 31 * 1000;
+  exp = (new Date()).getTime() + 21 * 1000;
 
   let html = `${ntot(n1)} vezes ${ntot(n2)}`;
   html = `<h1 class="">${capF(html)}</h1>`;
   html += `<h2 id="time_left">${getTime(exp - (new Date()).getTime() - 100, "min")}</h2>`;
-  html += '<input type="text" style="height: 28px; width: 26px; text-align:center;">';
-  html += '<label class="m-1">x</label>';
-  html += '<input type="text" style="height: 28px; width: 26px; text-align:center;">';
-  html += '<label class="m-1">=</label>';
-  html += '<input type="text" style="height: 28px; width: 32px; text-align:center;">';
   qs("#div_teste").innerHTML = html;
+  qs("#div_result").innerHTML = "";
 
   clearInterval(inter);
   inter = setInterval(function() {
@@ -49,35 +50,56 @@ function getNumbers() {
     }
     if (qs("#time_left")) qs("#time_left").innerText = getTime(ms, "min");
   }, 1000);
-
-  html = `<div class="alert alert-dismissible alert-secondary" id="div_alert" role="alert">`;
-  html += '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>';
-  html += 'teste';
-  html += '</div>';
-  qs("#div_result").innerHTML = html;
+  
+  point -= 1;
+  qs("#btn_val_nam").innerText = "Validar";
+  qs("#btn_val_nam").onclick = function() {
+    gameResult();
+  }
 }
 
 function gameResult() {
   clearInterval(inter);
+  let msg = "";
+  let typ = "danger";
   if ((new Date()).getTime() > exp) {
-    msg = "Você foi mais rápido que uma lesma... Mas acho que não foi a tempo";
-    typ = "secondary";
-    qs("#div_alert").innerText = msg;
+    msg = "Você foi mais rápido que uma lesma... Mas não deu tempo";
+  } else if (qs("#n1").value != n1) {
+    msg = `Mas será que não sabe o que é "${ntot(n1)}"?`;
+  } else if (qs("#n2").value != n2) {
+    msg = `Mas será que não sabe o que é "${ntot(n2)}"?`;
+  } else if (qs("#nr").value != n1 * n2) {
+    msg = `Erroooooou!`;
+  } else if (qs("#nr").value == n1 * n2) {
+    msg = `Acertou!`;
+    typ = "success";
+    point += 2;
+  }
+  setCookieY("tabuada", point);
 
-  } else {
-  }  
-
-  let html = `<div class="alert alert-dismissible alert-${typ}" id="div_alert" role="alert">`;
+  let html = `<div class="alert alert-dismissible alert-${typ} m-3" id="div_alert" role="alert">${msg}`;
   html += '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>';
-  html += 'teste';
   html += '</div>';
   qs("#div_result").innerHTML = html;
+  
+  qs("#btn_val_nam").innerText = "Próximo";
+  qs("#btn_val_nam").onclick = function() {
+    getNumbers();
+  }
 }
 
 afterLoad(function() {
+  point = getCookie("tabuada");
+  if (!point) point = 0;
   getNumbers();
-
-  qs("#btn_val_nam").onclick = function() {
-    gameResult();
+  
+  qs("#n1").oninput = function() {
+    if (qs("#n1").value == n1)
+      qs("#n2").focus();
   }
+  qs("#n2").oninput = function() {
+    if (qs("#n2").value == n2)
+      qs("#nr").focus();
+  }
+  
 });
