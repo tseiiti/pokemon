@@ -98,15 +98,19 @@ function gameResult() {
   if ((new Date()).getTime() > exp) {
     msg = "Você foi mais rápido que uma lesma... Mas parece que não deu tempo.";
     err = " - erro tipo 1";
+    point -= 2;
   } else if (qs("#n1").value != n1) {
     msg = `Mas será que não sabe o que é "${ntot(n1)}"? Daaaarrrrr`;
     err = " - erro tipo 2";
+    point -= 2;
   } else if (qs("#n2").value != n2) {
     msg = `Mas será que não sabe o que é "${ntot(n2)}"? Daaaarrrrr`;
     err = " - erro tipo 3";
+    point -= 2;
   } else if (qs("#nr").value != n1 * n2) {
     msg = `Erroooooou!`;
     err = " - erro tipo 4";
+    point -= 2;
   } else if (qs("#nr").value == n1 * n2) {
     msg = `Acertou!`;
     typ = "success";
