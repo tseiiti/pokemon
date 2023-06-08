@@ -52,6 +52,8 @@ function getNumbers() {
   }, 1000);
   
   point -= 1;
+  setCookieY("tabuada", point);
+  qs("#n1").focus();
   qs("#btn_val_nam").innerText = "Validar";
   qs("#btn_val_nam").onclick = function() {
     gameResult();
@@ -101,5 +103,4 @@ afterLoad(function() {
     if (qs("#n2").value == n2)
       qs("#nr").focus();
   }
-  
 });
