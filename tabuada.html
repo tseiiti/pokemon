@@ -12,16 +12,18 @@
 
     <div class="container-lg">
       <main class="text-center mx-3">
-        <h5 id="point"></h5>
-        <div class="m-0 p-0" id="div_teste"></div>
-        <div>
-          <input type="text" id="n1" style="height: 28px; width: 26px; text-align:center;">
-          <label class="m-1">x</label>
-          <input type="text" id="n2" style="height: 28px; width: 26px; text-align:center;">
-          <label class="m-1">=</label>
-          <input type="text" id="nr" style="height: 28px; width: 32px; text-align:center;">
-        </div>
-        <button class="btn btn-primary my-3" id="btn_val_nam" type="button">Validar</button>
+        <form onsubmit="getNumbers(); return false;">
+          <h5 id="point"></h5>
+          <div class="m-0 p-0" id="div_teste"></div>
+          <div>
+            <input type="text" id="n1" style="height: 28px; width: 26px; text-align:center;">
+            <label class="m-1">x</label>
+            <input type="text" id="n2" style="height: 28px; width: 26px; text-align:center;">
+            <label class="m-1">=</label>
+            <input type="text" id="nr" style="height: 28px; width: 32px; text-align:center;">
+          </div>
+          <button class="btn btn-primary my-3" id="btn_val_nam" type="submit">Validar</button>
+        </form>
         <div class="m-0 p-0" id="div_result"></div>
         
         <div class="table-wrapper-scroll-y" id="his"></div>
