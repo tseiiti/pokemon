@@ -136,7 +136,9 @@ afterLoad(function() {
     his.push(ult_his[1]);
     setCookieY("his", encode(his));
   }
-  getNumbers();
+  // getNumbers();
+  qs("#point").innerHTML = `Total de ${point} pontos`;
+  gameHistory();
   
   qs("#n1").oninput = function() {
     if (qs("#n1").value == n1)
