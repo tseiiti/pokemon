@@ -1,5 +1,5 @@
 
-var point, exp, n1, n2, inter;
+var point, his, exp, n1, n2, inter;
 
 function ntot(n) {
   if (n == 1) {
@@ -33,7 +33,7 @@ function getNumbers() {
   
   n1 = randomBetween(2, 9);
   n2 = randomBetween(1, 10);
-  exp = (new Date()).getTime() + 21 * 1000;
+  exp = (new Date()).getTime() + 31 * 1000;
 
   let html = `${ntot(n1)} vezes ${ntot(n2)}`;
   html = `<h1 class="">${capF(html)}</h1>`;
@@ -52,32 +52,45 @@ function getNumbers() {
   }, 1000);
   
   point -= 1;
-  setCookieY("tabuada", point);
+  setCookieY("point", point);
+  setCookieY("ult_his", `${his.length + 1};${n1}x${n2}= - 5`);
   qs("#n1").focus();
   qs("#btn_val_nam").innerText = "Validar";
   qs("#btn_val_nam").onclick = function() {
     gameResult();
   }
+  
+  qs("#his").innerHTML = "";
+  his.forEach(function(e) {
+    qs("#his").innerHTML += e + "<br>";
+  });
 }
 
 function gameResult() {
   clearInterval(inter);
   let msg = "";
   let typ = "danger";
+  let err = "";
   if ((new Date()).getTime() > exp) {
     msg = "Você foi mais rápido que uma lesma... Mas não deu tempo";
+    err = " - 1";
   } else if (qs("#n1").value != n1) {
     msg = `Mas será que não sabe o que é "${ntot(n1)}"?`;
+    err = " - 2";
   } else if (qs("#n2").value != n2) {
     msg = `Mas será que não sabe o que é "${ntot(n2)}"?`;
+    err = " - 3";
   } else if (qs("#nr").value != n1 * n2) {
     msg = `Erroooooou!`;
+    err = " - 4";
   } else if (qs("#nr").value == n1 * n2) {
     msg = `Acertou!`;
     typ = "success";
     point += 2;
   }
-  setCookieY("tabuada", point);
+  setCookieY("point", point);
+  his.push(`${qs("#n1").value}x${qs("#n2").value}=${qs("#nr").value}${err}`)
+  setCookieY("his", encode(his));
 
   let html = `<div class="alert alert-dismissible alert-${typ} m-3" id="div_alert" role="alert">${msg}`;
   html += '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>';
@@ -91,8 +104,16 @@ function gameResult() {
 }
 
 afterLoad(function() {
-  point = getCookie("tabuada");
+  point = getCookie("point");
   if (!point) point = 0;
+  
+  his = getCookie("his");
+  if (!his) his = "[]";
+  his = decode(his, Array);
+  let ult_his = getCookie("ult_his");
+  ult_his = ult_his.split(";");
+  if (his.length < ult_his[0])
+    his.push(ult_his[1]);
   getNumbers();
   
   qs("#n1").oninput = function() {

@@ -21,8 +21,20 @@
           <label class="m-1">=</label>
           <input type="text" id="nr" style="height: 28px; width: 32px; text-align:center;">
         </div>
-        <button class="btn btn-primary mt-3" id="btn_val_nam" type="button">Validar</button>
+        <button class="btn btn-primary my-3" id="btn_val_nam" type="button">Validar</button>
         <div class="m-0 p-0" id="div_result"></div>
+        
+        <div class="table-wrapper-scroll-y" id="his"></div>
+        <style>
+          .table-wrapper-scroll-y {
+            position: relative;
+            height: 120px;
+            overflow: auto;
+            display: block;
+            font-size: small;
+            line-height: 11px;
+          }
+        </style>
       </main>
     </div>
 
