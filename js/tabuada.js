@@ -60,8 +60,12 @@ function gameHistory() {
   let html = "";
   his.sort((a, b) => b.split("&")[0] - a.split("&")[0]).forEach(function(e) {
     let t = e.split("&")[1].split(" - ")[1];
+    let d = new Date(+e.split("&")[0]);
+    let h = pLeft(d.getHours());
+    let m = pLeft(d.getMinutes());
+    let s = pLeft(d.getSeconds());
     html += `<tr>
-      <td>${getTime(+e.split("&")[0])}</td>
+      <td>${h}:${m}:${s}</td>
       <td>${e.split("&")[1].split(" - ")[0]}</td>
       <td>${t ? t : ""}</td>
       </tr>`;
@@ -84,7 +88,7 @@ function getNumbers() {
   
   n1 = randomBetween(4, 9);
   n2 = randomBetween(1, 10);
-  exp = (new Date()).getTime() + 26 * 1000;
+  exp = (new Date()).getTime() + 16 * 1000;
   point -= 3;
 
   setCookieY("point", point);
