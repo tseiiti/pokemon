@@ -25,17 +25,6 @@ function ntot(n) {
   }
 }
 
-function gameTimer() {
-  clearInterval(inter);
-  inter = setInterval(function() {
-    let ms = exp - (new Date()).getTime();
-    if (ms < 0) {
-      gameResult();
-    }
-    if (qs("#time_left")) qs("#time_left").innerText = getTime(ms, "min");
-  }, 1000);
-}
-
 function gameForm() {
   let html = `${ntot(n1)} vezes ${ntot(n2)}`;
   html = `<h1 class="">${capF(html)}</h1>`;
@@ -47,20 +36,37 @@ function gameForm() {
   formButton(1);
 }
 
-function formButton(type) {
-  qs("form button").innerText = (type == 1 ? "Validar" : "Próximo");
+function formButton(typ) {
+  qs("form button").innerText = (typ == 1 ? "Validar" : "Próximo");
   qs("form").onsubmit = function() {
-    if (type == 1) gameResult();
+    if (typ == 1) gameResult();
     else getNumbers();
     return false;
   }
 }
 
+function gameTimer() {
+  clearInterval(inter);
+  inter = setInterval(function() {
+    let ms = exp - (new Date()).getTime();
+    if (ms < 0)
+      gameResult();
+    if (qs("#time_left"))
+      qs("#time_left").innerText = getTime(ms, "min");
+  }, 1000);
+}
+
 function gameHistory() {
-  qs("#his").innerHTML = "";
+  let html = "";
   his.sort((a, b) => b.split("&")[0] - a.split("&")[0]).forEach(function(e) {
-    qs("#his").innerHTML += e.split("&")[1] + "<br>";
+    let t = e.split("&")[1].split(" - ")[1];
+    html += `<tr>
+      <td>${getTime(+e.split("&")[0])}</td>
+      <td>${e.split("&")[1].split(" - ")[0]}</td>
+      <td>${t ? t : ""}</td>
+      </tr>`;
   });
+  qs("#his").innerHTML = html;
 }
 
 function gameAlert(typ, msg) {
@@ -78,8 +84,8 @@ function getNumbers() {
   
   n1 = randomBetween(2, 9);
   n2 = randomBetween(1, 10);
-  exp = (new Date()).getTime() + 16 * 1000;
-  point -= 1;
+  exp = (new Date()).getTime() + 26 * 1000;
+  point -= 3;
 
   setCookieY("point", point);
   setCookieY("ult_his", `${his.length + 1}|${(new Date()).getTime()}&${n1}x${n2}= erro tipo - 5`);
@@ -98,23 +104,19 @@ function gameResult() {
   if ((new Date()).getTime() > exp) {
     msg = "Você foi mais rápido que uma lesma... Mas parece que não deu tempo.";
     err = " - erro tipo 1";
-    point -= 2;
   } else if (qs("#n1").value != n1) {
     msg = `Mas será que não sabe o que é "${ntot(n1)}"? Daaaarrrrr`;
     err = " - erro tipo 2";
-    point -= 2;
   } else if (qs("#n2").value != n2) {
     msg = `Mas será que não sabe o que é "${ntot(n2)}"? Daaaarrrrr`;
     err = " - erro tipo 3";
-    point -= 2;
   } else if (qs("#nr").value != n1 * n2) {
     msg = `Erroooooou!`;
     err = " - erro tipo 4";
-    point -= 2;
   } else if (qs("#nr").value == n1 * n2) {
     msg = `Acertou!`;
     typ = "success";
-    point += 2;
+    point += 4;
   }
 
   setCookieY("point", point);
@@ -139,7 +141,7 @@ afterLoad(function() {
     his.push(ult_his[1]);
     setCookieY("his", encode(his));
   }
-  // getNumbers();
+  
   qs("#point").innerHTML = `Total de ${point} pontos`;
   gameHistory();
   
