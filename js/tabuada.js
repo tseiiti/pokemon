@@ -82,7 +82,7 @@ function getNumbers() {
   qs("#nr").value = "";
   qs("#point").innerHTML = `Total de ${point} pontos`;
   
-  n1 = randomBetween(2, 9);
+  n1 = randomBetween(4, 9);
   n2 = randomBetween(1, 10);
   exp = (new Date()).getTime() + 26 * 1000;
   point -= 3;
