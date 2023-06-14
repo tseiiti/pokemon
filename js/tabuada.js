@@ -1,5 +1,5 @@
 
-var point, his, exp, n1, n2, inter;
+var hist, exp, tmp, err, eve, n1, n2, inter;
 
 function ntot(n) {
   if (n == 1) {
@@ -27,7 +27,7 @@ function ntot(n) {
 
 function gameForm() {
   let html = `${ntot(n1)} vezes ${ntot(n2)}`;
-  html = `<h1 class="">${capF(html)}</h1>`;
+  html = `<h1 class="p-0 m-0">${capF(html)}</h1>`;
   html += `<h2 id="time_left">${getTime(exp - (new Date()).getTime() - 100, "min")}</h2>`;
   qs("#div_teste").innerHTML = html;
   qs("#div_result").innerHTML = "";
@@ -36,10 +36,10 @@ function gameForm() {
   formButton(1);
 }
 
-function formButton(typ) {
-  qs("form button").innerText = (typ == 1 ? "Validar" : "Próximo");
+function formButton() {
+  qs("form button").innerText = (eve == 1 ? "Validar" : "Próximo");
   qs("form").onsubmit = function() {
-    if (typ == 1) gameResult();
+    if (eve == 1) gameResult();
     else getNumbers();
     return false;
   }
@@ -49,28 +49,33 @@ function gameTimer() {
   clearInterval(inter);
   inter = setInterval(function() {
     let ms = exp - (new Date()).getTime();
-    if (ms < 0)
-      gameResult();
-    if (qs("#time_left"))
+    if (qs("#time_left")) {
+      if (ms <= 0) ms = 0;
       qs("#time_left").innerText = getTime(ms, "min");
+    }
+    if (ms <= 0)
+      gameResult();
   }, 1000);
 }
 
 function gameHistory() {
+  let his = [...hist];
+  let pnts = his.shift();
   let html = "";
   his.sort((a, b) => b.split("&")[0] - a.split("&")[0]).forEach(function(e) {
-    let t = e.split("&")[1].split(" - ")[1];
-    let d = new Date(+e.split("&")[0]);
-    let h = pLeft(d.getHours());
-    let m = pLeft(d.getMinutes());
+    let f = e.split("&");
+    let d = new Date(+f[2]);
     let s = pLeft(d.getSeconds());
+    let l = pLeft(d.getMilliseconds(), 3);
     html += `<tr>
-      <td>${h}:${m}:${s}</td>
-      <td>${e.split("&")[1].split(" - ")[0]}</td>
-      <td>${t ? t : ""}</td>
+      <td>${getTime(+f[0])}</td>
+      <td>${f[1]}</td>
+      <td>${s}:${l}</td>
+      <td>${f[3]}</td>
       </tr>`;
   });
-  qs("#his").innerHTML = html;
+  qs("#hist").innerHTML = html;
+  qs("#pnts").innerHTML = `Total de ${pnts} pontos`;
 }
 
 function gameAlert(typ, msg) {
@@ -80,73 +85,78 @@ function gameAlert(typ, msg) {
   qs("#div_result").innerHTML = html;
 }
 
+function updateHist() {
+  let txt = (new Date()).getTime();
+  txt += `&${qs("#n1").value ? qs("#n1").value : n1}`;
+  txt += `${qs("#n1").value != n1 ? '*' : ''}`;
+  txt += `x${qs("#n2").value ? qs("#n2").value : n2}`;
+  txt += `${qs("#n2").value != n2 ? '*' : ''}`;
+  txt += `=${qs("#nr").value}&${tmp}&${err}`
+  
+  hist.push(txt);
+  setCookieY("hist", hist.toString());
+}
+
 function getNumbers() {
+  eve = 1;
+  tmp = '';
+
   qs("#n1").value = "";
   qs("#n2").value = "";
   qs("#nr").value = "";
-  qs("#point").innerHTML = `Total de ${point} pontos`;
   
   n1 = randomBetween(4, 9);
-  n2 = randomBetween(1, 10);
+  n2 = randomBetween(2, 9);
   exp = (new Date()).getTime() + 16 * 1000;
-  point -= 3;
+  err = "sessão expirada";
+  hist[0] -= 3;
 
-  setCookieY("point", point);
-  setCookieY("ult_his", `${his.length + 1}|${(new Date()).getTime()}&${n1}x${n2}= erro tipo - 5`);
-
+  updateHist();
   gameForm();
   gameTimer();
-  gameHistory();
 }
 
 function gameResult() {
   clearInterval(inter);
+  eve = 2;
+  tmp = (new Date()).getTime() - (exp - 16 * 1000);
 
   let msg = "";
   let typ = "danger";
-  let err = "";
+  err = "";
   if ((new Date()).getTime() > exp) {
     msg = "Você foi mais rápido que uma lesma... Mas parece que não deu tempo.";
-    err = " - erro tipo 1";
+    err = "tempo expirado";
   } else if (qs("#n1").value != n1) {
     msg = `Mas será que não sabe o que é "${ntot(n1)}"? Daaaarrrrr`;
-    err = " - erro tipo 2";
+    err = "1° número inválido";
   } else if (qs("#n2").value != n2) {
     msg = `Mas será que não sabe o que é "${ntot(n2)}"? Daaaarrrrr`;
-    err = " - erro tipo 3";
+    err = "2° número inválido";
   } else if (qs("#nr").value != n1 * n2) {
     msg = `Erroooooou!`;
-    err = " - erro tipo 4";
+    err = "multiplicação incorreta";
   } else if (qs("#nr").value == n1 * n2) {
     msg = `Acertou!`;
     typ = "success";
-    point += 4;
+    hist[0] += 4;
   }
-
-  setCookieY("point", point);
-  his.push(`${(new Date()).getTime()}&${qs("#n1").value}x${qs("#n2").value}=${qs("#nr").value}${err}`);
-  setCookieY("his", encode(his));
-
-  gameAlert(typ, msg);
+  
+  if (hist[0] == 100 && typ == "success") {
+    msg = `Parabéns! Você chegou no nível azul claro! Quando fizer 1000 pontos chegará no nível azul escuro.`;
+    typ = "info";
+  }
+  
+  hist.pop();
+  updateHist();
   gameHistory();
-  formButton(2);
+  gameAlert(typ, msg);
+  formButton();
 }
 
 afterLoad(function() {
-  point = getCookie("point");
-  if (!point) point = 0;
-  
-  his = getCookie("his");
-  if (!his) his = "[]";
-  his = decode(his, Array);
-  let ult_his = getCookie("ult_his");
-  ult_his = ult_his.split("|");
-  if (his.length < ult_his[0]) {
-    his.push(ult_his[1]);
-    setCookieY("his", encode(his));
-  }
-  
-  qs("#point").innerHTML = `Total de ${point} pontos`;
+  hist = getCookie("hist") || "0";
+  hist = hist.split(',');
   gameHistory();
   
   qs("#n1").oninput = function() {

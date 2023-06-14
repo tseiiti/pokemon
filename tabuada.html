@@ -13,9 +13,9 @@
     <div class="container-lg">
       <main class="text-center mx-3">
         <form onsubmit="getNumbers(); return false;">
-          <h5 id="point"></h5>
+          <h5 class="m-0 p-0" id="pnts"></h5>
           <div class="m-0 p-0" id="div_teste"></div>
-          <div>
+          <div class="mt-3">
             <input type="text" id="n1" style="height: 28px; width: 26px; text-align:center;">
             <label class="m-1">x</label>
             <input type="text" id="n2" style="height: 28px; width: 26px; text-align:center;">
@@ -32,10 +32,11 @@
               <tr>
                 <th scope="col">Horário</th>
                 <th scope="col">Resposta</th>
+                <th scope="col">Tempo</th>
                 <th scope="col">Erro</th>
               </tr>
             </thead>
-            <tbody id="his"></tbody>
+            <tbody id="hist"></tbody>
           </table>
         </div>
         <style>
