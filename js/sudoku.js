@@ -4,13 +4,12 @@ function celula(html, id_t, id_c, id_y, id_x) {
   // respostas
   html += `<div style="line-height: 10px; font-size: 9px;">`;
   for(let i = 0; i < 9; i++) {
-    html += `<label class="numbers_left tabela_${id_t} celula_${id_c} linha_${id_y} coluna_${id_x} label_${i + 1}" style="line-height: 10px; font-size: 9px; width: 7px;" data-color="" data-value="${i + 1}">${i + 1}</label>`;
-    // if ((i + 1) % 3 == 0 && i < 8) html += `</div><div>`;
+    html += `<label class="numbers_left tabela_${id_t} celula_${id_c} linha_${id_y} coluna_${id_x} label_${i + 1}" style="line-height: 10px; font-size: 9px; width: 7px;" data-value="${i + 1}">${i + 1}</label>`;
   }
   html += `</div>`;
   
   // input numero da celula
-  html += `<input class="tabela_${id_t} linha_${id_y} coluna_${id_x} celula_${id_c}" name="val_num" type="number" data-celula="${id_c}" style="height: 20px; width: 20px; text-align:center;">`;
+  html += `<input class="inp_txt tabela_${id_t} celula_${id_c} linha_${id_y} coluna_${id_x}" type="number" style="height: 20px; width: 20px; text-align:center;">`;
   html += `</div>`;
   
   return html;
@@ -41,19 +40,20 @@ function grid() {
     if ((i + 1) % 3 == 0 && i < 8) html += `</div><div class="row">`;
   }
   html += `</div></div>`;
+
+  qs("#div_grid").innerHTML = html;
   
-  // alert(html)
-  qs("#div_teste").innerHTML = html;
+  oneNumber();
 }
 
 function oneNumber() {
-  // garante somente 1 numero
-  is = qsa("input[name=val_num]");
-  is.forEach(function(e) {
+  let it = qsa(".inp_txt");
+  it.forEach(function(e) {
     e.oninput = function() {
+      // garante somente 1 numero
       this.value = this.value.substr(-1);
+      verifica();
     }
-    e.addEventListener("change", btnTeste2);
   });
 }
 
@@ -67,37 +67,36 @@ function cc(text, replace = false, tlog = true) {
   }
 }
 
-function btnTeste1() {
-  is = qsa("input[name=val_num]");
+function btnSalvar() {
+  let it = qsa(".inp_txt");
   let t = "[";
-  is.forEach(function(e) {
+  it.forEach(function(e) {
     if (e.value) {
-      let cl = e.className.split(" ");
-      t += `[${cl[0].substr(-1)}, ${cl[3].substr(-1)}, ${e.value}], `;
+      let cl = e.classList;
+      t += `[${cl[1].substr(-1)}, ${cl[2].substr(-1)}, ${e.value}], `;
     }
   });
   t += "]";
   cc(t, true, false);
 }
 
-function btnTeste2() {
+function verifica() {
   qsa(".numbers_left").forEach(function(e) {
     e.style.visibility = "visible";
-    e.dataset.color = "";
     e.style.backgroundColor = "";
   });
 
-  qsa("input[name=val_num]").forEach(function(e) {
+  qsa(".inp_txt").forEach(function(e) {
     if (e.value && e.value > 0) {
-      let cl = e.className.split(" ");
+      let cl = e.classList;
       
-      // apaga label da celula preechida
-      qsa(`label.${cl[0]}.${cl[3]}`).forEach(function(f) {
+      // oculta labels da celula
+      qsa(`label.${cl[1]}.${cl[2]}`).forEach(function(f) {
         f.style.visibility = "hidden";
       });
       
-      // apaga label repetida da tabela, linha e coluna
-      cl.slice(0, 3).forEach(function(c) {
+      // oculta label repetida da tabela, linha e coluna
+      [cl[1], cl[3], cl[4]].forEach(function(c) {
         qsa(`label.${c}.label_${e.value}`).forEach(function(f) {
           f.style.visibility = "hidden";
         });
@@ -108,10 +107,10 @@ function btnTeste2() {
   qsa(".numbers_left").forEach(function(e) {
     if (e.style.visibility == "visible") {
       let color = "#abf7b1";
-      let cl = e.className.split(" ");
+      let cl = e.classList;
       
-      // verifica se nao eh unico
       qsa(`label.${cl[1]}.${cl[2]}`).forEach(function(f) {
+        // verifica se nao eh unico
         if (f.style.visibility == "visible" && e.className != f.className) {
           color = "#ddd";
           return;
@@ -119,8 +118,8 @@ function btnTeste2() {
       });
       
       if (color == "#ddd") {
-        // verifica se nao eh recomendavel
         qsa(`label.${cl[1]}.${cl[5]}`).forEach(function(f) {
+          // verifica se nao eh recomendavel
           if (f.style.visibility == "visible" && e.className != f.className) {
             color = "";
             return;
@@ -128,42 +127,26 @@ function btnTeste2() {
         });
       }
       
-      e.dataset.color = color;
       e.style.backgroundColor = color;
     }
   });
-}
-
-function btnTeste3() {
-  let executou = false;
-  qsa(".numbers_left").forEach(function(e) {
-    let color = true;
-    let cl = e.className.split(" ");
-    
-    if (e.style.visibility == "visible" && e.dataset.color != "") {
-      let f = qs(`input.${cl[1]}.${cl[2]}`);
-      f.value = e.dataset.value;
-      f.parentElement.className += " border-warning";
-      e.style.visibility = "hidden";
-      executou = true;
-    }
-  });
   
-  if (executou) {
-    btnTeste2();
-    btnTeste3();
-  }
+  corrige();
 }
 
-function btnTeste4() {
-  qsa("input[name=val_num]").forEach(function(e) {
+function corrige() {
+  qsa(".inp_txt").forEach(function(e) {
+    e.parentElement.classList.remove("text-bg-danger");
+  });
+
+  qsa(".inp_txt").forEach(function(e) {
     if (e.value && e.value > 0) {
-      let cl = e.className.split(" ");
-      cl.slice(0, 3).forEach(function(c) {
+      let cl = e.classList;
+      [cl[1], cl[3], cl[4]].forEach(function(c) {
         qsa(`input.${c}`).forEach(function(f) {
           if (e.className != f.className && e.value == f.value) {
-            e.parentElement.className += " text-bg-danger";
-            f.parentElement.className += " text-bg-danger";
+            e.parentElement.classList.add("text-bg-danger");
+            f.parentElement.classList.add("text-bg-danger");
           }
         });
       });
@@ -171,22 +154,40 @@ function btnTeste4() {
   });
 }
 
+function auto() {
+  let executou = false;
+  qsa(".numbers_left").forEach(function(e) {
+    if (e.style.visibility == "visible" && e.style.backgroundColor != "") {
+      let cl = e.classList;
+      let f = qs(`input.${cl[3]}.${cl[4]}`);
+      f.value = e.dataset.value;
+      f.parentElement.classList.add("border-warning");
+      e.style.visibility = "hidden";
+      executou = true;
+    }
+  });
+  
+  if (executou) {
+    verifica();
+    auto();
+  }
+}
+
+
 
 afterLoad(function() {
   grid();
-  oneNumber();
   
-  qs("#btn_teste_1").addEventListener("click", btnTeste1);
-  qs("#btn_teste_2").addEventListener("click", btnTeste2);
-  qs("#btn_teste_3").addEventListener("click", btnTeste3);
-  qs("#btn_teste_4").addEventListener("click", btnTeste4);
+  let html = "";
+  html += `<button class="btn btn-primary m-1" type="button" onclick="btnSalvar();">Salvar</button>`;
+  html += `<button class="btn btn-primary m-1" type="button" onclick="auto();">Auto</button>`;
+  qs("#div_btn").innerHTML = html;  
   
+  let x = [[1, 4, 3], [1, 6, 8], [1, 7, 5], [1, 8, 9], [3, 1, 5], [3, 4, 1], [3, 6, 7], [3, 7, 6], [3, 8, 8], [3, 9, 4], [4, 3, 1], [4, 4, 6], [4, 7, 4], [5, 1, 8], [5, 2, 4], [5, 6, 5], [5, 8, 3], [6, 3, 3], [6, 6, 8], [6, 8, 1], [7, 2, 4], [8, 7, 7], [8, 8, 2], [8, 9, 9], [9, 1, 7], [9, 3, 1], [9, 5, 6], [9, 6, 9], [9, 8, 4],];
   
-  // let x = [[1, 4, 3], [1, 6, 8], [1, 7, 5], [1, 8, 9], [3, 1, 5], [3, 4, 1], [3, 6, 7], [3, 7, 6], [3, 8, 8], [3, 9, 4], [4, 3, 1], [4, 4, 6], [4, 7, 4], [5, 1, 8], [5, 2, 4], [5, 6, 5], [5, 8, 3], [6, 3, 3], [6, 6, 8], [6, 8, 1], [7, 2, 4], [8, 7, 7], [8, 8, 2], [8, 9, 9], [9, 1, 7], [9, 3, 1], [9, 5, 6], [9, 6, 9], [9, 8, 4],];
+  x.forEach(function(a) {
+    qs(`input.tabela_${a[0]}.celula_${a[1]}`).value = a[2];
+  });
   
-  // x.forEach(function(a) {
-  //   qs(`input.tabela_${a[0]}.celula_${a[1]}`).value = a[2];
-  // });
-  
-  btnTeste2();
+  verifica();
 });
