@@ -59,8 +59,8 @@ function levelChange() {
 function getPoke() {
   pok_id = randomBetween(1, 905);
   let img = qs("#poke_image");
-  img.src = `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${pok_id.toString().padStart(3, "0")}.png`;
-  // img.src = `/img/pokes/${pok_id.toString().padStart(3, "0")}.png`;
+  // img.src = `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${pok_id.toString().padStart(3, "0")}.png`;
+  img.src = `/img/pokes/${pok_id.toString().padStart(3, "0")}.png`;
   img.alt = "créditos da imagem a pokemon.com";
   
   last_game = new Game(user.level, pok_id, "", 0);
