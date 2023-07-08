@@ -63,7 +63,7 @@ function cc(text, replace = false, tlog = true) {
     let t = "";
     if (!replace) html = qs("#div_console").innerHTML;
     if (tlog) t = getTime(new Date(), "mill") + " => ";
-    qs("#div_console").innerHTML = "<p cla6ss=\"p-0 m-0\">" + t + text + "</p>" + html;
+    qs("#div_console").innerHTML = "<p class=\"p-0 m-0\">" + t + text + "</p>" + html;
   }
 }
 

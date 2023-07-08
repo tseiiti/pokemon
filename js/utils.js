@@ -179,6 +179,10 @@ function capF(text) {
   return text[0].toUpperCase() + text.substring(1);
 }
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 // adiciona texto div antes do elemento indicado
 function ab(text, str_elm) {
   const newDiv = document.createElement("div");
