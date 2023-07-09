@@ -82,19 +82,18 @@ function salvar() {
 
 function verifica() {
   // desfaz verificações anteriores
-  qsa(".numbers_left.invisible, .numbers_left.bg-info, .numbers_left.bg-success").forEach(function(e) {
+  qsa("label.invisible, label.bg-info").forEach(function(e) {
     changeClass(e, "invisible", "visible");
     changeClass(e, "bg-info", "bg-white");
-    changeClass(e, "bg-success", "bg-white");
   });
 
-  desnecessarios();
+  ocultar();
+  mesmo();
   recomendaveis();
   corrige();
 }
 
-function desnecessarios() {
-  // ocultar opções inválidas
+function ocultar() {
   qsa(".inp_txt").forEach(function(e) {
     if (e.value && e.value > 0) {
       let cl = e.classList;
@@ -114,35 +113,52 @@ function desnecessarios() {
   });
 }
 
-function recomendaveis() {
-  // sinalizar recomendáveis
-  qsa(".numbers_left.visible").forEach(function(e) {
-    let color = "bg-success";
+function mesmo() {
+  let se = new Set();
+  // procura valores em mesma linha ou coluna
+  qsa("label.visible").forEach(function(e) {
     let cl = e.classList;
+    let same_lin = true;
+    let same_col = true;
     
-    // verifica se nao eh unico
-    qsa(`label.${cl[1]}.${cl[2]}.visible`).every(function(f) {
-      if (e.className != f.className) {
-        color = "bg-info";
-        return false;
-      }
-      return true;
+    qsa(`label.${cl[1]}.${cl[5]}.visible`).every(function(f) {
+      if (cl[3] != f.classList[3]) same_lin = false;
+      return same_lin;
     });
     
-    if (color == "bg-info") {
-      // verifica se nao eh recomendável
-      qsa(`label.${cl[1]}.${cl[5]}.visible`).every(function(f) {
-        if (e.className != f.className) {
-          color = "bg-white";
-          return false;
-        }
-        return true;
-      });
-    }
+    qsa(`label.${cl[1]}.${cl[5]}.visible`).every(function(f) {
+      if (cl[4] != f.classList[4]) same_col = false;
+      return same_col;
+    });
     
-    if (color != "bg-white") {
-      changeClass(e, "bg-white", color);
-    }
+    if (same_lin)
+      se.add(`${cl[1]} ${cl[3]} ${cl[5]}`);
+    if (same_col)
+      se.add(`${cl[1]} ${cl[4]} ${cl[5]}`);
+  });
+  
+  // oculta de outras tabelas
+  se.forEach(function(e) {
+    let cl = e.split(" ");
+    qsa(`label.${cl[1]}.${cl[2]}`).forEach(function(f) {
+      if (cl[0] != f.classList[1])
+        changeClass(f, "visible", "invisible");
+    });
+  });
+}
+
+function recomendaveis() {
+  qsa("label.visible").forEach(function(e) {
+    let cl = e.classList;
+    let ls;
+    
+    ls = qsa(`label.${cl[1]}.${cl[2]}.visible`);
+    if (ls.length == 1)
+      changeClass(ls[0], "bg-white", "bg-info");
+    
+    ls = qsa(`label.${cl[1]}.${cl[5]}.visible`);
+    if (ls.length == 1)
+      changeClass(ls[0], "bg-white", "bg-info");
   });
 }
 
@@ -168,7 +184,7 @@ function corrige() {
 
 function auto() {
   let executou = false;
-  qsa(".numbers_left.bg-info, .numbers_left.bg-success").forEach(function(e) {
+  qsa("label.bg-info").forEach(function(e) {
       let cl = e.classList;
       let f = qs(`input.${cl[3]}.${cl[4]}`);
       f.value = e.dataset.value;
@@ -182,28 +198,6 @@ function auto() {
   }
 }
 
-function teste() {
-  qsa(".numbers_left.tabela_1.visible").forEach(function(e) {
-    // if (e.style.visibility == "visible") {
-      // let cl = e.classList;
-      // let is_same_lin = true;
-      // let is_same_col = true;
-      
-      // qsa(`label.${cl[1]}.${cl[5]}`).every(function(f) {
-      //   // verifica se nao eh unico
-      //   if (f.style.visibility == "visible" && ) {
-      //     color = "#ddd";
-      //     return false;
-      //   }
-      //   return true;
-      // });
-      
-      cc(e.className);
-          e.classList.remove("visible").add("invisible");
-    // }
-  });
-}
-
 
 afterLoad(function() {
   grid();
@@ -214,11 +208,11 @@ afterLoad(function() {
   html += `<button class="btn btn-primary m-1" type="button" onclick="teste();">Teste</button>`;
   qs("#div_btn").innerHTML = html;  
   
-  let x = [[1, 4, 3], [1, 6, 8], [1, 7, 5], [1, 8, 9], [3, 1, 5], [3, 4, 1], [3, 6, 7], [3, 7, 6], [3, 8, 8], [3, 9, 4], [4, 3, 1], [4, 4, 6], [4, 7, 4], [5, 1, 8], [5, 2, 4], [5, 6, 5], [5, 8, 3], [6, 3, 3], [6, 6, 8], [6, 8, 1], [7, 2, 4], [8, 7, 7], [8, 8, 2], [8, 9, 9], [9, 1, 7], [9, 3, 1], [9, 5, 6], [9, 6, 9], [9, 8, 4],];
+  // let x = [[1, 4, 3], [1, 6, 8], [1, 7, 5], [1, 8, 9], [3, 1, 5], [3, 4, 1], [3, 6, 7], [3, 7, 6], [3, 8, 8], [3, 9, 4], [4, 3, 1], [4, 4, 6], [4, 7, 4], [5, 1, 8], [5, 2, 4], [5, 6, 5], [5, 8, 3], [6, 3, 3], [6, 6, 8], [6, 8, 1], [7, 2, 4], [8, 7, 7], [8, 8, 2], [8, 9, 9], [9, 1, 7], [9, 3, 1], [9, 5, 6], [9, 6, 9], [9, 8, 4],];
   
-  x.forEach(function(a) {
-    qs(`input.tabela_${a[0]}.celula_${a[1]}`).value = a[2];
-  });
+  // x.forEach(function(a) {
+  //   qs(`input.tabela_${a[0]}.celula_${a[1]}`).value = a[2];
+  // });
   
   verifica();
 });
