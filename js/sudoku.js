@@ -67,7 +67,7 @@ function cc(text, replace = false, tlog = true) {
   }
 }
 
-function btnSalvar() {
+function salvar() {
   let it = qsa(".inp_txt");
   let t = "[";
   it.forEach(function(e) {
@@ -81,11 +81,13 @@ function btnSalvar() {
 }
 
 function verifica() {
+  // desfaz verificações anteriores
   qsa(".numbers_left").forEach(function(e) {
     e.style.visibility = "visible";
     e.style.backgroundColor = "";
   });
 
+  // ocultar opções inválidas
   qsa(".inp_txt").forEach(function(e) {
     if (e.value && e.value > 0) {
       let cl = e.classList;
@@ -104,26 +106,29 @@ function verifica() {
     }
   });
   
+  // sinalizar recomendáveis
   qsa(".numbers_left").forEach(function(e) {
     if (e.style.visibility == "visible") {
       let color = "#abf7b1";
       let cl = e.classList;
       
-      qsa(`label.${cl[1]}.${cl[2]}`).forEach(function(f) {
+      qsa(`label.${cl[1]}.${cl[2]}`).every(function(f) {
         // verifica se nao eh unico
         if (f.style.visibility == "visible" && e.className != f.className) {
           color = "#ddd";
-          return;
+          return false;
         }
+        return true;
       });
       
       if (color == "#ddd") {
-        qsa(`label.${cl[1]}.${cl[5]}`).forEach(function(f) {
-          // verifica se nao eh recomendavel
+        qsa(`label.${cl[1]}.${cl[5]}`).every(function(f) {
+          // verifica se nao eh recomendável
           if (f.style.visibility == "visible" && e.className != f.className) {
             color = "";
-            return;
+            return false;
           }
+          return true;
         });
       }
       
@@ -157,7 +162,7 @@ function corrige() {
 function auto() {
   let executou = false;
   qsa(".numbers_left").forEach(function(e) {
-    if (e.style.visibility == "visible" && e.style.backgroundColor != "") {
+    if (e.style.visibility == "visible" && ["rgb(171, 247, 177)", "rgb(221, 221, 221)"].includes(e.style.backgroundColor)) {
       let cl = e.classList;
       let f = qs(`input.${cl[3]}.${cl[4]}`);
       f.value = e.dataset.value;
@@ -173,14 +178,20 @@ function auto() {
   }
 }
 
+function teste() {
+  qsa(".numbers_left").forEach(function(e) {
+    cc(e.style.backgroundColor)
+  });
+}
 
 
 afterLoad(function() {
   grid();
   
   let html = "";
-  html += `<button class="btn btn-primary m-1" type="button" onclick="btnSalvar();">Salvar</button>`;
+  html += `<button class="btn btn-primary m-1" type="button" onclick="salvar();">Salvar</button>`;
   html += `<button class="btn btn-primary m-1" type="button" onclick="auto();">Auto</button>`;
+  // html += `<button class="btn btn-primary m-1" type="button" onclick="teste();">Teste</button>`;
   qs("#div_btn").innerHTML = html;  
   
   let x = [[1, 4, 3], [1, 6, 8], [1, 7, 5], [1, 8, 9], [3, 1, 5], [3, 4, 1], [3, 6, 7], [3, 7, 6], [3, 8, 8], [3, 9, 4], [4, 3, 1], [4, 4, 6], [4, 7, 4], [5, 1, 8], [5, 2, 4], [5, 6, 5], [5, 8, 3], [6, 3, 3], [6, 6, 8], [6, 8, 1], [7, 2, 4], [8, 7, 7], [8, 8, 2], [8, 9, 9], [9, 1, 7], [9, 3, 1], [9, 5, 6], [9, 6, 9], [9, 8, 4],];

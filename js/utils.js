@@ -3,7 +3,7 @@ function qs(arg) {
 }
 
 function qsa(arg) {
-  return document.querySelectorAll(arg);
+  return [...document.querySelectorAll(arg)];
 }
 
 // carrega html de arquivos externos
