@@ -102,6 +102,11 @@ function decode(string, T) {
   return object;
 }
 
+function changeClass(elem, old_class, new_class) {
+  elem.classList.remove(old_class);
+  elem.classList.add(new_class);
+}
+
 // cria div de mensagem acima de um elemento
 function bsAlert(message, type, ele, time = 5000, after = false) {
   qsa("div.alert").forEach(function(e) {e.remove();});

@@ -4,7 +4,7 @@ function celula(html, id_t, id_c, id_y, id_x) {
   // respostas
   html += `<div style="line-height: 10px; font-size: 9px;">`;
   for(let i = 0; i < 9; i++) {
-    html += `<label class="numbers_left tabela_${id_t} celula_${id_c} linha_${id_y} coluna_${id_x} label_${i + 1}" style="line-height: 10px; font-size: 9px; width: 7px;" data-value="${i + 1}">${i + 1}</label>`;
+    html += `<label class="numbers_left tabela_${id_t} celula_${id_c} linha_${id_y} coluna_${id_x} label_${i + 1} visible bg-white" style="line-height: 10px; font-size: 9px; width: 7px;" data-value="${i + 1}">${i + 1}</label>`;
   }
   html += `</div>`;
   
@@ -73,7 +73,7 @@ function salvar() {
   it.forEach(function(e) {
     if (e.value) {
       let cl = e.classList;
-      t += `[${cl[1].substr(-1)}, ${cl[2].substr(-1)}, ${e.value}], `;
+      t += `[${cl[1].substr(-1)},${cl[2].substr(-1)},${e.value}],`;
     }
   });
   t += "]";
@@ -82,61 +82,68 @@ function salvar() {
 
 function verifica() {
   // desfaz verificações anteriores
-  qsa(".numbers_left").forEach(function(e) {
-    e.style.visibility = "visible";
-    e.style.backgroundColor = "";
+  qsa(".numbers_left.invisible, .numbers_left.bg-info, .numbers_left.bg-success").forEach(function(e) {
+    changeClass(e, "invisible", "visible");
+    changeClass(e, "bg-info", "bg-white");
+    changeClass(e, "bg-success", "bg-white");
   });
 
+  desnecessarios();
+  recomendaveis();
+  corrige();
+}
+
+function desnecessarios() {
   // ocultar opções inválidas
   qsa(".inp_txt").forEach(function(e) {
     if (e.value && e.value > 0) {
       let cl = e.classList;
       
       // oculta labels da celula
-      qsa(`label.${cl[1]}.${cl[2]}`).forEach(function(f) {
-        f.style.visibility = "hidden";
+      qsa(`label.${cl[1]}.${cl[2]}.visible`).forEach(function(f) {
+        changeClass(f, "visible", "invisible");
       });
       
       // oculta label repetida da tabela, linha e coluna
       [cl[1], cl[3], cl[4]].forEach(function(c) {
         qsa(`label.${c}.label_${e.value}`).forEach(function(f) {
-          f.style.visibility = "hidden";
+          changeClass(f, "visible", "invisible");
         });
       });
     }
   });
-  
+}
+
+function recomendaveis() {
   // sinalizar recomendáveis
-  qsa(".numbers_left").forEach(function(e) {
-    if (e.style.visibility == "visible") {
-      let color = "#abf7b1";
-      let cl = e.classList;
-      
-      qsa(`label.${cl[1]}.${cl[2]}`).every(function(f) {
-        // verifica se nao eh unico
-        if (f.style.visibility == "visible" && e.className != f.className) {
-          color = "#ddd";
+  qsa(".numbers_left.visible").forEach(function(e) {
+    let color = "bg-success";
+    let cl = e.classList;
+    
+    // verifica se nao eh unico
+    qsa(`label.${cl[1]}.${cl[2]}.visible`).every(function(f) {
+      if (e.className != f.className) {
+        color = "bg-info";
+        return false;
+      }
+      return true;
+    });
+    
+    if (color == "bg-info") {
+      // verifica se nao eh recomendável
+      qsa(`label.${cl[1]}.${cl[5]}.visible`).every(function(f) {
+        if (e.className != f.className) {
+          color = "bg-white";
           return false;
         }
         return true;
       });
-      
-      if (color == "#ddd") {
-        qsa(`label.${cl[1]}.${cl[5]}`).every(function(f) {
-          // verifica se nao eh recomendável
-          if (f.style.visibility == "visible" && e.className != f.className) {
-            color = "";
-            return false;
-          }
-          return true;
-        });
-      }
-      
-      e.style.backgroundColor = color;
+    }
+    
+    if (color != "bg-white") {
+      changeClass(e, "bg-white", color);
     }
   });
-  
-  corrige();
 }
 
 function corrige() {
@@ -161,15 +168,12 @@ function corrige() {
 
 function auto() {
   let executou = false;
-  qsa(".numbers_left").forEach(function(e) {
-    if (e.style.visibility == "visible" && ["rgb(171, 247, 177)", "rgb(221, 221, 221)"].includes(e.style.backgroundColor)) {
+  qsa(".numbers_left.bg-info, .numbers_left.bg-success").forEach(function(e) {
       let cl = e.classList;
       let f = qs(`input.${cl[3]}.${cl[4]}`);
       f.value = e.dataset.value;
       f.parentElement.classList.add("border-warning");
-      e.style.visibility = "hidden";
       executou = true;
-    }
   });
   
   if (executou) {
@@ -179,8 +183,24 @@ function auto() {
 }
 
 function teste() {
-  qsa(".numbers_left").forEach(function(e) {
-    cc(e.style.backgroundColor)
+  qsa(".numbers_left.tabela_1.visible").forEach(function(e) {
+    // if (e.style.visibility == "visible") {
+      // let cl = e.classList;
+      // let is_same_lin = true;
+      // let is_same_col = true;
+      
+      // qsa(`label.${cl[1]}.${cl[5]}`).every(function(f) {
+      //   // verifica se nao eh unico
+      //   if (f.style.visibility == "visible" && ) {
+      //     color = "#ddd";
+      //     return false;
+      //   }
+      //   return true;
+      // });
+      
+      cc(e.className);
+          e.classList.remove("visible").add("invisible");
+    // }
   });
 }
 
@@ -191,7 +211,7 @@ afterLoad(function() {
   let html = "";
   html += `<button class="btn btn-primary m-1" type="button" onclick="salvar();">Salvar</button>`;
   html += `<button class="btn btn-primary m-1" type="button" onclick="auto();">Auto</button>`;
-  // html += `<button class="btn btn-primary m-1" type="button" onclick="teste();">Teste</button>`;
+  html += `<button class="btn btn-primary m-1" type="button" onclick="teste();">Teste</button>`;
   qs("#div_btn").innerHTML = html;  
   
   let x = [[1, 4, 3], [1, 6, 8], [1, 7, 5], [1, 8, 9], [3, 1, 5], [3, 4, 1], [3, 6, 7], [3, 7, 6], [3, 8, 8], [3, 9, 4], [4, 3, 1], [4, 4, 6], [4, 7, 4], [5, 1, 8], [5, 2, 4], [5, 6, 5], [5, 8, 3], [6, 3, 3], [6, 6, 8], [6, 8, 1], [7, 2, 4], [8, 7, 7], [8, 8, 2], [8, 9, 9], [9, 1, 7], [9, 3, 1], [9, 5, 6], [9, 6, 9], [9, 8, 4],];
