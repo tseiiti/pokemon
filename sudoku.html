@@ -16,11 +16,33 @@
   <body>
     <header class="bg-secondary bg-gradient shadow-lg mb-5" data-component="/comp/header.html"></header>
 
-    <div class="container-sm" style="width: 420px; text-align:center;">
+    <div class="container-sm" style="width: 400px; text-align:center;">
       <main class="text-center mx-3">
         <div class="mb-4" id="div_grid"></div>
-        <div class="mb-1" id="div_btn"></div>
-        
+        <div class="mb-4" id="div_btn"></div>
+        <div class="table-wrapper-scroll-y mb-4">
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th scope="col">hora</th>
+                <th scope="col">tabela</th>
+                <th scope="col">celula</th>
+                <th scope="col">valor</th>
+              </tr>
+            </thead>
+            <tbody id="hist"></tbody>
+          </table>
+        </div>
+        <style>
+          .table-wrapper-scroll-y {
+            position: relative;
+            height: 120px;
+            overflow: auto;
+            display: block;
+            font-size: small;
+            line-height: 11px;
+          }
+        </style>
         <div id="div_console"></div>
         
       </main>

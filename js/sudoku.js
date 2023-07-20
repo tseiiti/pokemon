@@ -1,3 +1,5 @@
+var hist;
+
 function celula(html, id_t, id_c, id_y, id_x) {
   html += `<div class="col-4 border p-0">`;
   
@@ -31,6 +33,9 @@ function tabela(html, id_t) {
 }
 
 function grid() {
+  hist = getCookie("sudoku_hist") || "";
+  hist = hist.split(',');
+  
   let html = "";
   
   // gera grid
@@ -40,47 +45,40 @@ function grid() {
     if ((i + 1) % 3 == 0 && i < 8) html += `</div><div class="row">`;
   }
   html += `</div></div>`;
-
   qs("#div_grid").innerHTML = html;
   
-  oneNumber();
+  digitar();
+  historico();
+  
+  html = "";
+  // html += `<button class="btn btn-primary m-1" type="button" onclick="salvar();">Salvar</button>`;
+  html += `<button class="btn btn-primary m-1" type="button" onclick="recarregar();">Recarregar</button>`;
+  html += `<button class="btn btn-primary m-1" type="button" onclick="apagar();">Apagar</button>`;
+  html += `<button class="btn btn-primary m-1" type="button" onclick="auto();">Auto</button>`;
+  html += `<button class="btn btn-primary m-1" type="button" onclick="desfazer();">Desfazer</button>`;
+  // html += `<button class="btn btn-primary m-1" type="button" onclick="teste();">Teste</button>`;
+  qs("#div_btn").innerHTML = html;
 }
 
-function oneNumber() {
-  let it = qsa(".inp_txt");
-  it.forEach(function(e) {
+function digitar() {
+  qsa(".inp_txt").forEach(function(e) {
     e.oninput = function() {
       // garante somente 1 numero
       this.value = this.value.substr(-1);
-      verifica();
+      verifica(this);
     }
   });
 }
 
-function cc(text, replace = false, tlog = true) {
-  if (text) {
-    let html = "";
-    let t = "";
-    if (!replace) html = qs("#div_console").innerHTML;
-    if (tlog) t = getTime(new Date(), "mill") + " => ";
-    qs("#div_console").innerHTML = "<p class=\"p-0 m-0\">" + t + text + "</p>" + html;
+function verifica(elem) {
+  if (elem) {
+    let cl = elem.classList;
+    let txt = (new Date()).getTime();
+    txt += `&${cl[1]}&${cl[2]}&${elem.value}`;
+    hist.push(txt);
+    setCookieY("sudoku_hist", hist.toString());
   }
-}
-
-function salvar() {
-  let it = qsa(".inp_txt");
-  let t = "[";
-  it.forEach(function(e) {
-    if (e.value) {
-      let cl = e.classList;
-      t += `[${cl[1].substr(-1)},${cl[2].substr(-1)},${e.value}],`;
-    }
-  });
-  t += "]";
-  cc(t, true, false);
-}
-
-function verifica() {
+  
   // desfaz verificações anteriores
   qsa("label.invisible, label.bg-info").forEach(function(e) {
     changeClass(e, "invisible", "visible");
@@ -91,6 +89,7 @@ function verifica() {
   mesmo();
   recomendaveis();
   corrige();
+  historico();
 }
 
 function ocultar() {
@@ -182,14 +181,42 @@ function corrige() {
   });
 }
 
+function historico() {
+  let html = "";
+  [...hist].sort((a, b) => b.split("&")[0] - a.split("&")[0]).forEach(function(e) {
+    let f = e.split("&");
+    if (f[1]) html += `<tr>
+      <td>${getTime(+f[0])}</td>
+      <td>${f[1]}</td>
+      <td>${f[2]}</td>
+      <td>${f[3]}</td>
+      </tr>`;
+  });
+  qs("#hist").innerHTML = html;
+}
+
+
+
+function salvar() {
+  let t = "[";
+  qsa(".inp_txt").forEach(function(e) {
+    if (e.value) {
+      let cl = e.classList;
+      t += `[${cl[1].substr(-1)},${cl[2].substr(-1)},${e.value}],`;
+    }
+  });
+  t += "]";
+  cc(t, true, false);
+}
+
 function auto() {
   let executou = false;
   qsa("label.bg-info").forEach(function(e) {
-      let cl = e.classList;
-      let f = qs(`input.${cl[3]}.${cl[4]}`);
-      f.value = e.dataset.value;
-      f.parentElement.classList.add("border-warning");
-      executou = true;
+    let cl = e.classList;
+    let f = qs(`input.${cl[3]}.${cl[4]}`);
+    f.value = e.dataset.value;
+    f.parentElement.classList.add("border-warning");
+    executou = true;
   });
   
   if (executou) {
@@ -198,15 +225,42 @@ function auto() {
   }
 }
 
+function recarregar() {
+  [...hist].forEach(function(e) {
+    let f = e.split("&");
+    if (f[1]) qs(`input.${f[1]}.${f[2]}`).value = f[3];
+  });
+  verifica();
+}
+
+function apagar() {
+  delCookie("sudoku_hist");
+  grid();
+}
+
+function desfazer() {
+  hist.pop();
+  setCookieY("sudoku_hist", hist.toString());
+  grid();
+  recarregar();
+}
+
+
+
+function cc(text, replace = false, tlog = true) {
+  if (text) {
+    let html = "";
+    let t = "";
+    if (!replace) html = qs("#div_console").innerHTML;
+    if (tlog) t = getTime(new Date(), "mill") + " => ";
+    qs("#div_console").innerHTML = "<p class=\"p-0 m-0\">" + t + text + "</p>" + html;
+  }
+}
+
+
 
 afterLoad(function() {
   grid();
-  
-  let html = "";
-  html += `<button class="btn btn-primary m-1" type="button" onclick="salvar();">Salvar</button>`;
-  html += `<button class="btn btn-primary m-1" type="button" onclick="auto();">Auto</button>`;
-  html += `<button class="btn btn-primary m-1" type="button" onclick="teste();">Teste</button>`;
-  qs("#div_btn").innerHTML = html;  
   
   // let x = [[1, 4, 3], [1, 6, 8], [1, 7, 5], [1, 8, 9], [3, 1, 5], [3, 4, 1], [3, 6, 7], [3, 7, 6], [3, 8, 8], [3, 9, 4], [4, 3, 1], [4, 4, 6], [4, 7, 4], [5, 1, 8], [5, 2, 4], [5, 6, 5], [5, 8, 3], [6, 3, 3], [6, 6, 8], [6, 8, 1], [7, 2, 4], [8, 7, 7], [8, 8, 2], [8, 9, 9], [9, 1, 7], [9, 3, 1], [9, 5, 6], [9, 6, 9], [9, 8, 4],];
   

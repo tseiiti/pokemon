@@ -94,7 +94,7 @@ function updateHist() {
   txt += `=${qs("#nr").value}&${tmp}&${err}`
   
   hist.push(txt);
-  setCookieY("hist", hist.toString());
+  setCookieY("tabuada_hist", hist.toString());
 }
 
 function getNumbers() {
@@ -155,7 +155,7 @@ function gameResult() {
 }
 
 afterLoad(function() {
-  hist = getCookie("hist") || "0";
+  hist = getCookie("tabuada_hist") || "0";
   hist = hist.split(',');
   gameHistory();
   
