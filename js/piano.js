@@ -203,7 +203,11 @@ function draw() {
     // ctx.fill();
   }
 }
-      
+
+function teste() {
+  new Audio("/assets/key03.mp3").play();
+}
+
 afterLoad(function() {
   all_show();
   draw();
