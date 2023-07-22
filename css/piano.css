@@ -9,10 +9,9 @@
 
 .piano {
 	background-color: #121212;
-	width: 100%;
 	margin: 10px auto 0;
 	padding: 3px;
-	border-radius: 12px;
+	border-radius: 8px;
 }
 
 .controls {
@@ -21,36 +20,37 @@
 }
 
 .keys {
-  width: 100%;
+	height: 200px;
 	display: flex;
 	background-color: #181818;
 	border-radius: 8px;
 	user-select: none;
 }
 
-.key {
+.group_key {
 	width: 100%;
 	padding: 2px;
 	position: relative;
 }
 
-.key .white, .black {
+.key {
 	display: flex;
 	align-items: flex-end;
 	justify-content: center;
+	font-weight: 500;
 }
 
-.key span {
-	font-weight: 600;
-	color: rgba(0, 0, 0, 0.3);
+.disabled_keys span {
+	opacity: 0;
 }
 
 .white {
-	height: 200px;
+	height: 100%;
 	flex-grow: 1;
 	background-color: white;
 	border-radius: 4px;
 	border-bottom: 5px solid #ddd;
+	color: rgba(0, 0, 0, 0.3);
 	z-index: 1;
 }
 
@@ -63,4 +63,11 @@
 	position: absolute;
 	z-index: 2;
 	left: 70%;
+	color: rgba(255, 255, 255, 0.3);
+}
+
+.black_pressed {
+	background: linear-gradient(#222, black);
+	border-bottom: none;
+	height: 59%;
 }
