@@ -5,9 +5,15 @@ ruby -run -ehttpd . -p 8000
 http://localhost:8000/piano.html
 git add .; git commit -m "reduzi getTime"; git pull; git push; git status;
 
+git config --global alias.co checkout
+git config --global alias.br branch
+git config --global alias.ci commit
+git config --global alias.st status
+git config --global alias.pu pull
+git config --global alias.last 'log -1 HEAD'
+alias g=git
+
 pendencias:
-# tela com dados do pok
-# active botões de navegação header.html
 
 https://stackoverflow.com/questions/11179780/javascript-and-web-services-wsdl
 
