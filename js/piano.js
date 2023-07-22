@@ -1,4 +1,10 @@
+var ctx = new(window.AudioContext || window.webkitAudioContext)();
+var osc = ctx.createOscillator();
+osc.connect(ctx.destination);
+
 function handleDown(key) {
+  osc.start();
+
   if (key.className.includes('black')) {
     key.classList.add('black_pressed');
     return
@@ -7,6 +13,8 @@ function handleDown(key) {
 }
 
 function handleUp(key) {
+  osc.stop();
+
   if (key.className.includes('black')) {
     key.classList.remove('black_pressed');
     return
