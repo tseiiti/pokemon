@@ -1,5 +1,15 @@
 const notas = {};
 const ctx = new(AudioContext || webkitAudioContext)();
+const gan = ctx.createGain();
+gan.connect(ctx.destination);
+const adsr = {
+  attack: 0.2,
+  decay: 0, 
+  sustain: 1, 
+  realease: 0.3, 
+  max_time: 2
+};
+
 
 function gera_notas() {
   let letras = ["A", "A", "B", "C", "C", "D", "D", "E", "F", "F", "G", "G"];
@@ -9,20 +19,20 @@ function gera_notas() {
 
   for (let i = 0; i < 10; i++) {
     for (let j = 0; j < 12; j++) {
-      let oitava = j < 3 ? i : i + 1;
-      if (oitava > 0 && oitava < 10) {
-        let nota = notas[`oitava_${oitava}`];
-        if (!nota) nota = notas[`oitava_${oitava}`] = [];
-
+      let oit = j < 3 ? i : i + 1;
+      
+      if (oit > 0 && oit < 10) {
+        if (!notas[`oitava_${oit}`]) notas[`oitava_${oit}`] = [];
+        let id = j < 3 ? j + 9 : j - 3;
         let su = [1, 4, 6, 9, 11].includes(j) ? "#" : "";
         let fr = cnt ** j * bas * 2 ** i;
-        nota.push({
-          id: j, 
-          oitava: oitava, 
+        notas[`oitava_${oit}`].push({
+          id: id, 
+          oitava: oit, 
           letra: letras[j], 
           latim: latim[j],
           sustenido: su, 
-          assinatura: `${letras[j]}${oitava}`,
+          assinatura: `${letras[j]}${oit}`,
           frequencia: fr
         });
       }
@@ -31,11 +41,11 @@ function gera_notas() {
 }
 
 function teclado() {
-  let keys, group_key, keyboard = qs(".keyboard");
+  let group_key, keyboard = qs(".keyboard");
   
   for (let i = 1; i < 10; i++) {
+    let keys = appendHtml(`<section class="col-12 col-sm-6 col-lg-4 keys"></section>`, keyboard);
     let arr_nota = notas[`oitava_${i}`];
-    keys = appendHtml(`<section class="col-12 col-sm-6 col-lg-4 keys"></section>`, keyboard);
     arr_nota.forEach(function(nota) {
       if (nota.sustenido == "#") {
         appendHtml(`<div class="key black" data-oitava="${nota.oitava}" data-id="${nota.id}"></div>`, group_key, true);
@@ -54,10 +64,18 @@ function tela() {
   qsa(".key").forEach(function(key) {
     key.onmousedown = function() { handleDown(key); }
     key.onmouseup = function() { handleUp(key); }
-    key.onmouseleave = function() { handleUp(key); }
+    // key.onmouseleave = function() { handleUp(key); }
     key.ontouchstart = function() { handleDown(key); }
     key.ontouchend = function() { handleUp(key); }
   });
+
+  qs("#conf_check").onchange = function() {
+    if (this.checked) {
+      // qs(".switcher").classList.add("switcher_active");
+      return;
+    }
+    // qs(".switcher").classList.remove("switcher_active");
+  }
 }
 
 function aux_osc(frq, dtn) {
@@ -78,19 +96,48 @@ function gen_osc(frq, dtn) {
 }
 
 function stp_osc() {
-  oscs[0].stop();
-  oscs[0].disconnect();
+  if (oscs[0]) {
+    oscs[0].stop();
+    oscs[0].disconnect();
+  }
   // oscs[1].stop();
   // oscs[1].disconnect();
   // oscs[2].stop();
   // oscs[2].disconnect();
 }
 
+function noteOn(frq) {
+  let now = ctx.currentTime;
+  let atk = adsr.attack * adsr.max_time;
+  let aet = now + atk;
+  let ded = adsr.decay * adsr.max_time;
+
+  gan.gain.cancelScheduledValues(now);
+  let osc = ctx.createOscillator();
+  osc.frequency.value = frq;
+  osc.connect(gan);
+
+  gan.gain.setValueAtTime(0, now);
+  gan.gain.linearRampToValueAtTime(1, aet);
+  gan.gain.setTargetAtTime(adsr.sustain, aet, ded);
+}
+
+function noteOff() {
+  let now = ctx.currentTime;
+  let rld = adsr.realease * adsr.max_time;
+  let ret = now + rld;
+
+  gan.gain.cancelScheduledValues(now);
+  gan.gain.setValueAtTime(gan.gain.value, now);
+  gan.gain.linearRampToValueAtTime(0, ret);
+}
+
 function handleDown(key) {
   if (!key) return;
   
   let nota = notas[`oitava_${key.dataset.oitava}`][key.dataset.id];
-  gen_osc(nota.frequencia, 11);
+  noteOn(nota.frequencia);
+  // gen_osc(nota.frequencia, 10);
   
   if (key.className.includes("black")) {
     key.classList.add("black_pressed");
@@ -102,7 +149,8 @@ function handleDown(key) {
 function handleUp(key) {
   if (!key) return;
   
-  stp_osc();
+  noteOff();
+  // stp_osc();
   
   if (key.className.includes("black")) {
     key.classList.remove("black_pressed");
