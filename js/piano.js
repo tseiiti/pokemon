@@ -1,54 +1,53 @@
-const notas = [];
+const notas = {};
 const ctx = new(AudioContext || webkitAudioContext)();
-var oscs = [];
 
 function gera_notas() {
   let letras = ["A", "A", "B", "C", "C", "D", "D", "E", "F", "F", "G", "G"];
   let latim = ["Lá", "Lá", "Si", "Dó", "Dó", "Ré", "Ré", "Mi", "Fá", "Fá", "Sol", "Sol"];
   let cnt = 2 ** (1 / 12);
   let bas = 27.5;
-  let id = 0;
+
   for (let i = 0; i < 10; i++) {
     for (let j = 0; j < 12; j++) {
-      let oi = j < 3 ? i : i + 1;
-      if (oi > 0 && oi < 10) {
-        let lt = letras[j];
+      let oitava = j < 3 ? i : i + 1;
+      if (oitava > 0 && oitava < 10) {
+        let nota = notas[`oitava_${oitava}`];
+        if (!nota) nota = notas[`oitava_${oitava}`] = [];
+
         let su = [1, 4, 6, 9, 11].includes(j) ? "#" : "";
         let fr = cnt ** j * bas * 2 ** i;
-        notas.push({
-          id: id, 
-          oitava: oi, 
-          letra: lt, 
+        nota.push({
+          id: j, 
+          oitava: oitava, 
+          letra: letras[j], 
+          latim: latim[j],
           sustenido: su, 
-          assinatura: `${lt}${oi}${su}`,
-          latim: latim[j] + su,
+          assinatura: `${letras[j]}${oitava}`,
           frequencia: fr
         });
-        id++;
       }
     }
   }
 }
 
 function teclado() {
-  let keys, group_key, oitava = 0, piano = qs(".piano");
+  let keys, group_key, keyboard = qs(".keyboard");
   
-  notas.forEach(function(nota) {
-    if (nota.oitava != oitava) {
-      oitava = nota.oitava;
-      keys = appendHtml(`<section class="keys"></section>`, piano, true);
-      appendHtml(`<section class="controls">${oitava}° oitava</section>`, piano, true);
-    }
-    if (nota.sustenido == "#") {
-      appendHtml(`<div class="key black" data-key="w" data-nota_id="${nota.id}"><span>${nota.latim}</span></div>`, group_key, true);
-    } else {
-      group_key = appendHtml(`<div class="group_key"></div>`, keys);
-      appendHtml(`<div class="key white" data-key="a" data-nota_id="${nota.id}"><span>${nota.latim}</span></div>`, group_key);
-    }
-  });
+  for (let i = 1; i < 10; i++) {
+    let arr_nota = notas[`oitava_${i}`];
+    keys = appendHtml(`<section class="col-12 col-sm-6 col-lg-4 keys"></section>`, keyboard);
+    arr_nota.forEach(function(nota) {
+      if (nota.sustenido == "#") {
+        appendHtml(`<div class="key black" data-oitava="${nota.oitava}" data-id="${nota.id}"></div>`, group_key, true);
+      } else {
+        group_key = appendHtml(`<div class="group_key"></div>`, keys);
+        appendHtml(`<div class="key white" data-oitava="${nota.oitava}" data-id="${nota.id}"><span>${nota.assinatura}</span></div>`, group_key);
+      }
+    });
+  }
 }
 
-function teclados() {
+function tela() {
   gera_notas();
   teclado();
   
@@ -71,25 +70,26 @@ function aux_osc(frq, dtn) {
   return osc;
 }
 
+var oscs = [];
 function gen_osc(frq, dtn) {
   oscs[0] = aux_osc(frq, 0);
-  oscs[1] = aux_osc(frq, dtn);
-  oscs[2] = aux_osc(frq, -dtn);
+  // oscs[1] = aux_osc(frq, dtn);
+  // oscs[2] = aux_osc(frq, -dtn);
 }
 
 function stp_osc() {
   oscs[0].stop();
   oscs[0].disconnect();
-  oscs[1].stop();
-  oscs[1].disconnect();
-  oscs[2].stop();
-  oscs[2].disconnect();
+  // oscs[1].stop();
+  // oscs[1].disconnect();
+  // oscs[2].stop();
+  // oscs[2].disconnect();
 }
 
 function handleDown(key) {
   if (!key) return;
   
-  let nota = notas[key.dataset.nota_id];
+  let nota = notas[`oitava_${key.dataset.oitava}`][key.dataset.id];
   gen_osc(nota.frequencia, 11);
   
   if (key.className.includes("black")) {
@@ -133,6 +133,6 @@ function teste() {
 // }
 
 afterLoad(function() {
-  teclados();
+  tela();
   appendHtml(`<div class="btn btn-primary mt-4" onclick="teste();">Teste</div>`);
 });

@@ -15,12 +15,18 @@
 }
 
 .controls {
-  padding: 8px 4px 2px;
+  padding: 8px 4px 0;
 	color: rgba(255, 255, 255, 0.8);
 }
 
+.keyboard {
+	width: 100%;
+	margin: 0;
+}
+
 .keys {
-	height: 160px;
+  padding: 3px 0;
+	height: 140px;
 	display: flex;
 	background-color: #181818;
 	border-radius: 8px;
