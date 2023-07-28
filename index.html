@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Poke Yuyu - o Jogo</title>
+    <title>Poke Yuyu - Login</title>
     <link rel="icon" type="image/x-icon" href="/img/icon.ico">
     <link rel="stylesheet" href="/css/bootstrap.min.css">
   </head>
@@ -11,19 +11,33 @@
     <header class="bg-secondary bg-gradient shadow-lg mb-5" data-component="/comp/header.html"></header>
 
     <div class="container-lg">
-      <main class="text-center mx-3">
-        <div class="row" data-component="/comp/level_buttons.html"></div>
-        <div class="row" data-component="/comp/user_card.html"></div>
-        <div class="row" id="div_comp_game"></div>
+      <main>
+        <div class="row justify-content-center">
+          <form class="form-group col-10 col-md-6">
+            <div class="text-center mb-3">
+              <h1 class="">Fazer login</h1>
+              <p class="fw-lighter">Não esqueça o seu nome, se não perderá todos os seus pontos, heheheh!</p>
+            </div>
+
+            <div class="mb-3">
+              <label for="usr_name" class="form-label">Nome</label>
+              <input class="form-control" id="usr_name" type="text" placeholder="Escreva seu nome" list="usr_name_list" autocomplete="off" autofocus="autofocus">
+              <datalist id="usr_name_list"></datalist>
+            </div>
+
+            <div style="text-align: right;">
+              <button class="btn btn-primary" id="button_set_usr" type="button" aria-describedby="usr_name">Avançar</button>
+            </div>
+          </form>
+        </div>
       </main>
     </div>
 
     <footer class="bd-footer bg-light mt-5" data-component="/comp/footer.html"></footer>
-    <!-- <div data-component="/comp/modal.html"></div> -->
     <script type="text/javascript" src="/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="/js/utils.js"></script>
     <script type="text/javascript" src="/js/game.js"></script>
     <script type="text/javascript" src="/js/index.js"></script>
-    <!-- <script type="module" src="index.js"></script> -->
+    <!-- <script type="module" src="login.js"></script> -->
   </body>
 </html>

@@ -1,7 +1,5 @@
-const notas = {};
-const ctx = new(AudioContext || webkitAudioContext)();
-const gan = ctx.createGain();
-gan.connect(ctx.destination);
+var notas, audioCtx, gainNode, oscillator;
+
 const adsr = {
   attack: 0.2,
   decay: 0, 
@@ -10,6 +8,15 @@ const adsr = {
   max_time: 2
 };
 
+function inicio() {
+  notas = {};
+  audioCtx = new(AudioContext || webkitAudioContext)();
+  gainNode = audioCtx.createGain();
+  oscillator = audioCtx.createOscillator();
+  
+  oscillator.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
+}
 
 function gera_notas() {
   let letras = ["A", "A", "B", "C", "C", "D", "D", "E", "F", "F", "G", "G"];
@@ -22,7 +29,8 @@ function gera_notas() {
       let oit = j < 3 ? i : i + 1;
       
       if (oit > 0 && oit < 10) {
-        if (!notas[`oitava_${oit}`]) notas[`oitava_${oit}`] = [];
+        if (!notas[`oitava_${oit}`])
+          notas[`oitava_${oit}`] = [];
         let id = j < 3 ? j + 9 : j - 3;
         let su = [1, 4, 6, 9, 11].includes(j) ? "#" : "";
         let fr = cnt ** j * bas * 2 ** i;
@@ -41,25 +49,48 @@ function gera_notas() {
 }
 
 function teclado() {
-  let group_key, keyboard = qs(".keyboard");
+  let group_key;
+  let keyboard = qs(".keyboard");
+  let html;
   
   for (let i = 1; i < 10; i++) {
-    let keys = appendHtml(`<section class="col-12 col-sm-6 col-lg-4 keys"></section>`, keyboard);
+    html = `<section class="col-12 col-sm-6 col-md-4 col-lg-3 collapse keys" id="keys_${i}"></section>`;
+    let keys = appendHtml(html, keyboard);
     let arr_nota = notas[`oitava_${i}`];
+    
     arr_nota.forEach(function(nota) {
       if (nota.sustenido == "#") {
-        appendHtml(`<div class="key black" data-oitava="${nota.oitava}" data-id="${nota.id}"></div>`, group_key, true);
+        html = `<div class="key black" data-oitava="${nota.oitava}" data-id="${nota.id}"></div>`;
+        appendHtml(html, group_key, true);
       } else {
-        group_key = appendHtml(`<div class="group_key"></div>`, keys);
-        appendHtml(`<div class="key white" data-oitava="${nota.oitava}" data-id="${nota.id}"><span>${nota.assinatura}</span></div>`, group_key);
+        html = `<div class="group_key"></div>`;
+        group_key = appendHtml(html, keys);
+        html = `<div class="key white" data-oitava="${nota.oitava}" data-id="${nota.id}"><span>${nota.assinatura}</span></div>`;
+        appendHtml(html, group_key);
       }
     });
   }
 }
 
+function configuracoes() {
+  let settings = qs(".card-body");
+  let html = `<div class="row" id="check_keys"></div>`;
+  let check_keys = appendHtml(html, settings);
+  
+  for (let i = 1; i < 10; i++) {
+    html = `<div class="form-check form-switch col-6 col-sm-4 col-md-3"><label class="form-check-label" for="conf_check">${i}⁰ Oitava</label><input class="form-check-input" id="check_keys_${i}" type="checkbox" role="switch" data-bs-toggle="collapse" data-bs-target="#keys_${i}" aria-expanded="false" aria-controls="keys_${i}"></div>`;
+    appendHtml(html, check_keys);
+  }
+  
+  qs("#check_keys_4").click();
+  qs("#check_keys_5").click();
+}
+
 function tela() {
+  inicio();
   gera_notas();
   teclado();
+  configuracoes();
   
   qsa(".key").forEach(function(key) {
     key.onmousedown = function() { handleDown(key); }
@@ -68,22 +99,14 @@ function tela() {
     key.ontouchstart = function() { handleDown(key); }
     key.ontouchend = function() { handleUp(key); }
   });
-
-  qs("#conf_check").onchange = function() {
-    if (this.checked) {
-      // qs(".switcher").classList.add("switcher_active");
-      return;
-    }
-    // qs(".switcher").classList.remove("switcher_active");
-  }
 }
 
 function aux_osc(frq, dtn) {
-  let osc = ctx.createOscillator();
+  let osc = audioCtx.createOscillator();
   osc.type = "sine";
   osc.frequency.value = frq;
   osc.detune.value = dtn;
-  osc.connect(ctx.destination);
+  osc.connect(audioCtx.destination);
   osc.start();
   return osc;
 }
@@ -107,29 +130,29 @@ function stp_osc() {
 }
 
 function noteOn(frq) {
-  let now = ctx.currentTime;
+  let now = audioCtx.currentTime;
   let atk = adsr.attack * adsr.max_time;
   let aet = now + atk;
   let ded = adsr.decay * adsr.max_time;
 
-  gan.gain.cancelScheduledValues(now);
-  let osc = ctx.createOscillator();
+  gainNode.gain.cancelScheduledValues(now);
+  let osc = audioCtx.createOscillator();
   osc.frequency.value = frq;
-  osc.connect(gan);
+  osc.connect(gainNode);
 
-  gan.gain.setValueAtTime(0, now);
-  gan.gain.linearRampToValueAtTime(1, aet);
-  gan.gain.setTargetAtTime(adsr.sustain, aet, ded);
+  gainNode.gain.setValueAtTime(0, now);
+  gainNode.gain.linearRampToValueAtTime(1, aet);
+  gainNode.gain.setTargetAtTime(adsr.sustain, aet, ded);
 }
 
 function noteOff() {
-  let now = ctx.currentTime;
+  let now = audioCtx.currentTime;
   let rld = adsr.realease * adsr.max_time;
   let ret = now + rld;
 
-  gan.gain.cancelScheduledValues(now);
-  gan.gain.setValueAtTime(gan.gain.value, now);
-  gan.gain.linearRampToValueAtTime(0, ret);
+  gainNode.gain.cancelScheduledValues(now);
+  gainNode.gain.setValueAtTime(gainNode.gain.value, now);
+  gainNode.gain.linearRampToValueAtTime(0, ret);
 }
 
 function handleDown(key) {
@@ -160,16 +183,16 @@ function handleUp(key) {
 }
 
 function teste() {
-  let ctx = new(AudioContext || webkitAudioContext)();
-  // var gai = ctx.createGain();
-  // gai.connect(ctx.destination);
-  let osc = ctx.createOscillator();
+  let audioCtx = new(AudioContext || webkitAudioContext)();
+  // var gai = audioCtx.createGain();
+  // gai.connect(audioCtx.destination);
+  let osc = audioCtx.createOscillator();
   // osc.connect(gai);
   osc.type = "sine";
   osc.frequency.value = 440;
-  osc.connect(ctx.destination);
+  osc.connect(audioCtx.destination);
   osc.start();
-  osc.stop(ctx.currentTime + 2);
+  osc.stop(audioCtx.currentTime + 2);
 }
 
 // document.onkeydown = function(event) {
