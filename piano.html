@@ -18,22 +18,32 @@
           <section class="controls">
             <h5>Seiiti's Piano</h5>
             <div class="form-check form-switch form-check-reverse">
-              <label class="form-check-label" for="conf_check">Configurações</label>
+              <label class="form-check-label" for="check_settings">Configurações</label>
               <input class="form-check-input" id="check_settings" type="checkbox" role="switch" data-bs-toggle="collapse" data-bs-target="#settings" aria-expanded="false" aria-controls="settings">
             </div>
           </section>
           
+          <section class="panel">
+            <div class="item1">teste</div>
+          </section>
           <section class="row keyboard"></section>
           
-          <div class="collapse mt-4" id="settings">
+          <section class="collapse mt-2" id="settings">
             <div class="card">
               <div class="card-body">
                 <h5 class="card-title">Configurações</h5>
-                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                
+                <h6 class="card-subtitle mt-3 text-muted">Volume</h6>
+                <input type="range" class="form-range" min="0" max="100" id="range_gain">
+                
+                <h6 class="card-subtitle mt-3 text-muted">Tipo de Oscilador</h6>
+                <div class="row mt-1 mx-0" id="radio_types"></div>
+                
+                <h6 class="card-subtitle mt-3 text-muted">Ativar/Desativar Oitavas</h6>
+                <div class="row mt-1 mx-0" id="check_keys"></div>
               </div>
             </div>
-          </div>
+          </section>
         </section>
       </main>
     </div>
