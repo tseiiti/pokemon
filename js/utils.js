@@ -211,9 +211,9 @@ function appendHtml(html, target, bef = false) {
 
 function cc(text, replace = false, time_log = false) {
   if (!text) return;
-  let div = qs("#div_console");
+  let div = qs("#div_log");
   if (!div) {
-    div = appendHtml(`<div class="mt-4" id="div_console"></div>`);
+    div = appendHtml(`<div class="mt-4" id="div_log"></div>`);
   }
   let html = replace ? "" : div.innerHTML;
   let t = time_log ? getTime(new Date(), "mill") + " => " : "";

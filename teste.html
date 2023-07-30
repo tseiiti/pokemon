@@ -13,20 +13,41 @@
 
     <div class="container-lg">
       <main>
+        <form action="" id="form_log">
+          <div class="mb-3">
+            <label for="input_log" class="form-label">log</label>
+            <input type="text" class="form-control" id="input_log" placeholder="$" aria-describedby="input_log" value="alert(1)">
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
       </main>
     </div>
-
+    qs("#input_log").onkeypress = function(event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        e.click();
+      }
+    });
     <footer class="bd-footer bg-light mt-5" data-component="/comp/footer.html"></footer>
 
 		<script type="text/javascript" src="/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="/js/utils.js"></script>
+    
     <script type="text/javascript">
-    function teste() {
-      const x = 2;
-      alert(x+1);
-    }
-    teste();
-    alert(x);
+      function exec_log() {
+        let ret;
+        try {
+          ret = eval(qs("#input_log").value);
+        } catch(err) {
+          ret = err;
+        }
+        alert(ret)
+      }
+      
+      qs("#input_log").onkeypress = function(event) {
+        function(event) {alert(event)}
+      }
+      qs("#form_log").onsubmit = function() { exec_log(); }
     </script>
   </body>
 </html>

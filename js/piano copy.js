@@ -212,3 +212,9 @@ afterLoad(function() {
   all_show();
   draw();
 });
+
+  // attack: 0.2,
+  // decay: 0, 
+  // sustain: 1, 
+  // realease: 0.3, 
+  // max_time: 2

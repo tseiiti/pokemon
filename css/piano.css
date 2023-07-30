@@ -31,7 +31,7 @@
 	padding: 0 2px;
 }
 
-.item1 {
+.items {
 	padding: 2px 4px;
 	border-radius: 4px;
 	background-color: #242424;
@@ -98,4 +98,15 @@
 	background: linear-gradient(#222, black);
 	border-bottom: none;
 	height: 54.5%;
+}
+
+.settings {
+  margin: 2px;
+  padding: 6px;
+	background-color: white;
+	border-radius: 4px;
+}
+
+.settings p {
+	font-size: 0.8em;
 }
