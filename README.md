@@ -1,7 +1,7 @@
 # Jogo para identificar personagem
 git clone git@github.com:tseiiti/pokemon.git
 git checkout test
-ruby -run -ehttpd . -p 8000
+ruby -run -ehttpd . -p 8000 -b 0.0.0.0
 http://localhost:8000/piano.html
 git add .; git commit -m "reduzi getTime"; git pull; git push; git status;
 
