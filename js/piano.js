@@ -1,5 +1,4 @@
 var notas, audioCtx, gainNode, oscillator, adsr = {
-  ded: 0, 
   now: 0, 
   volume: 0, 
   type: 0, 
@@ -162,25 +161,21 @@ function getValues(dataset) {
 function noteOn() {
   let aet = adsr.now + adsr.attack * adsr.max_time;
   let ded = adsr.decay * adsr.max_time;
-  // let can = adsr.now > adsr.ded ? adsr.now : adsr.ded;
-  
-  // adsr.ded = Math.floor((aet + ded) * 1000) / 1000;
   
   oscillator.type = adsr.type;
   oscillator.frequency.value = adsr.frequency;
 
-  // gainNode.gain.cancelScheduledValues(audioCtx.currentTime);
+  gainNode.gain.cancelScheduledValues(audioCtx.currentTime);
   gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
-  gainNode.gain.linearRampToValueAtTime(1, aet);
+  gainNode.gain.linearRampToValueAtTime(adsr.volume, aet);
   gainNode.gain.setTargetAtTime(adsr.sustain, aet, ded);
 }
 
 function noteOff() {
   let ret = adsr.now + adsr.realease * adsr.max_time;
-  // let can = adsr.now > adsr.ded ? adsr.now : adsr.ded;
   
-  // gainNode.gain.cancelScheduledValues(audioCtx.currentTime);
-  gainNode.gain.setValueAtTime(gainNode.gain.value, adsr.now);
+  gainNode.gain.cancelScheduledValues(audioCtx.currentTime);
+  gainNode.gain.setValueAtTime(gainNode.gain.value, audioCtx.currentTime);
   gainNode.gain.linearRampToValueAtTime(0, ret);
 }
 
