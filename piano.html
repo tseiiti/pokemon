@@ -34,18 +34,48 @@
               <h5 class="p-0">Configurações</h5>
               <hr />
               <div class="row">
-                <p class="col-4" data-value="máximo"></p>
-                <div class="col-8"><input type="range" class="form-range" min="0" max="4" step="0.1" value="1" id="range_mxt"></div>
-                <p class="col-4" data-value="ataque"></p>
-                <div class="col-8"><input type="range" class="form-range" min="0" max="4" step="0.1" value="0.3" id="range_atk"></div>
-                <p class="col-4" data-value="decaída"></p>
-                <div class="col-8"><input type="range" class="form-range" min="0" max="2" step="0.1" value="0.1" id="range_dec"></div>
-                <p class="col-4" data-value="sustentação"></p>
-                <div class="col-8"><input type="range" class="form-range" min="0" max="1.2" step="0.1" value="0.7" id="range_sus"></div>
-                <p class="col-4" data-value="saída"></p>
-                <div class="col-8"><input type="range" class="form-range" min="0" max="4" step="0.2" value="1" id="range_rel"></div>
-                <p class="col-4" data-value="volume" title="Tooltip on left"></p>
-                <div class="col-8"><input type="range" class="form-range" min="0" max="1.2" step="0.1" value="1" id="range_vol"></div>
+                <div class="col-4 my_tooltip">
+                  <label for="range_atk" data-value="ATK"></label>
+                  <span class="my_tooltip_text">Índice do tempo de ataque</span>
+                </div>
+                <div class="col-8">
+                  <input type="range" class="form-range" min="0" max="4" step="0.1" value="0.3" id="range_atk">
+                </div>
+                <div class="col-4 my_tooltip">
+                  <label for="range_dec" data-value="DEC"></label>
+                  <span class="my_tooltip_text">Índice do tempo de decaída</span>
+                </div>
+                <div class="col-8">
+                  <input type="range" class="form-range" min="0" max="2" step="0.1" value="0.1" id="range_dec">
+                </div>
+                <div class="col-4 my_tooltip">
+                  <label for="range_sus" data-value="SUS"></label>
+                  <span class="my_tooltip_text">Percentual do volume de sustentação</span>
+                </div>
+                <div class="col-8">
+                  <input type="range" class="form-range" min="0" max="1.2" step="0.1" value="0.7" id="range_sus">
+                </div>
+                <div class="col-4 my_tooltip">
+                  <label for="range_rel" data-value="REL"></label>
+                  <span class="my_tooltip_text">Índice do tempo de saída</span>
+                </div>
+                <div class="col-8">
+                  <input type="range" class="form-range" min="0" max="4" step="0.2" value="1" id="range_rel">
+                </div>
+                <div class="col-4 my_tooltip">
+                  <label for="range_mxt" data-value="MXT"></label>
+                  <span class="my_tooltip_text">Tempo base para cálculo do envelope</span>
+                </div>
+                <div class="col-8">
+                  <input type="range" class="form-range" min="0" max="4" step="0.1" value="1" id="range_mxt">
+                </div>
+                <div class="col-4 my_tooltip">
+                  <label for="range_vol" data-value="MXT"></label>
+                  <span class="my_tooltip_text">Volume máximo de ataque</span>
+                </div>
+                <div class="col-8">
+                  <input type="range" class="form-range" min="0" max="1.2" step="0.1" value="1" id="range_vol">
+                </div>
               </div>
               
               <hr />
@@ -68,7 +98,7 @@
 
     <footer class="bd-footer bg-light mt-5" data-component="/comp/footer.html"></footer>
 
-		<script type="text/javascript" src="/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="/js/utils.js"></script>
     <script type="text/javascript" src="/js/piano.js"></script>
   </body>

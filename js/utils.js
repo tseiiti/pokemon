@@ -227,7 +227,7 @@ function custom_console() {
       <hr class="cus_con_log_hr" />
       <div class="cus_con_log_div">
         <label class="cus_con_log_lab" for="input_log">&#10095;</label>
-        <input class="cus_con_log_inp" type="text" id="input_log">
+        <input class="cus_con_log_inp" type="text" id="input_log" autofocus="autofocus">
       </div>
     </div>
     <style>
@@ -262,29 +262,36 @@ function custom_console() {
     </style>
   </div>`;
   appendHtml(html);
-
-  function exec_log(ev) {
-    if (event.key != "Enter") return;
-
-    let cmd = qs("#input_log").value;
-    let ret;
-    try {
-      ret = eval(cmd);
-    } catch (err) {
-      ret = err;
-    }
-    let html = `<div class="cus_con_log_his_ite"><label>&#10095;</label>${cmd}</div>`;
-    appendHtml(html, qs("#cus_con_log_his"));
-    
-    if (ret) {
-      html = `<div class="cus_con_log_his_ite"><label>&#10094;</label>${ret}</div>`;
-      appendHtml(html, qs("#cus_con_log_his"));
-    }
-    
-    qs("#input_log").value = "";
+  
+  qs("#input_log").onkeydown = function() {
+    cus_con_exec_log(event);
   }
+}
 
-  qs("#input_log").onkeydown = function() { exec_log(event); }
+function cus_con_exec_log(ev) {
+  if (event.key != "Enter") return;
+
+  let cmd = qs("#input_log").value;
+  let ret;
+  try {
+    ret = eval(cmd);
+  } catch (err) {
+    ret = err;
+  }
+  let html = `<div class="cus_con_log_his_ite" onclick="cus_con_reload_cmd('${cmd}')"><label>&#10095;</label>${cmd}</div>`;
+  appendHtml(html, qs("#cus_con_log_his"));
+  
+  if (ret) {
+    html = `<div class="cus_con_log_his_ite"><label>&#10094;</label>${ret}</div>`;
+    appendHtml(html, qs("#cus_con_log_his"));
+  }
+  
+  qs("#input_log").value = "";
+}
+
+function cus_con_reload_cmd(cmd) {
+  qs("#input_log").value = cmd;
+  qs("#input_log").focus();
 }
 
 

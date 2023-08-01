@@ -1,13 +1,13 @@
 var notas, audioCtx, gainNode, oscillator, adsr = {
-  now: 0, 
-  volume: 0, 
   type: 0, 
-  max_time: 0, 
-  frequency: 0, 
   attack: 0, 
   decay: 0, 
   sustain: 0, 
-  realease: 0
+  realease: 0, 
+  max_time: 0, 
+  volume: 0, 
+  frequency: 0, 
+  now: 0
 };
 
 function inicio() {
@@ -26,9 +26,9 @@ function inicio() {
   oscillator.detune.value = 0;
   oscillator.start(0);
   
-  audioCtx.onstatechange = function () {
-    cc(audioCtx.state);
-  };
+  // audioCtx.onstatechange = function () {
+  //   cc(audioCtx.state);
+  // };
 }
 
 function gera_notas() {
@@ -104,18 +104,45 @@ function configuracoes() {
   qs("#check_keys_5").click();
   
   ["sine", "square", "sawtooth", "triangle"].forEach(function(e) {
-    html = `<div class="form-check"><input class="form-check-input" type="radio" name="radio_type" id="radio_type_${e}" data-value="${e}"><label class="form-check-label" for="radio_type_${e}">${e}</label></div>`;
+    html = `<div class="form-check radio_type"><input class="form-check-input" type="radio" name="radio_type" id="radio_type_${e}" data-value="${e}"><label class="form-check-label" for="radio_type_${e}">${e}</label></div>`;
     appendHtml(html, qs("#radio_types"));
+    qs(`#radio_type_${e}`).onclick = function() { conf_onchange(); }
   });
-  qs("#radio_type_sine").click();
   
-  getValues({ oitava: 4, id: 0 });
+  // [
+  //   "#range_atk", 
+  //   "#range_dec", 
+  //   "#range_sus", 
+  //   "#range_rel", 
+  //   "#range_mxt", 
+  //   "#range_vol"
+  // ]
+  qsa(".form-range").forEach(function(e) {
+    e.onchange = function() { conf_onchange(); }
+  });
+  
+  qs("#radio_type_sine").click();
+}
+
+function conf_onchange() {
+  let radio_type = qs('input[name="radio_type"]:checked');
+  adsr.type = radio_type.dataset.value;
+  adsr.attack = qs("#range_atk").value;
+  adsr.decay = qs("#range_dec").value;
+  adsr.sustain = qs("#range_sus").value;
+  adsr.realease = qs("#range_rel").value;
+  adsr.max_time = qs("#range_mxt").value;
+  adsr.volume = qs("#range_vol").value;
+  
+  Object.keys(adsr).forEach(function(k) {
+    qs(`#item_${k}`).innerText = `${k}: ${adsr[k]}`;
+  });
 }
 
 function eventos() {
   qsa(".key").forEach(function(e) {
-    e.onmousedown = function() { handleDown(e); }
-    e.onmouseup = function() { handleUp(e); }
+    // e.onmousedown = function() { handleDown(e); }
+    // e.onmouseup = function() { handleUp(e); }
     // e.onmouseleave = function() { handleUp(e); }
     e.ontouchstart = function() { handleDown(e); }
     e.ontouchend = function() { handleUp(e); }
@@ -123,11 +150,13 @@ function eventos() {
   
   qsa(".form-range").forEach(function(e) {
     e.oninput = function() {
-      let f = e.parentElement.previousElementSibling;
+      // let f = e.parentElement.previousElementSibling;
+      let f = qs(`label[for="${e.id}"]`);
       f.innerText = `${f.dataset.value} ${e.value}`;
     }
     e.oninput();
   });
+  // qs('label[for*=range_atk]').outerHTML
 }
 
 function tela() {
@@ -137,24 +166,17 @@ function tela() {
   teclado();
   configuracoes();
   eventos();
+  // custom_console();
 }
 
 function getValues(dataset) {
   let nota = notas[`oitava_${dataset.oitava}`][dataset.id];
-  let radio_type = qs('input[name="radio_type"]:checked');
   
   adsr.now = Math.floor(audioCtx.currentTime * 1000) / 1000;
-  adsr.volume = qs("#range_vol").value;
-  adsr.type = radio_type.dataset.value;
   adsr.frequency = nota.frequencia.toFixed(2);
-  adsr.attack = qs("#range_atk").value;
-  adsr.decay = qs("#range_dec").value;
-  adsr.sustain = qs("#range_sus").value;
-  adsr.realease = qs("#range_rel").value;
-  adsr.max_time = qs("#range_mxt").value;
   
-  Object.keys(adsr).forEach(function(k) {
-    qs(`#item_${k}`).innerText = `${k}: ${adsr[k]}`;
+  ["frequency", "now"].forEach(function(n) {
+    qs(`#item_${n}`).innerText = `${n}: ${adsr[n]}`;
   });
 }
 
