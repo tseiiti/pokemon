@@ -28,13 +28,13 @@
 
 .panel {
 	width: 100%;
-	padding: 0 2px;
+	padding: 4px;
 }
 
 .items {
 	padding: 2px 4px;
 	border-radius: 4px;
-	background-color: #242424;
+	background-color: #333;
 	color: rgba(255, 255, 255, 0.5);
 }
 
@@ -44,7 +44,7 @@
 }
 
 .keys {
-  padding: 3px 0;
+  padding: 2px;
 	height: 140px;
 	display: flex;
 	border-radius: 8px;
@@ -101,7 +101,7 @@
 }
 
 .settings {
-  margin: 2px;
+  margin: 4px;
   padding: 6px;
 	background-color: white;
 	border-radius: 4px;

@@ -1,73 +1,45 @@
-var notas, audioCtx, gainNode, oscillator, adsr = {
-  type: 0, 
-  attack: 0, 
-  decay: 0, 
-  sustain: 0, 
-  realease: 0, 
-  max_time: 0, 
-  volume: 0, 
-  frequency: 0, 
-  now: 0
-};
-
-function inicio() {
-  notas = {};
-  audioCtx = new(AudioContext || webkitAudioContext)();
-  gainNode = audioCtx.createGain();
-  oscillator = audioCtx.createOscillator();
-  
-  oscillator.connect(gainNode);
-  gainNode.connect(audioCtx.destination);
-  
-  gainNode.gain.value = 0.001;
-  gainNode.gain.minValue = 0.001;
-  gainNode.gain.maxValue = 0.001;
-  
-  oscillator.detune.value = 0;
-  oscillator.start(0);
-  
-  // audioCtx.onstatechange = function () {
-  //   cc(audioCtx.state);
-  // };
-}
+const audioCtx = new(AudioContext || webkitAudioContext)();
+const adsr = { typ: 0, atk: 0, dec: 0, sus: 0, sai: 0, bas: 0, vol: 0, frq: 0, now: 0 };
+const notas = {};
+const gos = [];
 
 function gera_notas() {
-  let letras = ["A", "A", "B", "C", "C", "D", "D", "E", "F", "F", "G", "G"];
-  let latim = ["Lá", "Lá", "Si", "Dó", "Dó", "Ré", "Ré", "Mi", "Fá", "Fá", "Sol", "Sol"];
+  let letra = ["A", "A", "B", "C", "C", "D", "D", "E", "F", "F", "G", "G"];
   let cnt = 2 ** (1 / 12);
-  let bas = 27.5;
-
+  let bas = 27;
+  
   for (let i = 0; i < 10; i++) {
     for (let j = 0; j < 12; j++) {
       let oit = j < 3 ? i : i + 1;
       if (oit > 0 && oit < 10) {
-        if (!notas[`oitava_${oit}`])
-          notas[`oitava_${oit}`] = [];
         let id = j < 3 ? j + 9 : j - 3;
-        let su = [1, 4, 6, 9, 11].includes(j) ? "#" : "";
-        let fr = cnt ** j * bas * 2 ** i;
-        notas[`oitava_${oit}`].push({
-          id: id, 
-          oitava: oit, 
-          letra: letras[j], 
-          latim: latim[j],
-          sustenido: su, 
-          assinatura: `${letras[j]}${oit}`,
-          frequencia: fr
-        });
+        let sus = [1, 4, 6, 9, 11].includes(j) ? "#" : "";
+        let frq = cnt ** j * bas * 2 ** i;
+        let key = `O${oit}L${letra[j]}${sus}`;
+        notas[key] = {
+          key: key, 
+          sus: sus, 
+          ass: `${letra[j]}${oit}`, 
+          frq: frq, 
+          go: null
+        };
       }
     }
   }
 }
 
 function painel() {
+  let html = `<div class="row m-0 items"></div>`;
+  let items = appendHtml(html, qs("#panel"));
+  
   Object.keys(adsr).forEach(function(k) {
-    let html = `<div class="col-6"><p class="m-0 p-0" id="item_${k}">${adsr[k]}</p></div>`;
-    appendHtml(html, qs(".items"));
+    html = `<div class="col-6"><p class="m-0 p-0" id="item_${k}">${adsr[k]}</p></div>`;
+    appendHtml(html, items);
   });
 }
 
 function teclado() {
+  let letra = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
   let group_key;
   let keyboard = qs(".keyboard");
   let html;
@@ -75,16 +47,16 @@ function teclado() {
   for (let i = 1; i < 10; i++) {
     html = `<section class="col-12 col-sm-6 col-md-4 col-lg-3 collapse keys" id="keys_${i}"></section>`;
     let keys = appendHtml(html, keyboard);
-    let arr_nota = notas[`oitava_${i}`];
     
-    arr_nota.forEach(function(nota) {
-      if (nota.sustenido == "#") {
-        html = `<div class="key black" data-oitava="${nota.oitava}" data-id="${nota.id}"></div>`;
+    letra.forEach(function(k) {
+      let nota = notas[`O${i}L${k}`]
+      if (nota.sus == "#") {
+        html = `<div class="key black" data-key="${nota.key}"></div>`;
         appendHtml(html, group_key, true);
       } else {
         html = `<div class="group_key"></div>`;
         group_key = appendHtml(html, keys);
-        html = `<div class="key white" data-oitava="${nota.oitava}" data-id="${nota.id}"><span>${nota.assinatura}</span></div>`;
+        html = `<div class="key white" data-key="${nota.key}"><span>${nota.ass}</span></div>`;
         appendHtml(html, group_key);
       }
     });
@@ -109,30 +81,25 @@ function configuracoes() {
     qs(`#radio_type_${e}`).onclick = function() { conf_onchange(); }
   });
   
-  // [
-  //   "#range_atk", 
-  //   "#range_dec", 
-  //   "#range_sus", 
-  //   "#range_rel", 
-  //   "#range_mxt", 
-  //   "#range_vol"
-  // ]
   qsa(".form-range").forEach(function(e) {
     e.onchange = function() { conf_onchange(); }
   });
   
   qs("#radio_type_sine").click();
+  createGO();
+  createGO();
+  createGO();
 }
 
 function conf_onchange() {
   let radio_type = qs('input[name="radio_type"]:checked');
-  adsr.type = radio_type.dataset.value;
-  adsr.attack = qs("#range_atk").value;
-  adsr.decay = qs("#range_dec").value;
-  adsr.sustain = qs("#range_sus").value;
-  adsr.realease = qs("#range_rel").value;
-  adsr.max_time = qs("#range_mxt").value;
-  adsr.volume = qs("#range_vol").value;
+  adsr.typ = radio_type.dataset.value;
+  adsr.atk = qs("#range_atk").value;
+  adsr.dec = qs("#range_dec").value;
+  adsr.sus = qs("#range_sus").value;
+  adsr.sai = qs("#range_sai").value;
+  adsr.bas = qs("#range_bas").value;
+  adsr.vol = qs("#range_vol").value;
   
   Object.keys(adsr).forEach(function(k) {
     qs(`#item_${k}`).innerText = `${k}: ${adsr[k]}`;
@@ -142,7 +109,7 @@ function conf_onchange() {
 function eventos() {
   qsa(".key").forEach(function(e) {
     // e.onmousedown = function() { handleDown(e); }
-    // e.onmouseup = function() { handleUp(e); }
+    // e.onmouseup = function() { handleUp(e); } 
     // e.onmouseleave = function() { handleUp(e); }
     e.ontouchstart = function() { handleDown(e); }
     e.ontouchend = function() { handleUp(e); }
@@ -150,17 +117,14 @@ function eventos() {
   
   qsa(".form-range").forEach(function(e) {
     e.oninput = function() {
-      // let f = e.parentElement.previousElementSibling;
       let f = qs(`label[for="${e.id}"]`);
-      f.innerText = `${f.dataset.value} ${e.value}`;
+      f.innerText = `${f.dataset.value} ${Number(e.value).toFixed(1)}`;
     }
     e.oninput();
   });
-  // qs('label[for*=range_atk]').outerHTML
 }
 
 function tela() {
-  inicio();
   gera_notas();
   painel();
   teclado();
@@ -169,43 +133,36 @@ function tela() {
   // custom_console();
 }
 
-function getValues(dataset) {
-  let nota = notas[`oitava_${dataset.oitava}`][dataset.id];
+function createGO() {
+  let gainNode = audioCtx.createGain();
+  let oscillator = audioCtx.createOscillator();
   
-  adsr.now = Math.floor(audioCtx.currentTime * 1000) / 1000;
-  adsr.frequency = nota.frequencia.toFixed(2);
+  oscillator.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
+  gainNode.gain.value = 0;
+  oscillator.detune.value = 0;
+  oscillator.start(0);
   
-  ["frequency", "now"].forEach(function(n) {
-    qs(`#item_${n}`).innerText = `${n}: ${adsr[n]}`;
+  gos.push({
+    // id: gos.length, 
+    oscillator: oscillator, 
+    gainNode: gainNode
   });
-}
-
-function noteOn() {
-  let aet = adsr.now + adsr.attack * adsr.max_time;
-  let ded = adsr.decay * adsr.max_time;
   
-  oscillator.type = adsr.type;
-  oscillator.frequency.value = adsr.frequency;
-
-  gainNode.gain.cancelScheduledValues(audioCtx.currentTime);
-  gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
-  gainNode.gain.linearRampToValueAtTime(adsr.volume, aet);
-  gainNode.gain.setTargetAtTime(adsr.sustain, aet, ded);
-}
-
-function noteOff() {
-  let ret = adsr.now + adsr.realease * adsr.max_time;
-  
-  gainNode.gain.cancelScheduledValues(audioCtx.currentTime);
-  gainNode.gain.setValueAtTime(gainNode.gain.value, audioCtx.currentTime);
-  gainNode.gain.linearRampToValueAtTime(0, ret);
+  return gos.slice(-1);
 }
 
 function handleDown(key) {
-  if (!key) return;
+  let nota = notas[key.dataset.key];
+  let go = gos.find(e => e.gainNode.gain.value == 0);
+  if (!go) go = createGO();
   
-  getValues(key.dataset);
-  noteOn();
+  noteOn(nota.frq, go.oscillator, go.gainNode);
+  nota.go = go;
+  adsr.frq = nota.frq;
+  
+  qs(`#item_now`).innerText = `now: ${Math.floor(adsr.now * 1000) / 1000}`;
+  qs(`#item_frq`).innerText = `frq: ${Math.floor(adsr.frq * 1000) / 1000}`;
   
   if (key.className.includes("black")) {
     key.classList.add("black_pressed");
@@ -215,10 +172,9 @@ function handleDown(key) {
 }
 
 function handleUp(key) {
-  if (!key) return;
-  
-  getValues(key.dataset);
-  noteOff();
+  let nota = notas[key.dataset.key];
+  noteOff(nota.go.gainNode);
+  // nota.go = null;
   
   if (key.className.includes("black")) {
     key.classList.remove("black_pressed");
@@ -227,86 +183,28 @@ function handleUp(key) {
   key.style.background = "white";
 }
 
-// document.onkeydown = function(event) {
-//   handleDown(qs(`.key[data-key=${event.key}]`));
-// }
+function noteOn(frequency, oscillator, gainNode) {
+  adsr.now = audioCtx.currentTime;
+  oscillator.type = adsr.typ;
+  oscillator.frequency.value = frequency;
+  
+  let aet = adsr.now + adsr.atk * adsr.bas;
+  let ded = adsr.dec * adsr.bas;
+  
+  gainNode.gain.cancelScheduledValues(adsr.now);
+  gainNode.gain.setValueAtTime(0, adsr.now);
+  gainNode.gain.linearRampToValueAtTime(adsr.vol, aet);
+  gainNode.gain.setTargetAtTime(adsr.sus, aet, ded);
+}
 
-// document.onkeyup = function(event) {
-//   handleUp(qs(`.key[data-key=${event.key}]`));
-// }
+function noteOff(gainNode) {
+  let ret = adsr.now + adsr.sai * adsr.bas;
+  
+  gainNode.gain.cancelScheduledValues(adsr.now);
+  gainNode.gain.setValueAtTime(gainNode.gain.value, adsr.now);
+  gainNode.gain.linearRampToValueAtTime(0, ret);
+}
 
 afterLoad(function() {
   tela();
 });
-
-
-  // oscillator = audioCtx.createOscillator();
-  // oscillator.connect(gainNode);
-  // // oscillator.detune.value = 0;
-  
-  // oscillator.onended = function() {
-  //   oscillator.disconnect(gainNode);
-  // }
-  // oscillator.start(0);
-  
-  
-  // ger_osc(key.dataset);
-// function ger_osc(dataset) {
-//   let gain = qs("#range_gain").value / 100;
-//   let type = qs('input[name="radio_type"]:checked').dataset.value;
-//   let nota = notas[`oitava_${dataset.oitava}`][dataset.id];
-  
-//   oscillator.type = type;
-//   oscillator.frequency.value = nota.frequencia;
-//   gainNode.gain.value = gain;
-  
-//   qs("#item1").innerText = type;
-//   qs("#item2").innerText = gain;
-//   qs("#item3").innerText = nota.id + 1;
-//   qs("#item4").innerText = nota.frequencia;
-// }
-
-  // appendHtml(`<div class="btn btn-primary mt-4" onclick="teste();">Teste</div>`);
-// function teste() {
-//   let audioCtx = new(AudioContext || webkitAudioContext)();
-//   // var gai = audioCtx.createGain();
-//   // gai.connect(audioCtx.destination);
-//   let osc = audioCtx.createOscillator();
-//   // osc.connect(gai);
-//   osc.type = "sine";
-//   osc.frequency.value = 440;
-//   osc.connect(audioCtx.destination);
-//   osc.start();
-//   osc.stop(audioCtx.currentTime + 2);
-// }
-
-
-  // stp_osc();
-  // gen_osc(nota.frequencia, 10);
-// function aux_osc(frq, dtn) {
-//   let osc = audioCtx.createOscillator();
-//   osc.type = "sine";
-//   osc.frequency.value = frq;
-//   osc.detune.value = dtn;
-//   osc.connect(audioCtx.destination);
-//   osc.start();
-//   return osc;
-// }
-
-// var oscs = [];
-// function gen_osc(frq, dtn) {
-//   oscs[0] = aux_osc(frq, 0);
-//   // oscs[1] = aux_osc(frq, dtn);
-//   // oscs[2] = aux_osc(frq, -dtn);
-// }
-
-// function stp_osc() {
-//   if (oscs[0]) {
-//     oscs[0].stop();
-//     oscs[0].disconnect();
-//   }
-//   // oscs[1].stop();
-//   // oscs[1].disconnect();
-//   // oscs[2].stop();
-//   // oscs[2].disconnect();
-// }
