@@ -32,8 +32,8 @@ function painel() {
   let html = `<div class="row m-0 items"></div>`;
   let items = appendHtml(html, qs("#panel"));
   
-  Object.keys(adsr).forEach(function(k) {
-    html = `<div class="col-6"><p class="m-0 p-0" id="item_${k}">${adsr[k]}</p></div>`;
+  ["now", "frq"].forEach(function(k) {
+    html = `<div class="col-6"><p class="m-0 p-0" id="item_${k}">${k.toUpperCase()}: ${adsr[k]}</p></div>`;
     appendHtml(html, items);
   });
 }
@@ -101,9 +101,9 @@ function conf_onchange() {
   adsr.bas = qs("#range_bas").value;
   adsr.vol = qs("#range_vol").value;
   
-  Object.keys(adsr).forEach(function(k) {
-    qs(`#item_${k}`).innerText = `${k}: ${adsr[k]}`;
-  });
+  // Object.keys(adsr).forEach(function(k) {
+  //   qs(`#item_${k}`).innerText = `${k}: ${adsr[k]}`;
+  // });
 }
 
 function eventos() {
@@ -124,16 +124,29 @@ function eventos() {
   });
 }
 
+function animation(timestamp) {
+  for (let i = 0; i < gos.length; i++) {
+    let vlr = gos[i].gainNode.gain.value * 100;
+    qs(`#item_go${i}`).innerText = `GOS: ${vlr.toFixed(2)}`;
+  }
+  
+  requestAnimationFrame(animation);
+}
+
 function tela() {
   gera_notas();
   painel();
   teclado();
   configuracoes();
   eventos();
+  requestAnimationFrame(animation);
   // custom_console();
 }
 
 function createGO() {
+  let html = `<div class="col-6"><p class="m-0 p-0" id="item_go${gos.length}">GOS: 0</p></div>`;
+  appendHtml(html, qs("div.items"));
+  
   let gainNode = audioCtx.createGain();
   let oscillator = audioCtx.createOscillator();
   
@@ -142,9 +155,8 @@ function createGO() {
   gainNode.gain.value = 0;
   oscillator.detune.value = 0;
   oscillator.start(0);
-  
+
   gos.push({
-    // id: gos.length, 
     oscillator: oscillator, 
     gainNode: gainNode
   });
@@ -161,8 +173,10 @@ function handleDown(key) {
   nota.go = go;
   adsr.frq = nota.frq;
   
-  qs(`#item_now`).innerText = `now: ${Math.floor(adsr.now * 1000) / 1000}`;
-  qs(`#item_frq`).innerText = `frq: ${Math.floor(adsr.frq * 1000) / 1000}`;
+  ["now", "frq"].forEach(function(k) {
+    let v = Math.floor(adsr[k] * 1000) / 1000;
+    qs(`#item_${k}`).innerText = `${k.toUpperCase()}: ${v}`;
+  });
   
   if (key.className.includes("black")) {
     key.classList.add("black_pressed");
@@ -174,7 +188,6 @@ function handleDown(key) {
 function handleUp(key) {
   let nota = notas[key.dataset.key];
   noteOff(nota.go.gainNode);
-  // nota.go = null;
   
   if (key.className.includes("black")) {
     key.classList.remove("black_pressed");
@@ -188,7 +201,7 @@ function noteOn(frequency, oscillator, gainNode) {
   oscillator.type = adsr.typ;
   oscillator.frequency.value = frequency;
   
-  let aet = adsr.now + adsr.atk * adsr.bas;
+  let aet = adsr.now + (adsr.atk * adsr.bas);
   let ded = adsr.dec * adsr.bas;
   
   gainNode.gain.cancelScheduledValues(adsr.now);
@@ -198,6 +211,8 @@ function noteOn(frequency, oscillator, gainNode) {
 }
 
 function noteOff(gainNode) {
+  adsr.now = audioCtx.currentTime;
+  
   let ret = adsr.now + adsr.sai * adsr.bas;
   
   gainNode.gain.cancelScheduledValues(adsr.now);
