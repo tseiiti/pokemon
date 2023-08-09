@@ -108,11 +108,11 @@ function conf_onchange() {
 
 function eventos() {
   qsa(".key").forEach(function(e) {
-    // e.onmousedown = function() { handleDown(e); }
-    // e.onmouseup = function() { handleUp(e); } 
-    // e.onmouseleave = function() { handleUp(e); }
-    e.ontouchstart = function() { handleDown(e); }
-    e.ontouchend = function() { handleUp(e); }
+    e.onmousedown = function() { handleDown(e); }
+    e.onmouseup = function() { handleUp(e); } 
+    e.onmouseleave = function() { handleUp(e); }
+    // e.ontouchstart = function() { handleDown(e); }
+    // e.ontouchend = function() { handleUp(e); }
   });
   
   qsa(".form-range").forEach(function(e) {
@@ -168,6 +168,10 @@ function handleDown(key) {
   let nota = notas[key.dataset.key];
   let go = gos.find(e => e.gainNode.gain.value == 0);
   if (!go) go = createGO();
+
+  if (!nota.frq) return;
+  if (!go.oscillator) return;
+  if (!go.gainNode) return;
   
   noteOn(nota.frq, go.oscillator, go.gainNode);
   nota.go = go;
@@ -187,6 +191,8 @@ function handleDown(key) {
 
 function handleUp(key) {
   let nota = notas[key.dataset.key];
+  if (!nota.go) return;
+  
   noteOff(nota.go.gainNode);
   
   if (key.className.includes("black")) {
