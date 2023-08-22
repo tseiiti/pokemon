@@ -108,11 +108,11 @@ function conf_onchange() {
 
 function eventos() {
   qsa(".key").forEach(function(e) {
-    e.onmousedown = function() { handleDown(e); }
-    e.onmouseup = function() { handleUp(e); } 
-    e.onmouseleave = function() { handleUp(e); }
-    // e.ontouchstart = function() { handleDown(e); }
-    // e.ontouchend = function() { handleUp(e); }
+    e.ontouchstart = function(ev) { ev.preventDefault(); handleDown(e); }
+    e.ontouchend = function(ev) { ev.preventDefault(); handleUp(e); }
+    e.onmousedown = function(ev) { ev.preventDefault(); handleDown(e); }
+    e.onmouseup = function(ev) { ev.preventDefault(); handleUp(e); } 
+    e.onmouseleave = function(ev) { ev.preventDefault(); handleUp(e); }
   });
   
   qsa(".form-range").forEach(function(e) {
