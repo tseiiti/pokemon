@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Poke Yuyu - Dinâmico</title>
+    <link rel="icon" type="image/x-icon" href="/img/icon.ico">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <style>
+      #text_input {
+        font-family: "Lucida Console", Courier, monospace;
+        line-height: 0.95 !important;
+      }
+      #div_log {
+        position: relative;
+        height: 130px;
+        overflow: auto;
+        display: block;
+        font-size: small;
+        line-height: 0.99;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="bg-secondary bg-gradient shadow-lg mb-5" data-component="/comp/header.html"></header>
+
+    <div class="container-lg">
+      <textarea id="text_input" class="form-control mb-2" rows="10" oninput="exec()"></textarea>
+      <div class="float-end">
+        <button class="btn btn-outline-danger form-check-inline py-0 mx-0" onclick="input_clear()">clear</button>
+        <button class="btn btn-outline-secondary form-check-inline py-0 mx-3" onclick="log_clear()">clear logs</button>
+        <button class="btn btn-outline-primary form-check-inline py-0" onclick="exec()">run >></button>
+        <div class="form-check form-switch form-check-inline ms-1 me-0">
+          <input class="form-check-input" type="checkbox" role="switch" id="auto_exec" onchange="auto_exec_change()" checked="">
+          <label class="form-check-label" for="auto_exec">auto exec</label>
+        </div>
+      </div>
+
+      <h5 class="mt-4">logs:</h5>
+      <div id="div_log" class="border rounded p-1"></div>
+      <div id="div_output" class="mt-4 p-1"></div>
+    </div>
+
+    <footer class="bd-footer bg-light mt-5" data-component="/comp/footer.html"></footer>
+    <script type="text/javascript" src="/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="/js/utils.js"></script>
+    <script type="text/javascript" src="/js/dinamico.js"></script>
+  </body>
+</html>
