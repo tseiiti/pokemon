@@ -1,68 +1,71 @@
 <!doctype html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Poke Yuyu - Calculadora</title>
-    <link rel="icon" type="image/x-icon" href="/img/icon.ico">
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/calc.css">
-  </head>
-  <body>
-    <header class="bg-secondary bg-gradient shadow-lg mb-5" data-component="/comp/header.html"></header>
-    <div class="container-lg">
-      <main class="mx-3">
-        <div class="container">
-          <div class="calc">
-            <div class="display">
-              <div id="display_1"></div>
-              <div id="display_2"></div>
-            </div>
-            <div>
-              <button class="mr ac" onclick="geraExpressao('ac')">AC</button>
-              <button class="mr" onclick="geraExpressao('mr')">MR</button>
-              <button class="mr" onclick="geraExpressao('m-')">M-</button>
-              <button class="mr" onclick="geraExpressao('m+')">M+</button>
-            </div>
-            <div>
-              <button onclick="geraExpressao('+-')"><sub>&plus;</sub>\<sup>&minus;</sup></button>
-              <button onclick="geraExpressao('pw')">x&sup2;</button>
-              <button onclick="geraExpressao('sq')">&radic;</button>
-              <button onclick="geraExpressao('/')">/</button>
-            </div>
-            <div>
-              <button onclick="geraExpressao(7)">7</button>
-              <button onclick="geraExpressao(8)">8</button>
-              <button onclick="geraExpressao(9)">9</button>
-              <button onclick="geraExpressao('*')">*</button>
-            </div>
-            <div>
-              <button onclick="geraExpressao(4)">4</button>
-              <button onclick="geraExpressao(5)">5</button>
-              <button onclick="geraExpressao(6)">6</button>
-              <button onclick="geraExpressao('-')">&minus;</button>
-            </div>
-            <div>
-              <button onclick="geraExpressao(1)">1</button>
-              <button onclick="geraExpressao(2)">2</button>
-              <button onclick="geraExpressao(3)">3</button>
-              <button onclick="geraExpressao('+')">&plus;</button>
-            </div>
-            <div>
-              <button onclick="geraExpressao(0)">0</button>
-              <button onclick="geraExpressao('.')">.</button>
-              <button onclick="geraExpressao('<')"><</button>
-              <button class="result" onclick="geraExpressao('=')">=</button>
-            </div>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Poke Yuyu - Calculadora</title>
+  <link rel="icon" type="image/x-icon" href="/img/icon.ico">
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/calc.css">
+</head>
+
+<body>
+  <header class="bg-secondary bg-gradient shadow-lg mb-5" data-component="/comp/header.html"></header>
+
+  <div class="container-lg">
+    <main class="mx-3">
+      <div class="container">
+        <div class="calc">
+          <div class="display">
+            <div id="display_1"></div>
+            <div id="display_2"></div>
+          </div>
+          <div>
+            <button class="mr ac" onclick="geraExpressao('ac')">AC</button>
+            <button class="mr" onclick="geraExpressao('mr')">MR</button>
+            <button class="mr" onclick="geraExpressao('m-')">M-</button>
+            <button class="mr" onclick="geraExpressao('m+')">M+</button>
+          </div>
+          <div>
+            <button onclick="geraExpressao('+-')"><sub>&plus;</sub>\<sup>&minus;</sup></button>
+            <button onclick="geraExpressao('pw')">x&sup2;</button>
+            <button onclick="geraExpressao('sq')">&radic;</button>
+            <button onclick="geraExpressao('/')">/</button>
+          </div>
+          <div>
+            <button onclick="geraExpressao(7)">7</button>
+            <button onclick="geraExpressao(8)">8</button>
+            <button onclick="geraExpressao(9)">9</button>
+            <button onclick="geraExpressao('*')">*</button>
+          </div>
+          <div>
+            <button onclick="geraExpressao(4)">4</button>
+            <button onclick="geraExpressao(5)">5</button>
+            <button onclick="geraExpressao(6)">6</button>
+            <button onclick="geraExpressao('-')">&minus;</button>
+          </div>
+          <div>
+            <button onclick="geraExpressao(1)">1</button>
+            <button onclick="geraExpressao(2)">2</button>
+            <button onclick="geraExpressao(3)">3</button>
+            <button onclick="geraExpressao('+')">&plus;</button>
+          </div>
+          <div>
+            <button onclick="geraExpressao(0)">0</button>
+            <button onclick="geraExpressao('.')">.</button>
+            <button onclick="geraExpressao('<')"><</button>
+            <button class="result" onclick="geraExpressao('=')">=</button>
           </div>
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
+  </div>
 
-    <footer class="bd-footer bg-light mt-5" data-component="/comp/footer.html"></footer>
+  <footer class="bd-footer bg-light mt-5" data-component="/comp/footer.html"></footer>
 
-		<script type="text/javascript" src="/js/bootstrap.bundle.min.js"></script>
-    <script type="text/javascript" src="/js/utils.js"></script>
-    <script type="text/javascript" src="/js/calc.js"></script>
-  </body>
+  <script type="text/javascript" src="/js/bootstrap.bundle.min.js"></script>
+  <script type="text/javascript" src="/js/utils.js"></script>
+  <script type="text/javascript" src="/js/calc.js"></script>
+</body>
+
 </html>
