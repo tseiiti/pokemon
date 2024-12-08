@@ -1,7 +1,3 @@
-const qs = (arg) => {
-  return document.querySelector(arg)
-}
-
 const d1 = qs('#display_1')
 const d2 = qs('#display_2')
 const ops = ['/', '*', '-', '+']
